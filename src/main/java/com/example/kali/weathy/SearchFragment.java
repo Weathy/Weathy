@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class SearchFragment extends Fragment {
 
+    private EditText cityName;
     private Button backButton;
     private Button gpsButton;
     private Button sofiaButton;
