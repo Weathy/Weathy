@@ -1,4 +1,4 @@
-package com.example.pc.weathy;
+package com.example.kali.weathy;
 
 
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class SearchFragment extends Fragment {
+
     private Button backButton;
     private Button gpsButton;
     private Button sofiaButton;
