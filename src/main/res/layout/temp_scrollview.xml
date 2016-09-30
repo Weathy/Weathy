@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="15dp"
+    android:id="@+id/temp_status_scrollview">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/degrees_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:text="8"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/circle_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/degrees_tv"
+            android:layout_toRightOf="@+id/degrees_tv"
+            android:text="&#xb0;"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/circle_tv"
+            android:layout_toRightOf="@+id/circle_tv"
+            android:text="C"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:text="Feels like:"
+                    android:maxLines="1"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:text="8"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="23sp"
+                    android:id="@+id/temperature_status_textview"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="match_parent"
+                    android:text="&#xb0;"
+                    android:maxLines="1"
+                    android:gravity="top|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="40sp"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Sunny"
+                    android:gravity="center|right"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:id="@+id/weather_status_textview"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="-----------------"
+                    android:maxLines="1"
+                    android:gravity="center|right"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Wind"
+                    android:maxLines="1"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:text="0.4"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:id="@+id/wind_meter_in_second_textview"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="m/s"
+                    android:maxLines="1"
+                    android:gravity="center|end"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Light"
+                    android:gravity="center|right"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:id="@+id/wind_status_textview"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/weather_status_imageview"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/extra_info"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+</LinearLayout>

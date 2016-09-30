@@ -5,24 +5,5 @@
     android:background="@android:color/holo_blue_dark"
     tools:context="com.example.kali.weathy.TwentyFourFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="search"
-            android:id="@+id/search_button"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="drawer"
-            android:id="@+id/drawer_button"/>
-    </RelativeLayout>
-
 
 </LinearLayout>
