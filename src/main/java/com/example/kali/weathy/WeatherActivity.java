@@ -10,26 +10,20 @@ import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kali.weathy.model.Weather;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -192,7 +186,7 @@ public class WeatherActivity extends AppCompatActivity
                 temp_max = (int)(weather.getJSONObject("main").getInt("temp_max")-KELVIN_CONSTANT);
                 sunrise = Integer.toString(weather.getJSONObject("sys").getInt("sunrise"));
                 sunset = Integer.toString(weather.getJSONObject("sys").getInt("sunset"));
-                windSpeed = weather.getJSONObject("wind").getInt("speed");
+                windSpeed = weather.getJSONObject("wind").getDouble("speed");
                 humidity = weather.getJSONObject("main").getInt("humidity");
                 pressure = weather.getJSONObject("main").getInt("pressure");
                 currentTemp = (int)(weather.getJSONObject("main").getInt("temp")-KELVIN_CONSTANT);
@@ -218,6 +212,11 @@ public class WeatherActivity extends AppCompatActivity
             humidity.setText(weather.getHumidity()+"%");
             TextView wind = (TextView)findViewById(R.id.wind_meter_in_second_textview);
             wind.setText(weather.getWindSpeed()+"");
+            TextView cityName = (TextView) findViewById(R.id.city_name_textview);
+            cityName.setText(weather.getCityName()+"");
+            TextView feelsLike = (TextView) findViewById(R.id.temperature_status_textview);
+            feelsLike.setText(weather.getCurrentTemp()+"");
+
         }
     }
 }
