@@ -11,6 +11,7 @@ import android.widget.Button;
 
 public class TenDayFragment extends Fragment {
 
+    private Button searchButton;
     private TenDayComunicator activity;
 
     interface TenDayComunicator{
@@ -28,7 +29,6 @@ public class TenDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_ten_day, container, false);
-
 
         return root;
     }

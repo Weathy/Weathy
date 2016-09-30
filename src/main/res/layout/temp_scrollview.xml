@@ -76,21 +76,33 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:maxLines="1"
-                    android:text="8"
+                    android:text="-28"
                     android:gravity="center|end"
                     android:textColor="@android:color/white"
-                    android:textSize="23sp"
+                    android:textSize="20sp"
                     android:id="@+id/temperature_status_textview"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
                     android:layout_height="match_parent"
-                    android:text="&#xb0;"
-                    android:maxLines="1"
-                    android:gravity="top|end"
-                    android:textColor="@android:color/white"
-                    android:textSize="40sp"/>
+                    android:layout_weight="0.5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="0dp"
+                        android:text="&#xb0;"
+                        android:maxLines="1"
+                        android:gravity="top|end"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
 
 
 
