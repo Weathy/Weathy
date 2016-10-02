@@ -63,11 +63,12 @@ public class WeatherActivity extends AppCompatActivity
     }
 
 
-    private class WeatherPagerAdapter extends FragmentPagerAdapter {
+    public class WeatherPagerAdapter extends FragmentPagerAdapter {
+
 
         private final static int NUMBER_OF_FRAGMENTS = 3;
 
-        WeatherPagerAdapter(FragmentManager fm) {
+        public WeatherPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -163,6 +164,7 @@ public class WeatherActivity extends AppCompatActivity
         private static final double KELVIN_CONSTANT = 272.15;
         private StringBuilder coordinatesJSON = new StringBuilder();
         private StringBuilder weatherJSON = new StringBuilder();
+        private StringBuilder secondWeatherJSON = new StringBuilder();
         private int currentTemp;
         private String lat;
         private String lng;
@@ -179,9 +181,10 @@ public class WeatherActivity extends AppCompatActivity
         @Override
         protected Weather doInBackground(Void... params) {
             try {
-                URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=%D0%9F%D0%BB%D0%B5%D0%B2%D0%B5%D0%BD&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+                URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=Sofia&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
                 HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                 weatherConnection.setRequestMethod("GET");
+
                 InputStream weatherStream = weatherConnection.getInputStream();
                 Scanner weatherScanner = new Scanner(weatherStream);
                 while (weatherScanner.hasNextLine()) {
@@ -189,6 +192,7 @@ public class WeatherActivity extends AppCompatActivity
                 }
                 Log.e("error",weatherJSON.toString());
                 JSONObject weather = new JSONObject(weatherJSON.toString());
+                cityName = weather.getString("name");
                 description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
                 icon = weather.getJSONArray("weather").getJSONObject(0).getString("icon");
                 temp_min = (int)(weather.getJSONObject("main").getInt("temp_min")-KELVIN_CONSTANT);
@@ -206,11 +210,13 @@ public class WeatherActivity extends AppCompatActivity
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return new Weather(cityName,currentTemp,humidity,windSpeed,pressure,sunrise,sunset,description,icon,temp_min,temp_max,lat,lng);
+            return new Weather(cityName,currentTemp,feelsLike,humidity,windSpeed,pressure,sunrise,sunset,description,icon,temp_min,temp_max,lat,lng);
         }
 
         @Override
         protected void onPostExecute(Weather weather) {
+            TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
+            cityNameTV.setText(weather.getCityName());
             TextView statusTV = (TextView)findViewById(R.id.weather_status_textview);
             statusTV.setText(weather.getDescription());
             TextView degreeTV = (TextView)findViewById(R.id.degrees_tv);
@@ -224,7 +230,21 @@ public class WeatherActivity extends AppCompatActivity
             TextView cityName = (TextView) findViewById(R.id.city_name_textview);
             cityName.setText(weather.getCityName()+"");
             TextView feelsLike = (TextView) findViewById(R.id.temperature_status_textview);
-            feelsLike.setText(weather.getCurrentTemp()+"");
+            feelsLike.setText(weather.getFeelsLike()+"");
+            switch (weather.getDescription()){
+                case "Clear" :
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
+                    return;
+                case "Clouds" :
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.day_cloudy);
+                    return;
+                case "Thunderstorm" :
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.day_thunderstorm);
+                    return;
+                case "Rain" :
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
+                    return;
+            }
 
         }
     }
@@ -242,10 +262,8 @@ public class WeatherActivity extends AppCompatActivity
         private String iconURL;
         private String date;
         private ArrayList<Weather.TwentyFourWeather> list = new ArrayList<>();
-
         @Override
         protected ArrayList<Weather.TwentyFourWeather> doInBackground(Void... params) {
-
             try {
                 URL twentyFourInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/sofia.json");
                 HttpURLConnection connection = (HttpURLConnection) twentyFourInfo.openConnection();
@@ -298,7 +316,5 @@ public class WeatherActivity extends AppCompatActivity
     public ArrayList<Weather.TwentyFourWeather> getData() {
         return twentyFourHourForecast;
     }
-
-
 
 }
