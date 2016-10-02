@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kali.weathy.model.Weather;
 
@@ -162,10 +163,9 @@ public class WeatherActivity extends AppCompatActivity
 
     class RequestTask extends AsyncTask<Void, Void, Weather> {
         private static final double KELVIN_CONSTANT = 272.15;
-        private StringBuilder coordinatesJSON = new StringBuilder();
         private StringBuilder weatherJSON = new StringBuilder();
-        private StringBuilder secondWeatherJSON = new StringBuilder();
         private int currentTemp;
+        private int feelsLike;
         private String lat;
         private String lng;
         private String cityName;
@@ -178,31 +178,60 @@ public class WeatherActivity extends AppCompatActivity
         private double windSpeed;
         private int humidity;
         private int pressure;
+        private double visibility;
+        private String lastUpdate;
         @Override
         protected Weather doInBackground(Void... params) {
             try {
                 URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=Sofia&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
                 HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                 weatherConnection.setRequestMethod("GET");
-
                 InputStream weatherStream = weatherConnection.getInputStream();
                 Scanner weatherScanner = new Scanner(weatherStream);
                 while (weatherScanner.hasNextLine()) {
                     weatherJSON.append(weatherScanner.nextLine());
                 }
                 Log.e("error",weatherJSON.toString());
+
                 JSONObject weather = new JSONObject(weatherJSON.toString());
-                cityName = weather.getString("name");
                 description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
                 icon = weather.getJSONArray("weather").getJSONObject(0).getString("icon");
                 temp_min = (int)(weather.getJSONObject("main").getInt("temp_min")-KELVIN_CONSTANT);
                 temp_max = (int)(weather.getJSONObject("main").getInt("temp_max")-KELVIN_CONSTANT);
-                sunrise = Integer.toString(weather.getJSONObject("sys").getInt("sunrise"));
-                sunset = Integer.toString(weather.getJSONObject("sys").getInt("sunset"));
                 windSpeed = weather.getJSONObject("wind").getDouble("speed");
                 humidity = weather.getJSONObject("main").getInt("humidity");
                 pressure = weather.getJSONObject("main").getInt("pressure");
                 currentTemp = (int)(weather.getJSONObject("main").getInt("temp")-KELVIN_CONSTANT);
+                weatherJSON.delete(0,weatherJSON.length());
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/Sofia.json");
+                weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+                weatherConnection.setRequestMethod("GET");
+                weatherStream = weatherConnection.getInputStream();
+                weatherScanner = new Scanner(weatherStream);
+                while (weatherScanner.hasNextLine()) {
+                    weatherJSON.append(weatherScanner.nextLine());
+                }
+                weather = new JSONObject(weatherJSON.toString());
+                feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
+                String [] up =  weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
+                lastUpdate = up[0];
+                cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
+                weatherJSON.delete(0,weatherJSON.length());
+                weatherInfo = new URL("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22Sofia%2C%20bg%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+                weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+                weatherConnection.setRequestMethod("GET");
+                weatherStream = weatherConnection.getInputStream();
+                weatherScanner = new Scanner(weatherStream);
+                while (weatherScanner.hasNextLine()) {
+                    weatherJSON.append(weatherScanner.nextLine());
+                }
+                weather = new JSONObject(weatherJSON.toString());
+                visibility = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("atmosphere").getDouble("visibility");
+                sunset = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunset");
+                sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
+
+
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -210,13 +239,21 @@ public class WeatherActivity extends AppCompatActivity
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return new Weather(cityName,currentTemp,feelsLike,humidity,windSpeed,pressure,sunrise,sunset,description,icon,temp_min,temp_max,lat,lng);
+            return new Weather(cityName,currentTemp,feelsLike,humidity,windSpeed,pressure,sunrise,sunset,description,icon,temp_min,temp_max,lat,lng,visibility,lastUpdate);
         }
-
         @Override
         protected void onPostExecute(Weather weather) {
+            Log.e("weather" , weather.toString());
             TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
             cityNameTV.setText(weather.getCityName());
+            TextView visibilityTV = (TextView) findViewById(R.id.visibility_textview);
+            visibilityTV.setText(weather.getVisibility()+"");
+            TextView lastUpdateTV = (TextView) findViewById(R.id.renewed_textview);
+            lastUpdateTV.setText(weather.getLastUpdate());
+            TextView sunsetTV = (TextView) findViewById(R.id.time_sunset_textview);
+            sunsetTV.setText(weather.getSunset());
+            TextView feelsLikeTV = (TextView) findViewById(R.id.temperature_status_textview);
+            feelsLikeTV.setText(weather.getFeelsLike()+"");
             TextView statusTV = (TextView)findViewById(R.id.weather_status_textview);
             statusTV.setText(weather.getDescription());
             TextView degreeTV = (TextView)findViewById(R.id.degrees_tv);
@@ -247,6 +284,8 @@ public class WeatherActivity extends AppCompatActivity
             }
 
         }
+
+
     }
 
     class TwentyFourTask extends AsyncTask<Void, Void, ArrayList<Weather.TwentyFourWeather>> {

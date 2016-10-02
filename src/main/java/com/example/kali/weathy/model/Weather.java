@@ -19,8 +19,10 @@ public class Weather {
     private int humidity;
     private int pressure;
     private int feelsLike;
+    private double visibility;
+    private String lastUpdate;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, double windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, String latitude, String longitude) {
+    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, double windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, String latitude, String longitude,double visibility,String lastUpdate) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -35,6 +37,8 @@ public class Weather {
         this.latitude = latitude;
         this.longitude = longitude;
         this.feelsLike = feelsLike;
+        this.visibility = visibility;
+        this.lastUpdate = lastUpdate;
     }
 
     public String getCityName() {
@@ -91,6 +95,14 @@ public class Weather {
 
     public int getFeelsLike() {
         return feelsLike;
+    }
+
+    public double getVisibility() {
+        return visibility;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
     }
 
     public static class TwentyFourWeather{
