@@ -1,5 +1,8 @@
 package com.example.kali.weathy;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.kali.weathy.model.Weather;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,13 +31,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TenDayFragment.TenDayComunicator,
         TwentyFourFragment.TwentyFourComunicator, CityForecastFragment.CityForecastComunicator {
-    private WeatherPagerAdapter adapter;
 
+    private WeatherPagerAdapter adapter;
+    public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,10 @@ public class WeatherActivity extends AppCompatActivity
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
         new RequestTask().execute();
+        new TwentyFourTask().execute();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -219,4 +228,77 @@ public class WeatherActivity extends AppCompatActivity
 
         }
     }
+
+    class TwentyFourTask extends AsyncTask<Void, Void, ArrayList<Weather.TwentyFourWeather>> {
+
+        private StringBuilder twentyFourJSON = new StringBuilder();
+        private int currentTemp;
+        private int feelsLike;
+        private double windSpeed;
+        private int humidity;
+        private String condition;
+        private int airPressure;
+        private String time;
+        private String iconURL;
+        private String date;
+        private ArrayList<Weather.TwentyFourWeather> list = new ArrayList<>();
+
+        @Override
+        protected ArrayList<Weather.TwentyFourWeather> doInBackground(Void... params) {
+
+            try {
+                URL twentyFourInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/sofia.json");
+                HttpURLConnection connection = (HttpURLConnection) twentyFourInfo.openConnection();
+                connection.setRequestMethod("GET");
+                InputStream inputStr = connection.getInputStream();
+                Scanner twentyFourScanner = new Scanner(inputStr);
+                while(twentyFourScanner.hasNextLine()){
+                    twentyFourJSON.append(twentyFourScanner.nextLine());
+                }
+
+                JSONObject obj = new JSONObject(twentyFourJSON.toString());
+                JSONArray twentyFourArray = obj.getJSONArray("hourly_forecast");
+                for(int i = 0; i<24; i++){
+                    JSONObject obj1 = new JSONObject(twentyFourArray.getJSONObject(i).toString());
+
+                    currentTemp = obj1.getJSONObject("temp").getInt("metric");
+                    feelsLike = obj1.getJSONObject("feelslike").getInt("metric");
+                    windSpeed = obj1.getJSONObject("wspd").getDouble("metric");
+                    humidity = obj1.getInt("humidity");
+                    condition= obj1.getString("condition");
+                    airPressure = obj1.getJSONObject("mslp").getInt("metric");
+                    time = obj1.getJSONObject("FCTTIME").getString("hour")+":"+obj1.getJSONObject("FCTTIME").getString("min");
+                    iconURL = obj1.getString("icon_url");
+                    date = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
+                    list.add(new Weather.TwentyFourWeather(currentTemp, iconURL, feelsLike, windSpeed, humidity, condition, airPressure, time, date));
+                }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Weather.TwentyFourWeather> list) {
+
+            TwentyFourFragment fr = (TwentyFourFragment) WeatherActivity.this.getSupportFragmentManager().findFragmentById(R.id.twenty_four_fragment);
+            if(fr != null){
+                fr.refreshAdaptor(list);
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<Weather.TwentyFourWeather> getData() {
+        return twentyFourHourForecast;
+    }
+
+
+
 }

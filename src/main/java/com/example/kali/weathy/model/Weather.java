@@ -86,4 +86,65 @@ public class Weather {
     public int getCurrentTemp() {
         return currentTemp;
     }
+
+    public static class TwentyFourWeather{
+
+        private int currentTemp;
+        private String iconURL;
+        private int feelsLike;
+        private double windSpeed;
+        private int humidity;
+        private String condition;
+        private int airPressure;
+        private String time;
+        private String date;
+
+        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, double windSpeed, int humidity, String condition, int airPressure, String time, String date) {
+            this.currentTemp = currentTemp;
+            this.iconURL = iconURL;
+            this.feelsLike = feelsLike;
+            this.windSpeed = windSpeed;
+            this.humidity = humidity;
+            this.condition = condition;
+            this.airPressure = airPressure;
+            this.time = time;
+            this.date = date;
+        }
+
+        public int getCurrentTemp() {
+            return currentTemp;
+        }
+
+        public String getIconURL() {
+            return iconURL;
+        }
+
+        public int getFeelsLike() {
+            return feelsLike;
+        }
+
+        public double getWindSpeed() {
+            return windSpeed;
+        }
+
+        public int getHumidity() {
+            return humidity;
+        }
+
+        public String getCondition() {
+            return condition;
+        }
+
+        public int getAirPressure() {
+            return airPressure;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public String getDate() {
+            return date;
+        }
+    }
 }

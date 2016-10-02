@@ -2,7 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="TwentyFour"
+    android:id="@+id/twenty_four_fragment"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.example.kali.weathy.TwentyFourFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="24-Hour Forecast"
+        android:maxLines="1"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="35sp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:id="@+id/one_hour_recyclerview">
+
+    </android.support.v7.widget.RecyclerView>
 
 
 </LinearLayout>
