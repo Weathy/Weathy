@@ -65,7 +65,7 @@ public class WeatherActivity extends AppCompatActivity
     public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
 
-        private final static int NUMBER_OF_FRAGMENTS = 3;
+        private final static int NUMBER_OF_FRAGMENTS = 4;
 
         public WeatherPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -80,6 +80,8 @@ public class WeatherActivity extends AppCompatActivity
                     return TwentyFourFragment.newInstance("two");
                 case 2:
                     return TenDayFragment.newInstance("three");
+                case 3:
+                    return SearchFragment.newInstance("four");
                 default:
                     return CityForecastFragment.newInstance("one");
 
@@ -123,8 +125,9 @@ public class WeatherActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,new SearchFragment(),"Search fragment").commit();
-            return true;
+//            SearchFragment fragment = new SearchFragment();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,new SearchFragment(),"Search fragment").commit();
+//            return true;
         }
 
         return super.onOptionsItemSelected(item);

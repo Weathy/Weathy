@@ -25,7 +25,21 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+
+        return view;
+    }
+
+    public static SearchFragment newInstance(String str) {
+
+        Bundle args = new Bundle();
+        args.putString("str", str);
+
+        SearchFragment fragment = new SearchFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 }
