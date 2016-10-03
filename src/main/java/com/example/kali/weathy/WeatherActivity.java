@@ -40,6 +40,7 @@ public class WeatherActivity extends AppCompatActivity
         TwentyFourFragment.TwentyFourComunicator, CityForecastFragment.CityForecastComunicator {
 
     private WeatherPagerAdapter adapter;
+    private ViewPager vPager;
     public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
 
     @Override
@@ -58,7 +59,7 @@ public class WeatherActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ViewPager vPager = (ViewPager) findViewById(R.id.view_pager);
+        vPager = (ViewPager) findViewById(R.id.view_pager);
         adapter = new WeatherPagerAdapter(getSupportFragmentManager());
         vPager.setAdapter(adapter);
     }
@@ -96,12 +97,22 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+        if(getSupportFragmentManager().findFragmentByTag("Search fragment") != null){
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("Search fragment")).commit();
+            new RequestTask();
+            vPager.setAdapter(new WeatherPagerAdapter(getSupportFragmentManager()));
+        }
+        else{
+            super.onBackPressed();
+        }
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+
     }
 
     @Override
@@ -113,13 +124,10 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout, new SearchFragment(), "Search fragment").commit();
             return true;
         }
 
