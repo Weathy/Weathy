@@ -6,6 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.kali.weathy.model.Weather;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by iliqn on 3.10.2016 г..
  */
@@ -14,6 +19,8 @@ public class DBManager extends SQLiteOpenHelper{
     private static DBManager ourInstance;
     private static int version = 1;
     private Context context;
+    private Weather lastWeather;
+    private List<Weather.TwentyFourWeather> twentyHourForecastObjects;
 
     public static DBManager getInstance(Context context) {
         if(ourInstance == null){
@@ -25,6 +32,7 @@ public class DBManager extends SQLiteOpenHelper{
     private DBManager(Context context) {
         super(context, "myDB", null, version);
         this.context = context;
+        twentyHourForecastObjects = new ArrayList<>();
 
     }
 
@@ -40,26 +48,28 @@ public class DBManager extends SQLiteOpenHelper{
     }
 
     public void addWeather(String cityName,int currentTemp,String condition,int temp_min,int temp_max,String sunrise,String sunset,String windSpeed,int humidity,int pressure,int feels_like,String visibility,String last_update) {
-        SQLiteDatabase database = getWritableDatabase();
-        database.beginTransaction();
-        Log.e("db" , cityName);
-        ContentValues values = new ContentValues();
-        values.put("cityName" , cityName);
-        values.put("currentTemp" , currentTemp);
-        values.put("condition" , condition);
-        values.put("temp_min" , temp_min);
-        values.put("temp_max" , temp_max);
-        values.put("sunrise" , sunrise);
-        values.put("sunset" , sunset);
-        values.put("windSpeed" , windSpeed);
-        values.put("humidity" , humidity);
-        values.put("pressure" , pressure);
-        values.put("feels_like" , feels_like);
-        values.put("visibility" , visibility);
-        values.put("last_update" , last_update);
-        database.insert("weather", null, values);
-        database.setTransactionSuccessful();
-        database.endTransaction();
+            SQLiteDatabase database = getWritableDatabase();
+            database.beginTransaction();
+            Log.e("db", cityName);
+            ContentValues values = new ContentValues();
+            values.put("cityName", cityName);
+            values.put("currentTemp", currentTemp);
+            values.put("condition", condition);
+            values.put("temp_min", temp_min);
+            values.put("temp_max", temp_max);
+            values.put("sunrise", sunrise);
+            values.put("sunset", sunset);
+            values.put("windSpeed", windSpeed);
+            values.put("humidity", humidity);
+            values.put("pressure", pressure);
+            values.put("feels_like", feels_like);
+            values.put("visibility", visibility);
+            values.put("last_update", last_update);
+            database.insert("weather", null, values);
+            lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update);
+            database.setTransactionSuccessful();
+            database.endTransaction();
+
     }
 
     public void addTwentyHourWeather(int currentTemp,int feels_like,String windSpeed,int humidity,String condition,int pressure,String time, String date){
@@ -75,8 +85,16 @@ public class DBManager extends SQLiteOpenHelper{
         values.put("time" , time);
         values.put("date" , date);
         database.insert("twenty_hour_forecast", null, values);
+        twentyHourForecastObjects.add(new Weather.TwentyFourWeather(currentTemp,null,feels_like,windSpeed,humidity,condition,pressure,time,date));
         database.setTransactionSuccessful();
         database.endTransaction();
     }
 
+    public Weather getLastWeather() {
+        return lastWeather;
+    }
+
+    public List<Weather.TwentyFourWeather> getTwentyHourForecastObjects() {
+        return twentyHourForecastObjects;
+    }
 }

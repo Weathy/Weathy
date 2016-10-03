@@ -42,6 +42,7 @@ import java.util.Scanner;
 
         @Override
         protected Void doInBackground(Void... params) {
+            DBManager.getInstance(context).getWritableDatabase().execSQL("delete from weather");
             try {
                 URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=Sofia&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
                 HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -62,6 +63,7 @@ import java.util.Scanner;
                 humidity = weather.getJSONObject("main").getInt("humidity");
                 pressure = weather.getJSONObject("main").getInt("pressure");
                 currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
+                Log.e("error",Integer.toString(currentTemp));
                 weatherJSON.delete(0, weatherJSON.length());
                 weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/Sofia.json");
                 weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -73,6 +75,7 @@ import java.util.Scanner;
                 }
                 weather = new JSONObject(weatherJSON.toString());
                 feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
+                Log.e("error",Integer.toString(feelsLike));
                 String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
                 lastUpdate = up[0];
                 cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");

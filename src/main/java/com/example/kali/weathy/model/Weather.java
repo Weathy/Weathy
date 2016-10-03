@@ -13,14 +13,14 @@ public class Weather {
     private int temp_max;
     private String sunrise;
     private String sunset;
-    private double windSpeed;
+    private String windSpeed;
     private int humidity;
     private int pressure;
     private int feelsLike;
-    private double visibility;
+    private String visibility;
     private String lastUpdate;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, double windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, double visibility,String lastUpdate) {
+    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, String visibility,String lastUpdate) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -73,7 +73,7 @@ public class Weather {
         return sunset;
     }
 
-    public double getWindSpeed() {
+    public String getWindSpeed() {
         return windSpeed;
     }
 
@@ -85,7 +85,7 @@ public class Weather {
         return feelsLike;
     }
 
-    public double getVisibility() {
+    public String getVisibility() {
         return visibility;
     }
 
@@ -98,14 +98,14 @@ public class Weather {
         private int currentTemp;
         private String iconURL;
         private int feelsLike;
-        private double windSpeed;
+        private String windSpeed;
         private int humidity;
         private String condition;
         private int airPressure;
         private String time;
         private String date;
 
-        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, double windSpeed, int humidity, String condition, int airPressure, String time, String date) {
+        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, String windSpeed, int humidity, String condition, int airPressure, String time, String date) {
             this.currentTemp = currentTemp;
             this.iconURL = iconURL;
             this.feelsLike = feelsLike;
@@ -129,7 +129,7 @@ public class Weather {
             return feelsLike;
         }
 
-        public double getWindSpeed() {
+        public String getWindSpeed() {
             return windSpeed;
         }
 

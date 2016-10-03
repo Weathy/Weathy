@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.kali.weathy.Adaptors.TwentyFourAdaptor;
+import com.example.kali.weathy.Database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
@@ -37,22 +39,8 @@ public class TwentyFourFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_twenty_four, container, false);
-
-
-        forecast = activity.getData();
-
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No matter"));
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No matter"));
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No fsd"));
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No fsd"));
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No fsd"));
-        forecast.add(new Weather.TwentyFourWeather(22,"http://icons.wxug.com/i/c/k/nt_clear.gif", 22, 22.3, 44, "Clear", 32432, "22:00", "No fsd"));
-
-        Log.e("hi2", forecast.size()+"");
-
-
+        forecast = (ArrayList<Weather.TwentyFourWeather>) DBManager.getInstance(getActivity()).getTwentyHourForecastObjects();
         adaptor = new TwentyFourAdaptor(getActivity(), forecast);
         RecyclerView rv = (RecyclerView) root.findViewById(R.id.one_hour_recyclerview);
         rv.setAdapter(adaptor);

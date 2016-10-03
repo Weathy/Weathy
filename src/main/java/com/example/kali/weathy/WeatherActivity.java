@@ -54,9 +54,6 @@ public class WeatherActivity extends AppCompatActivity
         toggle.syncState();
         new TwentyFourTask(this).execute();
         new RequestTask(this).execute();
-        Cursor cursor = DBManager.getInstance(this).getWritableDatabase().rawQuery("SELECT cityName FROM weather", null);
-        cursor.moveToNext();
-        Log.e("db" , cursor.getString(cursor.getColumnIndex("cityName")));
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         vPager = (ViewPager) findViewById(R.id.view_pager);
@@ -206,7 +203,7 @@ public class WeatherActivity extends AppCompatActivity
                     time = obj1.getJSONObject("FCTTIME").getString("hour")+":"+obj1.getJSONObject("FCTTIME").getString("min");
                     iconURL = obj1.getString("icon_url");
                     date = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
-                    list.add(new Weather.TwentyFourWeather(currentTemp, iconURL, feelsLike, windSpeed, humidity, condition, airPressure, time, date));
+                    list.add(new Weather.TwentyFourWeather(currentTemp, iconURL, feelsLike, Double.toString(windSpeed), humidity, condition, airPressure, time, date));
                     DBManager.getInstance(context).addTwentyHourWeather(currentTemp,feelsLike,windSpeed+"",humidity,condition,airPressure,time,date);
                 }
 
