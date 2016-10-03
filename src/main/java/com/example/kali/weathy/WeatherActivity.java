@@ -123,11 +123,7 @@ public class WeatherActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.remove(fm.findFragmentById(R.id.city_forecast));
-            fragmentTransaction.add(R.id.drawer_layout,new SearchFragment(),"Search fragment");
-            fragmentTransaction.commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,new SearchFragment(),"Search fragment").commit();
             return true;
         }
 

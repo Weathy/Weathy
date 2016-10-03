@@ -3,6 +3,7 @@ package com.example.kali.weathy.Adaptors;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,11 +60,13 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
         }
 
         holder.timeTV.setText(weather.getTime());
-        holder.feelslikeTV.setText(weather.getFeelsLike()+"t&#730;");
-        holder.currentTempTV.setText(weather.getCurrentTemp()+"t&#730;");
+        holder.feelslikeTV.setText(weather.getFeelsLike()+"");
+        holder.currentTempTV.setText(weather.getCurrentTemp()+"");
+
         new IconTask(holder.iconIV).execute(weather.getIconURL());
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -116,5 +119,7 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
             icon.setImageBitmap(image);
         }
     }
+
+
 
 }

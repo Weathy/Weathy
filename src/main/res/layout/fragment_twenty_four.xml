@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:tag="TwentyFour"
     android:id="@+id/twenty_four_fragment"
-    android:background="@color/colorPrimaryDark"
+    android:background="@android:color/transparent"
     tools:context="com.example.kali.weathy.TwentyFourFragment">
 
     <TextView
@@ -14,6 +14,7 @@
         android:text="24-Hour Forecast"
         android:maxLines="1"
         android:gravity="center"
+        android:background="@android:color/transparent"
         android:textColor="@android:color/white"
         android:textSize="35sp"/>
 
