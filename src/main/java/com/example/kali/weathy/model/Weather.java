@@ -11,8 +11,6 @@ public class Weather {
     private String icon;
     private int temp_min;
     private int temp_max;
-    private String latitude;
-    private String longitude;
     private String sunrise;
     private String sunset;
     private double windSpeed;
@@ -22,7 +20,7 @@ public class Weather {
     private double visibility;
     private String lastUpdate;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, double windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, String latitude, String longitude,double visibility,String lastUpdate) {
+    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, double windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, double visibility,String lastUpdate) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -34,8 +32,6 @@ public class Weather {
         this.icon = icon;
         this.temp_min = temp_min;
         this.temp_max = temp_max;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.feelsLike = feelsLike;
         this.visibility = visibility;
         this.lastUpdate = lastUpdate;
@@ -67,14 +63,6 @@ public class Weather {
 
     public int getTemp_max() {
         return temp_max;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
     }
 
     public String getSunrise() {

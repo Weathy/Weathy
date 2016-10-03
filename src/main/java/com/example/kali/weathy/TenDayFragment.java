@@ -16,7 +16,6 @@ public class TenDayFragment extends Fragment {
 
     interface TenDayComunicator{
 
-       public void changeFragment(Fragment f);
     }
 
     @Override
