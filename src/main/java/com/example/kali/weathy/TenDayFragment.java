@@ -8,6 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
+
+import com.example.kali.weathy.adaptors.TenDayListAdaptor;
+import com.example.kali.weathy.database.DBManager;
 
 public class TenDayFragment extends Fragment {
 
@@ -28,6 +32,10 @@ public class TenDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_ten_day, container, false);
+
+        ListView lv = (ListView) root.findViewById(R.id.one_day_lv);
+        TenDayListAdaptor adaptor = new TenDayListAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTenDayForecast());
+        lv.setAdapter(adaptor);
 
         return root;
     }

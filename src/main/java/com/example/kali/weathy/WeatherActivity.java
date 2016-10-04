@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestTask;
+import com.example.kali.weathy.database.TenDayTask;
 import com.example.kali.weathy.database.TwentyFourTask;
 import com.example.kali.weathy.model.Weather;
 
@@ -50,6 +51,7 @@ public class WeatherActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         new TwentyFourTask(this).execute();
+        new TenDayTask(this).execute();
         if(DBManager.getInstance(this).getLastWeather()==null) {
             new RequestTask(this).execute("Sofia");
         }

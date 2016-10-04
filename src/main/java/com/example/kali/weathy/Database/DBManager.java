@@ -9,11 +9,10 @@ import android.util.Log;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by iliqn on 3.10.2016 г..
- */
 public class DBManager extends SQLiteOpenHelper{
 
     private static DBManager ourInstance;
@@ -42,7 +41,7 @@ public class DBManager extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like INTEGER, visibility text,last_update text  )");
         db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
-        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed text, humidity INTEGER, weekday text, yearday INTEGER)");
+        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER)");
 
     }
 
@@ -94,7 +93,7 @@ public class DBManager extends SQLiteOpenHelper{
         database.endTransaction();
     }
 
-    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, String windspeed, int humidity, String weekday, int yearday){
+    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday){
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
@@ -119,5 +118,9 @@ public class DBManager extends SQLiteOpenHelper{
 
     public List<Weather.TwentyFourWeather> getTwentyHourForecastObjects() {
         return twentyHourForecastObjects;
+    }
+
+    public List<Weather.TenDayWeather> getTenDayForecast() {
+        return Collections.unmodifiableList(tenDayForecast);
     }
 }

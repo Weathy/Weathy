@@ -2,6 +2,7 @@ package com.example.kali.weathy.database;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +24,7 @@ public class TenDayTask extends AsyncTask<Void, Void, Void>{
     private int minTemp;
     private String condition;
     private String iconURL;
-    private String windSpeed;
+    private Double windSpeed;
     private int humidity;
     private String weekDay;
     private int yearDay;
@@ -34,7 +35,7 @@ public class TenDayTask extends AsyncTask<Void, Void, Void>{
 
     @Override
     protected Void doInBackground(Void... params) {
-
+        DBManager.getInstance(context).getWritableDatabase().execSQL("delete from ten_day_forecast");
         try {
             URL tenDayInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/sofia.json");
             HttpURLConnection connection = (HttpURLConnection) tenDayInfo.openConnection();
@@ -55,12 +56,12 @@ public class TenDayTask extends AsyncTask<Void, Void, Void>{
                 maxTemp = currentDay.getJSONObject("high").getInt("celsius");
                 minTemp = currentDay.getJSONObject("low").getInt("celsius");
                 condition = currentDay.getString("conditions");
-                windSpeed = currentDay.getJSONObject("avewind").getString("mph");
+                windSpeed = currentDay.getJSONObject("avewind").getDouble("mph");
                 humidity = currentDay.getInt("avehumidity");
                 weekDay = currentDay.getJSONObject("date").getString("weekday");
                 yearDay = currentDay.getJSONObject("date").getInt("yday");
                 iconURL = currentDay.getString("icon_url");
-                date = currentDay.getJSONObject("date").getString("monthname") + "/" + currentDay.getJSONObject("date").getString("day") + "/" + currentDay.getJSONObject("date").getString("year");
+                date = currentDay.getJSONObject("date").getString("monthname") + "/" + currentDay.getJSONObject("date").getString("day");
                 DBManager.getInstance(context).addTenDayWeather(date, maxTemp, minTemp, condition, windSpeed, humidity, weekDay, yearDay);
             }
 

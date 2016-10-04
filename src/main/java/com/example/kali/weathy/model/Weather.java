@@ -157,12 +157,12 @@ public class Weather {
         private int minTemp;
         private String condition;
         private String iconURL;
-        private String windSpeed;
+        private Double windSpeed;
         private int humidity;
         private String weekDay;
         private int yearDay;
 
-        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, String windSpeed, int humidity, String weekDay, int yearDay) {
+        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay) {
             this.date = date;
             this.maxTemp = maxTemp;
             this.minTemp = minTemp;
@@ -194,7 +194,7 @@ public class Weather {
             return iconURL;
         }
 
-        public String getWindSpeed() {
+        public Double getWindSpeed() {
             return windSpeed;
         }
 
