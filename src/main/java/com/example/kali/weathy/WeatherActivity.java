@@ -53,7 +53,9 @@ public class WeatherActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         new TwentyFourTask(this).execute();
-        new RequestTask(this).execute();
+        if(DBManager.getInstance(this).getLastWeather()==null) {
+            new RequestTask(this).execute("Sofia");
+        }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         vPager = (ViewPager) findViewById(R.id.view_pager);

@@ -16,7 +16,7 @@ import java.util.Scanner;
 /**
  * Created by iliqn on 3.10.2016 г..
  */
-    public class RequestTask extends AsyncTask<Void, Void, Void> {
+    public class RequestTask extends AsyncTask<String, Void, Void> {
 
         private Activity context;
         private static final double KELVIN_CONSTANT = 272.15;
@@ -41,10 +41,12 @@ import java.util.Scanner;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
             DBManager.getInstance(context).getWritableDatabase().execSQL("delete from weather");
+            String city = params[0];
+            Log.e("city", city);
             try {
-                URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=Sofia&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+                URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
                 HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                 weatherConnection.setRequestMethod("GET");
                 InputStream weatherStream = weatherConnection.getInputStream();
@@ -52,7 +54,7 @@ import java.util.Scanner;
                 while (weatherScanner.hasNextLine()) {
                     weatherJSON.append(weatherScanner.nextLine());
                 }
-                Log.e("error", weatherJSON.toString());
+                Log.e("firstJSON", weatherJSON.toString());
 
                 JSONObject weather = new JSONObject(weatherJSON.toString());
                 description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
@@ -63,9 +65,9 @@ import java.util.Scanner;
                 humidity = weather.getJSONObject("main").getInt("humidity");
                 pressure = weather.getJSONObject("main").getInt("pressure");
                 currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
-                Log.e("error",Integer.toString(currentTemp));
+                Log.e("currentTemp",Integer.toString(currentTemp));
                 weatherJSON.delete(0, weatherJSON.length());
-                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/Sofia.json");
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/"+city+".json");
                 weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                 weatherConnection.setRequestMethod("GET");
                 weatherStream = weatherConnection.getInputStream();
@@ -73,14 +75,17 @@ import java.util.Scanner;
                 while (weatherScanner.hasNextLine()) {
                     weatherJSON.append(weatherScanner.nextLine());
                 }
+
+                Log.e("secondJSON" , weatherJSON.toString());
                 weather = new JSONObject(weatherJSON.toString());
                 feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
-                Log.e("error",Integer.toString(feelsLike));
+                Log.e("JSONOBJECT" , weather.toString());
                 String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
                 lastUpdate = up[0];
                 cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
                 weatherJSON.delete(0, weatherJSON.length());
-                weatherInfo = new URL("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22Sofia%2C%20bg%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+                weatherInfo = new URL("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22"+city+"%2C%20bg%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
+                Log.e("thirdJson" , weatherInfo.toString());
                 weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                 weatherConnection.setRequestMethod("GET");
                 weatherStream = weatherConnection.getInputStream();
