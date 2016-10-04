@@ -1,4 +1,4 @@
-package com.example.kali.weathy.Database;
+package com.example.kali.weathy.database;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -13,9 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- * Created by iliqn on 3.10.2016 г..
- */
     public class RequestTask extends AsyncTask<String, Void, Void> {
 
         private Activity context;

@@ -1,9 +1,5 @@
 package com.example.kali.weathy.model;
 
-/**
- * Created by Kali on 28.9.2016 г..
- */
-
 public class Weather {
     private  String cityName;
     private int currentTemp;
@@ -151,6 +147,67 @@ public class Weather {
 
         public String getDate() {
             return date;
+        }
+    }
+
+    public static class TenDayWeather {
+
+        private String date;
+        private int maxTemp;
+        private int minTemp;
+        private String condition;
+        private String iconURL;
+        private String windSpeed;
+        private int humidity;
+        private String weekDay;
+        private int yearDay;
+
+        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, String windSpeed, int humidity, String weekDay, int yearDay) {
+            this.date = date;
+            this.maxTemp = maxTemp;
+            this.minTemp = minTemp;
+            this.condition = condition;
+            this.iconURL = iconURL;
+            this.windSpeed = windSpeed;
+            this.humidity = humidity;
+            this.weekDay = weekDay;
+            this.yearDay = yearDay;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public int getMaxTemp() {
+            return maxTemp;
+        }
+
+        public int getMinTemp() {
+            return minTemp;
+        }
+
+        public String getCondition() {
+            return condition;
+        }
+
+        public String getIconURL() {
+            return iconURL;
+        }
+
+        public String getWindSpeed() {
+            return windSpeed;
+        }
+
+        public int getHumidity() {
+            return humidity;
+        }
+
+        public String getWeekDay() {
+            return weekDay;
+        }
+
+        public int getYearDay() {
+            return yearDay;
         }
     }
 }

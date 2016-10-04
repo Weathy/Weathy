@@ -1,26 +1,23 @@
 package com.example.kali.weathy;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Transition;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.kali.weathy.Database.DBManager;
-import com.example.kali.weathy.Database.RequestTask;
+import com.example.kali.weathy.database.DBManager;
+import com.example.kali.weathy.database.RequestTask;
+import com.example.kali.weathy.database.TwentyFourTask;
 import com.example.kali.weathy.model.Weather;
 
 import org.json.JSONArray;
@@ -158,66 +155,6 @@ public class WeatherActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    class TwentyFourTask extends AsyncTask<Void, Void, ArrayList<Weather.TwentyFourWeather>> {
-        private Activity context;
-        private StringBuilder twentyFourJSON = new StringBuilder();
-        private int currentTemp;
-        private int feelsLike;
-        private double windSpeed;
-        private int humidity;
-        private String condition;
-        private int airPressure;
-        private String time;
-        private String iconURL;
-        private String date;
-        private ArrayList<Weather.TwentyFourWeather> list = new ArrayList<>();
-
-        public TwentyFourTask(Activity context){
-            this.context = context;
-        }
-        @Override
-        protected ArrayList<Weather.TwentyFourWeather> doInBackground(Void... params) {
-            DBManager.getInstance(context).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
-            try {
-                URL twentyFourInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/sofia.json");
-                HttpURLConnection connection = (HttpURLConnection) twentyFourInfo.openConnection();
-                connection.setRequestMethod("GET");
-                InputStream inputStr = connection.getInputStream();
-                Scanner twentyFourScanner = new Scanner(inputStr);
-                while(twentyFourScanner.hasNextLine()){
-                    twentyFourJSON.append(twentyFourScanner.nextLine());
-                }
-
-                JSONObject obj = new JSONObject(twentyFourJSON.toString());
-                JSONArray twentyFourArray = obj.getJSONArray("hourly_forecast");
-                for(int i = 0; i<24; i++){
-                    JSONObject obj1 = new JSONObject(twentyFourArray.getJSONObject(i).toString());
-
-                    currentTemp = obj1.getJSONObject("temp").getInt("metric");
-                    feelsLike = obj1.getJSONObject("feelslike").getInt("metric");
-                    windSpeed = obj1.getJSONObject("wspd").getDouble("metric");
-                    humidity = obj1.getInt("humidity");
-                    condition= obj1.getString("condition");
-                    airPressure = obj1.getJSONObject("mslp").getInt("metric");
-                    time = obj1.getJSONObject("FCTTIME").getString("hour")+":"+obj1.getJSONObject("FCTTIME").getString("min");
-                    iconURL = obj1.getString("icon_url");
-                    date = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
-                    list.add(new Weather.TwentyFourWeather(currentTemp, iconURL, feelsLike, Double.toString(windSpeed), humidity, condition, airPressure, time, date));
-                    DBManager.getInstance(context).addTwentyHourWeather(currentTemp,feelsLike,windSpeed+"",humidity,condition,airPressure,time,date);
-                }
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return list;
-        }
     }
 
     @Override

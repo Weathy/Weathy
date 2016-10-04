@@ -1,4 +1,4 @@
-package com.example.kali.weathy.Database;
+package com.example.kali.weathy.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,6 +21,7 @@ public class DBManager extends SQLiteOpenHelper{
     private Context context;
     private Weather lastWeather;
     private List<Weather.TwentyFourWeather> twentyHourForecastObjects;
+    private List<Weather.TenDayWeather> tenDayForecast;
 
     public static DBManager getInstance(Context context) {
         if(ourInstance == null){
@@ -33,6 +34,7 @@ public class DBManager extends SQLiteOpenHelper{
         super(context, "myDB", null, version);
         this.context = context;
         twentyHourForecastObjects = new ArrayList<>();
+        tenDayForecast = new ArrayList<>();
 
     }
 
@@ -40,6 +42,8 @@ public class DBManager extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like INTEGER, visibility text,last_update text  )");
         db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
+        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed text, humidity INTEGER, weekday text, yearday INTEGER)");
+
     }
 
     @Override
@@ -88,6 +92,25 @@ public class DBManager extends SQLiteOpenHelper{
         twentyHourForecastObjects.add(new Weather.TwentyFourWeather(currentTemp,null,feels_like,windSpeed,humidity,condition,pressure,time,date));
         database.setTransactionSuccessful();
         database.endTransaction();
+    }
+
+    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, String windspeed, int humidity, String weekday, int yearday){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        database.beginTransaction();
+        values.put("date", date);
+        values.put("max_temp", max_temp);
+        values.put("min_temp", min_temp);
+        values.put("condition", condition);
+        values.put("windspeed", windspeed);
+        values.put("humidity", humidity);
+        values.put("weekday", weekday);
+        values.put("yearday", yearday);
+        database.insert("ten_day_forecast", null, values);
+        tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday));
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
     }
 
     public Weather getLastWeather() {

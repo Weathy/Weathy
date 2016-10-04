@@ -1,9 +1,8 @@
-package com.example.kali.weathy.Adaptors;
+package com.example.kali.weathy.adaptors;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
