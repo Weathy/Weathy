@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.kali.weathy.adaptors.TwentyFourAdaptor;
+import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
@@ -40,10 +42,14 @@ public class TwentyFourFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_twenty_four, container, false);
         forecast = (ArrayList<Weather.TwentyFourWeather>) DBManager.getInstance(getActivity()).getTwentyHourForecastObjects();
-        adaptor = new TwentyFourAdaptor(getActivity(), forecast);
-        RecyclerView rv = (RecyclerView) root.findViewById(R.id.one_hour_recyclerview);
-        rv.setAdapter(adaptor);
-        rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+//        adaptor = new TwentyFourAdaptor(getActivity(), forecast);
+//        RecyclerView rv = (RecyclerView) root.findViewById(R.id.one_hour_recyclerview);
+//        rv.setAdapter(adaptor);
+//        rv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+
+        ListView lv = (ListView) root.findViewById(R.id.listview);
+        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
+        lv.setAdapter(adaptor);
 
 
         return root;
@@ -62,13 +68,11 @@ public class TwentyFourFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.adaptor.notifyDataSetChanged();
     }
 
 
     public void refreshAdaptor(ArrayList<Weather.TwentyFourWeather> list) {
         forecast = new ArrayList<>(list);
         Log.e("hi1", list.size()+"");
-        this.adaptor.notifyDataSetChanged();
     }
 }

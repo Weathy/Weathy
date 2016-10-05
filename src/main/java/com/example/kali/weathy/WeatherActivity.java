@@ -21,17 +21,7 @@ import com.example.kali.weathy.database.TenDayTask;
 import com.example.kali.weathy.database.TwentyFourTask;
 import com.example.kali.weathy.model.Weather;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TenDayFragment.TenDayComunicator,
@@ -50,11 +40,11 @@ public class WeatherActivity extends AppCompatActivity
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        new TwentyFourTask(this).execute();
-        new TenDayTask(this).execute();
-        if(DBManager.getInstance(this).getLastWeather()==null) {
-            new RequestTask(this).execute("Sofia");
-        }
+//        new TwentyFourTask(this).execute();
+//        new TenDayTask(this).execute();
+//        if(DBManager.getInstance(this).getLastWeather()==null) {
+//            new RequestTask(this).execute("Sofia");
+//        }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         vPager = (ViewPager) findViewById(R.id.view_pager);

@@ -18,13 +18,18 @@
         android:textColor="@android:color/white"
         android:textSize="35sp"/>
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:id="@+id/one_hour_recyclerview">
+        android:id="@+id/listview"></ListView>
 
-    </android.support.v7.widget.RecyclerView>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:id="@+id/one_hour_recyclerview">-->
+
+    <!--</android.support.v7.widget.RecyclerView>-->
 
 
 </LinearLayout>
