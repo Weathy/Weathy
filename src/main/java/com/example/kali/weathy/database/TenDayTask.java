@@ -1,8 +1,12 @@
 package com.example.kali.weathy.database;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.kali.weathy.LoadingActivity;
+import com.example.kali.weathy.WeatherActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class TenDayTask extends AsyncTask<Void, Void, Void>{
+public class TenDayTask extends AsyncTask<String, Void, Void>{
 
     private Activity context;
     private StringBuilder tenDayJSON = new StringBuilder();
@@ -34,7 +38,7 @@ public class TenDayTask extends AsyncTask<Void, Void, Void>{
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Void doInBackground(String... params) {
         DBManager.getInstance(context).getWritableDatabase().execSQL("delete from ten_day_forecast");
         try {
             URL tenDayInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/sofia.json");
@@ -75,5 +79,13 @@ public class TenDayTask extends AsyncTask<Void, Void, Void>{
         }
 
         return null;
+    }
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if(context instanceof  LoadingActivity){
+            Log.e("end","TRUE");
+            ((LoadingActivity) context).tasks.put("ten", Boolean.TRUE);
+        }
+        Log.e("end","False");
     }
 }

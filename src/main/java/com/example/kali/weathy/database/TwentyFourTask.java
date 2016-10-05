@@ -1,8 +1,12 @@
 package com.example.kali.weathy.database;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.example.kali.weathy.LoadingActivity;
+import com.example.kali.weathy.WeatherActivity;
 import com.example.kali.weathy.model.Weather;
 
 import org.json.JSONArray;
@@ -17,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TwentyFourTask extends AsyncTask<Void, Void, Void> {
+public class TwentyFourTask extends AsyncTask<String, Void, Void> {
     private Activity context;
     private StringBuilder twentyFourJSON = new StringBuilder();
     private int currentTemp;
@@ -35,7 +39,8 @@ public class TwentyFourTask extends AsyncTask<Void, Void, Void> {
         this.context = context;
     }
     @Override
-    protected Void doInBackground(Void... params) {
+    protected Void doInBackground(String... params) {
+        Log.e("database","Twenty");
         DBManager.getInstance(context).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
         try {
             URL twentyFourInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/sofia.json");
@@ -75,4 +80,13 @@ public class TwentyFourTask extends AsyncTask<Void, Void, Void> {
 
         return null;
     }
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if(context instanceof  LoadingActivity){
+            Log.e("end","TRUE");
+            ((LoadingActivity) context).tasks.put("twenty", Boolean.TRUE);
+        }
+        Log.e("end","False");
+    }
+
 }

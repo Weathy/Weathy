@@ -1,8 +1,13 @@
 package com.example.kali.weathy.database;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.kali.weathy.LoadingActivity;
+import com.example.kali.weathy.WeatherActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,6 +102,8 @@ import java.util.Scanner;
                 Log.e("db" , cityName);
                 DBManager.getInstance(context).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
 
+
+                Log.e("end","False");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -105,5 +112,16 @@ import java.util.Scanner;
                 e.printStackTrace();
             }
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            Log.e("end","False1");
+            if(context instanceof  LoadingActivity){
+                Log.e("end","TRUE");
+                ((LoadingActivity) context).tasks.put("task", Boolean.TRUE);
+            }
+
+            Log.e("end","False");
         }
     }

@@ -3,6 +3,7 @@ package com.example.kali.weathy;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,8 +64,8 @@ public class CityForecastFragment extends Fragment {
         TextView wind = (TextView) view.findViewById(R.id.wind_meter_in_second_textview);
         wind.setText(weather.getWindSpeed() + "");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
-        feelsLike.setText(weather.getFeelsLike() + "");
-        switch (weather.getDescription()) {
+        feelsLike.setText(weather.getFeelsLike() + "");/*
+       switch (weather.getDescription()) {
             case "Clear":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
                 return view;
@@ -77,8 +78,7 @@ public class CityForecastFragment extends Fragment {
             case "Rain":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
                 return view;
-        }
-        Toast.makeText(getActivity(), DBManager.getInstance(getActivity()).getTwentyHourForecastObjects().toString(), Toast.LENGTH_SHORT).show();
+        }*/
         return view;
     }
 
