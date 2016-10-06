@@ -91,7 +91,7 @@ public class Weather {
         return lastUpdate;
     }
 
-    public static class TwentyFourWeather{
+    public static class TwentyFourWeather implements Serializable {
 
         private int currentTemp;
         private String iconURL;

@@ -59,8 +59,8 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
         }
 
         holder.timeTV.setText(weather.getTime());
-        holder.feelslikeTV.setText(weather.getFeelsLike()+"");
-        holder.currentTempTV.setText(weather.getCurrentTemp()+"");
+        holder.feelslikeTV.setText(weather.getFeelsLike()+"℃");
+        holder.currentTempTV.setText(weather.getCurrentTemp()+"℃");
 
         new IconTask(holder.iconIV).execute(weather.getIconURL());
 

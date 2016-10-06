@@ -73,7 +73,7 @@ public class TenDayTask extends AsyncTask<String, Void, Void>{
                 weekDay = currentDay.getJSONObject("date").getString("weekday");
                 yearDay = currentDay.getJSONObject("date").getInt("yday");
                 iconURL = currentDay.getString("icon_url");
-                date = currentDay.getJSONObject("date").getString("day") + "/" + currentDay.getJSONObject("date").getString("monthname");
+                date = currentDay.getJSONObject("date").getString("day") + "." + currentDay.getJSONObject("date").getString("monthname");
                 year = currentDay.getJSONObject("date").getInt("year");
                 DBManager.getInstance(context).addTenDayWeather(date, maxTemp, minTemp, condition, windSpeed, humidity, weekDay, yearDay, year);
             }

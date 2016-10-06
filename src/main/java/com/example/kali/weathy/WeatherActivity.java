@@ -21,7 +21,6 @@ public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TenDayFragment.TenDayComunicator,
         TwentyFourFragment.TwentyFourComunicator, CityForecastFragment.CityForecastComunicator {
 
-    private WeatherPagerAdapter adapter;
     public static ViewPager vPager;
     public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
     private Button searchButton;
@@ -32,12 +31,8 @@ public class WeatherActivity extends AppCompatActivity
         setContentView(R.layout.activity_weather);
 
         vPager = (ViewPager) findViewById(R.id.view_pager);
-        adapter = new WeatherPagerAdapter(getSupportFragmentManager());
+        WeatherPagerAdapter adapter = new WeatherPagerAdapter(getSupportFragmentManager());
         vPager.setAdapter(adapter);
-
-        if(getIntent().getStringExtra("refresh").equals("refresh")){
-            vPager.setAdapter(new WeatherPagerAdapter(getSupportFragmentManager()));
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -61,41 +56,14 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
-        if(getSupportFragmentManager().findFragmentByTag("Search fragment") != null){
-            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("Search fragment")).commit();
-            vPager.setAdapter(new WeatherPagerAdapter(getSupportFragmentManager()));
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
         }
         else{
             super.onBackPressed();
         }
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.weather, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_search) {
-//            SearchFragment fragment = new SearchFragment();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,new SearchFragment(),"Search fragment").commit();
-//            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

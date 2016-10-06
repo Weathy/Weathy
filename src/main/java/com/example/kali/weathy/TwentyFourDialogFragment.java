@@ -2,7 +2,6 @@ package com.example.kali.weathy;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,12 @@ import android.widget.TextView;
 
 import com.example.kali.weathy.model.Weather;
 
-public class TenDayDialogFragment extends DialogFragment {
+public class TwentyFourDialogFragment extends DialogFragment {
 
-    public static TenDayDialogFragment newInstance(Weather.TenDayWeather weather) {
-        TenDayDialogFragment fragment = new TenDayDialogFragment();
+    public static TwentyFourDialogFragment newInstance(Weather.TwentyFourWeather weather) {
+        TwentyFourDialogFragment fragment = new TwentyFourDialogFragment();
         Bundle args = new Bundle();
-
-        args.putSerializable("day", weather);
-
+        args.putSerializable("hour", weather);
         fragment.setArguments(args);
         return fragment;
     }
@@ -27,36 +24,38 @@ public class TenDayDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Weather.TenDayWeather weather = (Weather.TenDayWeather) getArguments().getSerializable("day");
-        View root = inflater.inflate(R.layout.fragment_ten_day_dialog, container, false);
+
+        Weather.TwentyFourWeather weather = (Weather.TwentyFourWeather) getArguments().getSerializable("hour");
+
+        View root = inflater.inflate(R.layout.fragment_twenty_four_dialog, container, false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         TextView date = (TextView) root.findViewById(R.id.dialog_date_tv);
-        date.setText(weather.getWeekDay() + ", " + weather.getDate() + "/" + weather.getYear());
+        date.setText(weather.getTime() + " - " + weather.getDate());
+        TextView currentTemp = (TextView) root.findViewById(R.id.dialog_current_temp_tv);
+        currentTemp.setText(weather.getCurrentTemp() + "℃");
         TextView condition = (TextView) root.findViewById(R.id.dialog_condition_tv);
         condition.setText(weather.getCondition());
-        TextView maxTemp = (TextView) root.findViewById(R.id.dialog_max_temp_tv);
-        maxTemp.setText(weather.getMaxTemp()+"℃");
-        TextView minTemp = (TextView) root.findViewById(R.id.dialog_min_temp_tv);
-        minTemp.setText(weather.getMinTemp()+"℃");
+        TextView feelsLike = (TextView) root.findViewById(R.id.dialog_feels_like_tv);
+        feelsLike.setText(weather.getFeelsLike() + "℃");
         TextView windSpeed = (TextView) root.findViewById(R.id.dialog_wind_speed_tv);
-        windSpeed.setText(weather.getWindSpeed()+"m/s");
+        windSpeed.setText(weather.getWindSpeed() + "m/s");
         TextView humidity = (TextView) root.findViewById(R.id.dialog_humidity_tv);
-        humidity.setText(weather.getHumidity()+"%");
-        TextView dayOfTheYear = (TextView) root.findViewById(R.id.dialog_day_of_the_year_tv);
-        dayOfTheYear.setText(weather.getYearDay()+"");
+        humidity.setText(weather.getHumidity() + "%");
+        TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
+        airPressure.setText(weather.getAirPressure() + "hPa");
 
         Button close = (Button) root.findViewById(R.id.close_dialog_button);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TenDayDialogFragment.this.dismiss();
+                TwentyFourDialogFragment.this.dismiss();
             }
         });
 
-
-
         return root;
     }
+
+
 
 }

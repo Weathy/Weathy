@@ -42,9 +42,9 @@ public class TenDayListAdaptor extends ArrayAdapter{
         TextView day = (TextView) view.findViewById(R.id.day_tv);
         day.setText(weather.getWeekDay() + ", " + weather.getDate());
         TextView minT = (TextView) view.findViewById(R.id.min_temp_tv);
-        minT.setText(weather.getMinTemp()+"");
+        minT.setText(weather.getMinTemp()+"℃");
         TextView maxT = (TextView) view.findViewById(R.id.max_temp_tv);
-        maxT.setText(weather.getMaxTemp()+"");
+        maxT.setText(weather.getMaxTemp()+"℃");
 
         return view;
     }
