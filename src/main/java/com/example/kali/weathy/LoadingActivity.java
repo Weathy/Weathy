@@ -18,7 +18,7 @@ public class LoadingActivity extends AppCompatActivity {
     private TenDayTask tenDayTask;
     private TwentyFourTask twentyFourTask;
     private RequestTask requestTask;
-    public HashMap<String,Boolean> tasks;
+    public static HashMap<String,Boolean> tasks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +35,7 @@ public class LoadingActivity extends AppCompatActivity {
             tasks.put("task",Boolean.FALSE);
             requestTask.execute("Sofia");
         }
-        if(tenDayTask!=null || twentyFourTask!=null || requestTask !=null) {
+        if(tenDayTask!=null && twentyFourTask!=null && requestTask !=null) {
             Boolean ten = tasks.get("ten");
             Boolean twenty = tasks.get("twenty");
             Boolean task = tasks.get("task");
@@ -48,6 +48,7 @@ public class LoadingActivity extends AppCompatActivity {
             }
         }
         Intent intent = new Intent(LoadingActivity.this, WeatherActivity.class);
+        intent.putExtra("refresh", "refresh");
         startActivity(intent);
         finish();
     }

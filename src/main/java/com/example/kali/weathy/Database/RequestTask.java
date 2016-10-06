@@ -43,6 +43,13 @@ import java.util.Scanner;
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            if(WeatherActivity.vPager != null){
+                WeatherActivity.vPager.getAdapter().notifyDataSetChanged();
+            }
+        }
+
+        @Override
         protected Void doInBackground(String... params) {
             DBManager.getInstance(context).getWritableDatabase().execSQL("delete from weather");
             String city = params[0];
@@ -102,6 +109,10 @@ import java.util.Scanner;
                 Log.e("db" , cityName);
                 DBManager.getInstance(context).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
 
+                LoadingActivity.tasks.put("twenty", Boolean.TRUE);
+                publishProgress();
+
+
 
                 Log.e("end","False");
             } catch (MalformedURLException e) {
@@ -115,13 +126,5 @@ import java.util.Scanner;
         }
         @Override
         protected void onPostExecute(Void aVoid) {
-
-            Log.e("end","False1");
-            if(context instanceof  LoadingActivity){
-                Log.e("end","TRUE");
-                ((LoadingActivity) context).tasks.put("task", Boolean.TRUE);
-            }
-
-            Log.e("end","False");
         }
     }

@@ -2,6 +2,7 @@ package com.example.kali.weathy;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +19,11 @@ import com.example.kali.weathy.model.Weather;
 
 public class CityForecastFragment extends Fragment {
 
-    private Button searchButton;
     private CityForecastComunicator activity;
     private View view;
-    private LinearLayout layout;
     private Weather weather;
 
-    interface CityForecastComunicator{
+    interface CityForecastComunicator {
 
     }
 
@@ -37,9 +36,9 @@ public class CityForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_city_forecast,container,false);
+        view = inflater.inflate(R.layout.fragment_city_forecast, container, false);
 
-        while(weather==null) {
+        while (weather == null || weather.getDescription() == null) {
             weather = DBManager.getInstance(getActivity()).getLastWeather();
         }
 
@@ -64,8 +63,8 @@ public class CityForecastFragment extends Fragment {
         TextView wind = (TextView) view.findViewById(R.id.wind_meter_in_second_textview);
         wind.setText(weather.getWindSpeed() + "");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
-        feelsLike.setText(weather.getFeelsLike() + "");/*
-       switch (weather.getDescription()) {
+        feelsLike.setText(weather.getFeelsLike() + "");
+        switch (weather.getDescription()) {
             case "Clear":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
                 return view;
@@ -78,7 +77,7 @@ public class CityForecastFragment extends Fragment {
             case "Rain":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
                 return view;
-        }*/
+        }
         return view;
     }
 
@@ -86,9 +85,15 @@ public class CityForecastFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putString("str", str);
-        
+
         CityForecastFragment fragment = new CityForecastFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        weather = DBManager.getInstance(getActivity()).getLastWeather();
+        super.onResume();
     }
 }

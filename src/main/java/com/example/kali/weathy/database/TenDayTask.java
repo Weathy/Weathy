@@ -38,6 +38,13 @@ public class TenDayTask extends AsyncTask<String, Void, Void>{
     }
 
     @Override
+    protected void onProgressUpdate(Void... values) {
+        if(WeatherActivity.vPager != null){
+            WeatherActivity.vPager.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    @Override
     protected Void doInBackground(String... params) {
         DBManager.getInstance(context).getWritableDatabase().execSQL("delete from ten_day_forecast");
         try {
@@ -69,6 +76,9 @@ public class TenDayTask extends AsyncTask<String, Void, Void>{
                 DBManager.getInstance(context).addTenDayWeather(date, maxTemp, minTemp, condition, windSpeed, humidity, weekDay, yearDay);
             }
 
+            LoadingActivity.tasks.put("ten", Boolean.TRUE);
+            publishProgress();
+
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -82,10 +92,5 @@ public class TenDayTask extends AsyncTask<String, Void, Void>{
     }
     @Override
     protected void onPostExecute(Void aVoid) {
-        if(context instanceof  LoadingActivity){
-            Log.e("end","TRUE");
-            ((LoadingActivity) context).tasks.put("ten", Boolean.TRUE);
-        }
-        Log.e("end","False");
     }
 }

@@ -35,6 +35,13 @@ public class TwentyFourTask extends AsyncTask<String, Void, Void> {
     private String date;
     private ArrayList<Weather.TwentyFourWeather> list = new ArrayList<>();
 
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        if(WeatherActivity.vPager != null){
+            WeatherActivity.vPager.getAdapter().notifyDataSetChanged();
+        }
+    }
+
     public TwentyFourTask(Activity context){
         this.context = context;
     }
@@ -70,6 +77,9 @@ public class TwentyFourTask extends AsyncTask<String, Void, Void> {
                 DBManager.getInstance(context).addTwentyHourWeather(currentTemp,feelsLike,windSpeed+"",humidity,condition,airPressure,time,date);
             }
 
+            LoadingActivity.tasks.put("twenty", Boolean.TRUE);
+            publishProgress();
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -82,11 +92,7 @@ public class TwentyFourTask extends AsyncTask<String, Void, Void> {
     }
     @Override
     protected void onPostExecute(Void aVoid) {
-        if(context instanceof  LoadingActivity){
-            Log.e("end","TRUE");
-            ((LoadingActivity) context).tasks.put("twenty", Boolean.TRUE);
-        }
-        Log.e("end","False");
+
     }
 
 }
