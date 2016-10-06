@@ -1,5 +1,7 @@
 package com.example.kali.weathy.model;
 
+import java.io.Serializable;
+
 public class Weather {
     private  String cityName;
     private int currentTemp;
@@ -150,7 +152,7 @@ public class Weather {
         }
     }
 
-    public static class TenDayWeather {
+    public static class TenDayWeather implements Serializable{
 
         private String date;
         private int maxTemp;
@@ -161,8 +163,9 @@ public class Weather {
         private int humidity;
         private String weekDay;
         private int yearDay;
+        private int year;
 
-        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay) {
+        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay, int year) {
             this.date = date;
             this.maxTemp = maxTemp;
             this.minTemp = minTemp;
@@ -172,6 +175,7 @@ public class Weather {
             this.humidity = humidity;
             this.weekDay = weekDay;
             this.yearDay = yearDay;
+            this.year = year;
         }
 
         public String getDate() {
@@ -208,6 +212,10 @@ public class Weather {
 
         public int getYearDay() {
             return yearDay;
+        }
+
+        public int getYear() {
+            return year;
         }
     }
 }

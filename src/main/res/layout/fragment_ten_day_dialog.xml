@@ -1,0 +1,213 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/transparent"
+    tools:context="com.example.kali.weathy.TenDayDialogFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        >
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/colorDialogBackgroud"
+            android:text="X"
+            android:layout_alignParentRight="true"
+            android:id="@+id/close_dialog_button" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorDialogBackgroud">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/dialog_icon_iv"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_date_tv"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Condition |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_condition_tv" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Max temperature |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_max_temp_tv" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Min temperature |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_min_temp_tv" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Wind speed |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_wind_speed_tv" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Humidity |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_humidity_tv" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:text="Day of the year |"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:gravity="start"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:background="@color/transparent"
+                android:id="@+id/dialog_day_of_the_year_tv" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

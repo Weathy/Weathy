@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kali.weathy.R;
 import com.example.kali.weathy.model.Weather;
@@ -15,7 +16,7 @@ import com.example.kali.weathy.model.Weather;
 import java.util.List;
 
 
-public class TenDayListAdaptor extends ArrayAdapter {
+public class TenDayListAdaptor extends ArrayAdapter{
     private Context context;
     private List<Weather.TenDayWeather> items;
 
@@ -47,4 +48,5 @@ public class TenDayListAdaptor extends ArrayAdapter {
 
         return view;
     }
+
 }

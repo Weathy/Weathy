@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.model.Weather;
@@ -22,6 +24,7 @@ public class WeatherActivity extends AppCompatActivity
     private WeatherPagerAdapter adapter;
     public static ViewPager vPager;
     public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
+    private Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,14 @@ public class WeatherActivity extends AppCompatActivity
         vPager = (ViewPager) findViewById(R.id.view_pager);
         adapter = new WeatherPagerAdapter(getSupportFragmentManager());
         vPager.setAdapter(adapter);
+
+        searchButton = (Button) findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchButton.setBackgroundResource(R.drawable.button_clicked);
+            }
+        });
     }
 
     @Override

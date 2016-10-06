@@ -45,7 +45,7 @@ public class DBManager extends SQLiteOpenHelper {
         Log.e("create", "createDB");
         db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like INTEGER, visibility text,last_update text  )");
         db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
-        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER)");
+        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER)");
 
     }
 
@@ -97,7 +97,7 @@ public class DBManager extends SQLiteOpenHelper {
         database.endTransaction();
     }
 
-    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday) {
+    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday, int year) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
@@ -109,8 +109,9 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("humidity", humidity);
         values.put("weekday", weekday);
         values.put("yearday", yearday);
+        values.put("year", year);
         database.insert("ten_day_forecast", null, values);
-        tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday));
+        tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year));
         database.setTransactionSuccessful();
         database.endTransaction();
 
@@ -146,6 +147,11 @@ public class DBManager extends SQLiteOpenHelper {
                 String visibility = cursor.getString(cursor.getColumnIndex("visibility"));
                 String last_update = cursor.getString(cursor.getColumnIndex("last_update"));
                 lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update);
+
+            }
+
+            if(!cursor.isClosed()){
+                cursor.close();
             }
         }
 
@@ -163,11 +169,16 @@ public class DBManager extends SQLiteOpenHelper {
 
                 Weather.TwentyFourWeather weather = new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date);
                 twentyHourForecastObjects.add(weather);
+
+            }
+
+            if(!cursor.isClosed()){
+                cursor.close();
             }
         }
 
         if (tenDayForecast.isEmpty()) {
-            Cursor cursor = getWritableDatabase().rawQuery("SELECT date, min_temp, max_temp, condition, windspeed, humidity, weekday, yearday FROM  ten_day_forecast", null);
+            Cursor cursor = getWritableDatabase().rawQuery("SELECT date, min_temp, max_temp, condition, windspeed, humidity, weekday, yearday, year FROM  ten_day_forecast", null);
             while (cursor.moveToNext()) {
                 String date = cursor.getString(cursor.getColumnIndex("date"));
                 int min_temp = cursor.getInt(cursor.getColumnIndex("min_temp"));
@@ -177,9 +188,15 @@ public class DBManager extends SQLiteOpenHelper {
                 int humidity = cursor.getInt(cursor.getColumnIndex("humidity"));
                 String weekday = cursor.getString(cursor.getColumnIndex("weekday"));
                 int yearday = cursor.getInt(cursor.getColumnIndex("yearday"));
+                int year = cursor.getInt(cursor.getColumnIndex("year"));
 
-                Weather.TenDayWeather weather = new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday);
+                Weather.TenDayWeather weather = new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year);
                 tenDayForecast.add(weather);
+
+            }
+
+            if(!cursor.isClosed()){
+                cursor.close();
             }
 
         }
