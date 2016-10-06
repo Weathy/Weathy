@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,24 +47,28 @@ public class TwentyFourFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_twenty_four, container, false);
         forecast = (ArrayList<Weather.TwentyFourWeather>) DBManager.getInstance(getActivity()).getTwentyHourForecastObjects();
 
-        ListView lv = (ListView) root.findViewById(R.id.listview);
-        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
-        lv.setAdapter(adaptor);
+        RecyclerView rv = (RecyclerView) root.findViewById(R.id.recycler);
+        rv.setAdapter(new TwentyFourAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTwentyHourForecastObjects()));
+        rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-                if (prev != null) {
-                    ft.remove(prev);
-                }
-                ft.addToBackStack(null);
-
-                DialogFragment newFragment = TwentyFourDialogFragment.newInstance(DBManager.getInstance(getActivity()).getTwentyHourForecastObjects().get(position));
-                newFragment.show(ft, "TwentyFourDialog");
-            }
-        });
+//        ListView lv = (ListView) root.findViewById(R.id.listview);
+//        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
+//        lv.setAdapter(adaptor);
+//
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//                if (prev != null) {
+//                    ft.remove(prev);
+//                }
+//                ft.addToBackStack(null);
+//
+//                DialogFragment newFragment = TwentyFourDialogFragment.newInstance(DBManager.getInstance(getActivity()).getTwentyHourForecastObjects().get(position));
+//                newFragment.show(ft, "TwentyFourDialog");
+//            }
+//        });
 
         return root;
     }

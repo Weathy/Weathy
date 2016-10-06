@@ -19,20 +19,29 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-/**
- * Created by Kali on 1.10.2016 г..
- */
 
 public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.TwentyFourVH>{
 
     private List<Weather.TwentyFourWeather> forecast;
     private Activity activity;
-    private String lastDate;
+    private String firstDate;
+    private String secondDate;
+    private int secondDatePlace;
+    private int firstHour;
 
     public TwentyFourAdaptor(Activity activity, List<Weather.TwentyFourWeather> forecast) {
         this.activity = activity;
         this.forecast = forecast;
-        this.lastDate = "";
+        this.firstDate = forecast.get(0).getDate();
+        this.firstHour = Integer.parseInt(forecast.get(0).getTime().split(":")[0]);
+
+        for(int i = 0; i<forecast.size(); i++){
+            if(!firstDate.equals(forecast.get(i).getDate())){
+                secondDate = forecast.get(i).getDate();
+                break;
+            }
+        }
+        secondDatePlace = 23 - firstHour;
     }
 
     @Override
@@ -49,13 +58,18 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
 
         final Weather.TwentyFourWeather weather = forecast.get(position);
 
-        if(!lastDate.equals(weather.getDate())){
+        if(position == 0) {
             holder.dateTV.setVisibility(View.VISIBLE);
-            holder.dateTV.setText(weather.getDate());
-            lastDate = weather.getDate();
+            holder.dateTV.setText(firstDate);
         }
         else{
-            holder.dateTV.setVisibility(View.GONE);
+            if(position == secondDatePlace+1){
+                holder.dateTV.setVisibility(View.VISIBLE);
+                holder.dateTV.setText(secondDate);
+            }
+            else{
+                holder.dateTV.setVisibility(View.GONE);
+            }
         }
 
         holder.timeTV.setText(weather.getTime());
@@ -91,6 +105,19 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
         }
     }
 
+
+    class TwentyFourDateVH extends RecyclerView.ViewHolder{
+
+        private TextView dateTV;
+
+        public TwentyFourDateVH(View item) {
+            super(item);
+            dateTV = (TextView) item.findViewById(R.id.date_textview);
+
+        }
+    }
+
+
     private class IconTask extends AsyncTask<String, Void, Bitmap>{
         private ImageView icon;
 
@@ -118,7 +145,5 @@ public class TwentyFourAdaptor  extends RecyclerView.Adapter<TwentyFourAdaptor.T
             icon.setImageBitmap(image);
         }
     }
-
-
 
 }
