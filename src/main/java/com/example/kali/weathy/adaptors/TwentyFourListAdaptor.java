@@ -17,14 +17,25 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
 
     private Context context;
     private List<Weather.TwentyFourWeather> items;
+    private String firstDate;
+    private String secondDate;
+    private int secondDatePlace;
     private int firstHour;
-    private String lastDate;
 
     public TwentyFourListAdaptor(Context context, List<Weather.TwentyFourWeather> items) {
         super(context, R.layout.one_hour_view, items);
         this.context = context;
         this.items = items;
-        this.lastDate = "";
+        this.firstDate = items.get(0).getDate();
+        this.firstHour = Integer.parseInt(items.get(0).getTime().split(":")[0]);
+
+        for (int i = 0; i < items.size(); i++) {
+            if (!firstDate.equals(items.get(i).getDate())) {
+                secondDate = items.get(i).getDate();
+                break;
+            }
+        }
+        secondDatePlace = 23 - firstHour;
     }
 
     @NonNull
@@ -33,7 +44,7 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
 
         View view = convertView;
 
-        if(view == null){
+        if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             view = inflater.inflate(R.layout.one_hour_view, null);
         }
@@ -43,22 +54,25 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         TextView time = (TextView) view.findViewById(R.id.tf_time_textview);
         time.setText(weather.getTime());
         TextView temp = (TextView) view.findViewById(R.id.tf_temp_textview);
-        temp.setText(weather.getCurrentTemp()+"");
+        temp.setText(weather.getCurrentTemp() + "");
         TextView feelslike = (TextView) view.findViewById(R.id.tf_feelslike_textview);
-        feelslike.setText(weather.getFeelsLike()+"");
+        feelslike.setText(weather.getFeelsLike() + "");
 
-        TextView  date = (TextView) view.findViewById(R.id.date_textview);
+        TextView date = (TextView) view.findViewById(R.id.date_textview);
 
 
         firstHour = Integer.parseInt(weather.getTime().split(":")[0]);
 
-        if(!lastDate.equals(weather.getDate())||(Integer.parseInt(weather.getTime().split(":")[0])-firstHour==position)){
+        if (position == 0) {
             date.setVisibility(View.VISIBLE);
-            date.setText(weather.getDate());
-            lastDate = weather.getDate();
-        }
-        else{
-            date.setVisibility(View.GONE);
+            date.setText(firstDate);
+        } else {
+            if (position == secondDatePlace + 1) {
+                date.setVisibility(View.VISIBLE);
+                date.setText(secondDate);
+            } else {
+                date.setVisibility(View.GONE);
+            }
         }
 
         return view;

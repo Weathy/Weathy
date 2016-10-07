@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.kali.weathy.adaptors.TwentyFourAdaptor;
 import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
@@ -27,7 +23,6 @@ public class TwentyFourFragment extends Fragment {
 
     private TwentyFourComunicator activity;
     private ArrayList<Weather.TwentyFourWeather> forecast;
-    private TwentyFourAdaptor adaptor;
 
 
     interface TwentyFourComunicator{
@@ -38,7 +33,6 @@ public class TwentyFourFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.activity = (TwentyFourComunicator) context;
-        this.adaptor = null;
         this.forecast = new ArrayList<>();
     }
 
@@ -47,28 +41,28 @@ public class TwentyFourFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_twenty_four, container, false);
         forecast = (ArrayList<Weather.TwentyFourWeather>) DBManager.getInstance(getActivity()).getTwentyHourForecastObjects();
 
-        RecyclerView rv = (RecyclerView) root.findViewById(R.id.recycler);
-        rv.setAdapter(new TwentyFourAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTwentyHourForecastObjects()));
-        rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
+//        RecyclerView rv = (RecyclerView) root.findViewById(R.id.recycler);
+//        rv.setAdapter(new TwentyFourAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTwentyHourForecastObjects()));
+//        rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
 
-//        ListView lv = (ListView) root.findViewById(R.id.listview);
-//        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
-//        lv.setAdapter(adaptor);
-//
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-//                if (prev != null) {
-//                    ft.remove(prev);
-//                }
-//                ft.addToBackStack(null);
-//
-//                DialogFragment newFragment = TwentyFourDialogFragment.newInstance(DBManager.getInstance(getActivity()).getTwentyHourForecastObjects().get(position));
-//                newFragment.show(ft, "TwentyFourDialog");
-//            }
-//        });
+        ListView lv = (ListView) root.findViewById(R.id.listview);
+        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
+        lv.setAdapter(adaptor);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                DialogFragment newFragment = TwentyFourDialogFragment.newInstance(DBManager.getInstance(getActivity()).getTwentyHourForecastObjects().get(position));
+                newFragment.show(ft, "TwentyFourDialog");
+            }
+        });
 
         return root;
     }
