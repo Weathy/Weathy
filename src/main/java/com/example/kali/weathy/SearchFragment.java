@@ -27,26 +27,9 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         cityNameET = (EditText) view.findViewById(R.id.city_search_button);
         backButton = (Button) view.findViewById(R.id.back_search_button);
-//        backButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cityName = cityNameET.getText().toString();
-//                new RequestTask(getActivity()).execute(cityName);
-//                FragmentManager fragmentManager = getFragmentManager();
-//                Log.e("fragment", fragmentManager.toString());
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                Fragment f = getActivity().getSupportFragmentManager().findFragmentById(R.id.search_fragment);
-//                fragmentTransaction.remove(f);
-//                fragmentTransaction.add(CityForecastFragment.newInstance("one"),"Search fragment");
-//                fragmentTransaction.commit();
-//            }
-//        });
-
-
         return view;
     }
 

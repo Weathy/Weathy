@@ -14,22 +14,30 @@
         <activity
             android:name=".WeatherActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".LoadingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoadingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter></activity>
+            </intent-filter>
+        </activity>
+
         <receiver android:name=".Widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider"/>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider" />
         </receiver>
+
+        <service
+            android:name=".database.RequestWeatherIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
