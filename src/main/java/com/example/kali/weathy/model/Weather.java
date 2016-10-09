@@ -1,5 +1,8 @@
 package com.example.kali.weathy.model;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class Weather {
@@ -102,8 +105,9 @@ public class Weather {
         private int airPressure;
         private String time;
         private String date;
+        private Bitmap icon;
 
-        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, String windSpeed, int humidity, String condition, int airPressure, String time, String date) {
+        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, String windSpeed, int humidity, String condition, int airPressure, String time, String date, Bitmap icon) {
             this.currentTemp = currentTemp;
             this.iconURL = iconURL;
             this.feelsLike = feelsLike;
@@ -113,6 +117,10 @@ public class Weather {
             this.airPressure = airPressure;
             this.time = time;
             this.date = date;
+            this.icon = icon;
+
+            Log.e("BLOB", "this one was created");
+
         }
 
         public int getCurrentTemp() {
@@ -150,6 +158,11 @@ public class Weather {
         public String getDate() {
             return date;
         }
+
+        public Bitmap getIcon() {
+            return icon;
+        }
+
     }
 
     public static class TenDayWeather implements Serializable{
@@ -164,8 +177,9 @@ public class Weather {
         private String weekDay;
         private int yearDay;
         private int year;
+        private Bitmap icon;
 
-        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay, int year) {
+        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay, int year, Bitmap icon) {
             this.date = date;
             this.maxTemp = maxTemp;
             this.minTemp = minTemp;
@@ -176,6 +190,7 @@ public class Weather {
             this.weekDay = weekDay;
             this.yearDay = yearDay;
             this.year = year;
+            this.icon = icon;
         }
 
         public String getDate() {
@@ -216,6 +231,10 @@ public class Weather {
 
         public int getYear() {
             return year;
+        }
+
+        public Bitmap getIcon() {
+            return icon;
         }
     }
 }

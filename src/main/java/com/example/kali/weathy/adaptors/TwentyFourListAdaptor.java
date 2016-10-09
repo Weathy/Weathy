@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kali.weathy.R;
+import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.List;
@@ -57,6 +59,8 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         temp.setText(weather.getCurrentTemp() + "");
         TextView feelslike = (TextView) view.findViewById(R.id.tf_feelslike_textview);
         feelslike.setText(weather.getFeelsLike() + "");
+        ImageView icon = (ImageView) view.findViewById(R.id.tf_icon_imageview);
+        icon.setImageBitmap(weather.getIcon());
 
         TextView date = (TextView) view.findViewById(R.id.date_textview);
 

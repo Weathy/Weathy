@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class TenDayListAdaptor extends ArrayAdapter{
         minT.setText(weather.getMinTemp()+"℃");
         TextView maxT = (TextView) view.findViewById(R.id.max_temp_tv);
         maxT.setText(weather.getMaxTemp()+"℃");
+        ImageView icon = (ImageView) view.findViewById(R.id.icon_iv);
+        icon.setImageBitmap(weather.getIcon());
 
         return view;
     }

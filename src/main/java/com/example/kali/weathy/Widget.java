@@ -1,15 +1,9 @@
 package com.example.kali.weathy;
 
-
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.example.kali.weathy.database.DBManager;
 
@@ -29,6 +23,7 @@ public class Widget extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_max_temp_tv, DBManager.getInstance(context).getLastWeather().getTemp_max()+"℃");
 
             appWidgetManager.updateAppWidget(currentWidgetId,views);
+
         }
     }
 }
