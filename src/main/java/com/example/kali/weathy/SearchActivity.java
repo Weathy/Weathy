@@ -24,19 +24,24 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         fragment.setFilter(filter);
         String condition = getIntent().getStringExtra("condition");
 
-        switch (condition) {
-            case "Clear":
-                findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_clear);
-                break;
-            case "Clouds":
-                findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_cloudy);
-                break;
-            case "Thunderstorm":
-                findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_thunderstorm);
-                break;
-            case "Rain":
-                findViewById(R.id.activity_search).setBackgroundResource(R.drawable.rain);
-                break;
+        if(condition != null) {
+            switch (condition) {
+                case "Clear":
+                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_clear);
+                    break;
+                case "Clouds":
+                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_cloudy);
+                    break;
+                case "Thunderstorm":
+                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_thunderstorm);
+                    break;
+                case "Rain":
+                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.rain);
+                    break;
+            }
+        }
+        else{
+            findViewById(R.id.activity_search).setBackgroundResource(R.drawable.loading_screen_background);
         }
 
 

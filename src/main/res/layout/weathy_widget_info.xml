@@ -3,13 +3,26 @@
     android:layout_height="match_parent"
     android:background="@color/colorTransparent"
     android:id="@+id/appwidget_text"
+    android:layout_margin="8dp"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:text="Weathy"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="2"
-        android:id="@+id/widnget_timeTV"/>
+        android:gravity="center"
+        android:textSize="40sp"
+        android:textColor="@android:color/white"
+        android:id="@+id/widnget_current_temp_tv"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,11 +30,6 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/current_tempTV"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -33,13 +41,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Sofia"/>
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:id="@+id/widget_city_name_tv"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Cloudy"/>
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/widget_text_size"
+                android:id="@+id/widget_condition_tv" />
 
         </LinearLayout>
 
@@ -53,12 +66,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Today"/>
+                android:text="Today"
+                android:textSize="@dimen/widget_text_size"
+                android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:gravity="center"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="horizontal">
 
 
@@ -66,13 +83,21 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="14"/>
+                    android:id="@+id/widget_min_temp_tv"
+                    android:textColor="@android:color/holo_blue_bright"
+                    android:textSize="@dimen/widget_text_size"
+                    android:maxLines="1"
+                    android:gravity="start|center"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="44"/>
+                    android:id="@+id/widget_max_temp_tv"
+                    android:textSize="@dimen/widget_text_size"
+                    android:textColor="@android:color/white"
+                    android:maxLines="1"
+                    android:gravity="start|center"/>
 
             </LinearLayout>
 
