@@ -60,7 +60,7 @@ public class CityForecastFragment extends Fragment {
         wind.setText(weather.getWindSpeed() + "");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
         feelsLike.setText(weather.getFeelsLike() + "");
-        switch (weather.getDescription()) {
+         switch (weather.getDescription()) {
             case "Clear":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
                 return view;

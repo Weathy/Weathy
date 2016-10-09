@@ -53,6 +53,7 @@ public class WeatherActivity extends AppCompatActivity
                 Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
                 intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
                 startActivity(intent);
+                finish();
             }
         });
     }

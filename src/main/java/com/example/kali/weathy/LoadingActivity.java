@@ -37,13 +37,18 @@ public class LoadingActivity extends AppCompatActivity{
             }else{
                 intent = new Intent(LoadingActivity.this,WeatherActivity.class);
                 startActivity(intent);
+                unregisterReceiver(receiver);
+                finish();
             }
         }else {
             if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
-                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
+                loadingProgressBar.setVisibility(View.GONE);
             }else{
                 intent = new Intent(LoadingActivity.this,WeatherActivity.class);
                 startActivity(intent);
+                unregisterReceiver(receiver);
+                finish();
             }
         }
     }

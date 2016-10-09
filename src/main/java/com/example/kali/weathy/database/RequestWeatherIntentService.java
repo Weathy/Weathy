@@ -90,6 +90,7 @@ public class RequestWeatherIntentService extends IntentService {
             }
 
             JSONObject weather = new JSONObject(weatherJSON.toString());
+            Log.e("firstJSON" , weather.toString());
             description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
             icon = weather.getJSONArray("weather").getJSONObject(0).getString("icon");
             temp_min = (int) (weather.getJSONObject("main").getInt("temp_min") - KELVIN_CONSTANT);
@@ -109,12 +110,13 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
+            Log.e("secondJSON" , weather.toString());
             feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
             String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
             lastUpdate = up[0];
             cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
 
-            weatherJSON.delete(0, weatherJSON.length());
+           /* weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22"+city+"%2C%20bg%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
@@ -127,6 +129,7 @@ public class RequestWeatherIntentService extends IntentService {
             visibility = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("atmosphere").getDouble("visibility");
             sunset = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunset");
             sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
+            */
             DBManager.getInstance(getApplicationContext()).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
             //tenDay
 
@@ -203,7 +206,7 @@ public class RequestWeatherIntentService extends IntentService {
 
                 Log.e("BLOB", "after download");
 
-                DBManager.getInstance(context).addTwentyHourWeather(hourlyCurrentTemp,hourlyFeelsLike,hourlyWindSpeed+"",hourlyHumidity,hourlyCondition,hourlyAirPressure,hourlyTime,hourlyDate, hourlyIcon);
+                DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp,hourlyFeelsLike,hourlyWindSpeed+"",hourlyHumidity,hourlyCondition,hourlyAirPressure,hourlyTime,hourlyDate, hourlyIcon);
                 Intent intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
             }
