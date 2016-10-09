@@ -9,7 +9,7 @@ public class Weather {
     private  String cityName;
     private int currentTemp;
     private String description;
-    private String icon;
+    private String iconString;
     private int temp_min;
     private int temp_max;
     private String sunrise;
@@ -20,8 +20,9 @@ public class Weather {
     private int feelsLike;
     private String visibility;
     private String lastUpdate;
+    private Bitmap icon;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String icon, int temp_min, int temp_max, String visibility,String lastUpdate) {
+    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String iconString, int temp_min, int temp_max, String visibility,String lastUpdate, Bitmap icon) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -30,12 +31,13 @@ public class Weather {
         this.sunrise = sunrise;
         this.sunset = sunset;
         this.description = description;
-        this.icon = icon;
+        this.iconString = iconString;
         this.temp_min = temp_min;
         this.temp_max = temp_max;
         this.feelsLike = feelsLike;
         this.visibility = visibility;
         this.lastUpdate = lastUpdate;
+        this.icon = icon;
     }
 
     public String getCityName() {
@@ -54,8 +56,8 @@ public class Weather {
         return description;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getIconString() {
+        return iconString;
     }
 
     public int getTemp_min() {
@@ -92,6 +94,10 @@ public class Weather {
 
     public String getLastUpdate() {
         return lastUpdate;
+    }
+
+    public Bitmap getIcon() {
+        return icon;
     }
 
     public static class TwentyFourWeather implements Serializable {

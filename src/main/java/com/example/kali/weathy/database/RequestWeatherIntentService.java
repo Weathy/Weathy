@@ -37,6 +37,7 @@ public class RequestWeatherIntentService extends IntentService {
     private String cityName;
     private String description;
     private String icon;
+    private Bitmap iconImage;
     private int temp_min;
     private int temp_max;
     private String sunrise;
@@ -130,7 +131,18 @@ public class RequestWeatherIntentService extends IntentService {
             sunset = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunset");
             sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
             */
-            DBManager.getInstance(getApplicationContext()).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
+            {
+                String urlString = "http://openweathermap.org/img/w/"+icon+".png";
+                URL url = new URL(urlString);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                iconImage = BitmapFactory.decodeStream(input);
+                input.close();
+            }
+
+            DBManager.getInstance(getApplicationContext()).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate, iconImage);
             //tenDay
 
             weatherJSON.delete(0, weatherJSON.length());

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kali.weathy.model.Weather;
@@ -44,6 +45,8 @@ public class TwentyFourDialogFragment extends DialogFragment {
         humidity.setText(weather.getHumidity() + "%");
         TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
         airPressure.setText(weather.getAirPressure() + "hPa");
+        ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
+        icon.setImageBitmap(weather.getIcon());
 
         Button close = (Button) root.findViewById(R.id.close_dialog_button);
         close.setOnClickListener(new View.OnClickListener() {

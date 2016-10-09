@@ -34,17 +34,20 @@ public class LoadingActivity extends AppCompatActivity{
                 intent = new Intent(this, RequestWeatherIntentService.class);
                 intent.putExtra("city", "Sofia");
                 startService(intent);
-            }else{
+            }
+            else{
                 intent = new Intent(LoadingActivity.this,WeatherActivity.class);
                 startActivity(intent);
                 unregisterReceiver(receiver);
                 finish();
             }
-        }else {
+        }
+        else {
             if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
                 Toast.makeText(this, "No Internet Connection", Toast.LENGTH_LONG).show();
                 loadingProgressBar.setVisibility(View.GONE);
-            }else{
+            }
+            else{
                 intent = new Intent(LoadingActivity.this,WeatherActivity.class);
                 startActivity(intent);
                 unregisterReceiver(receiver);

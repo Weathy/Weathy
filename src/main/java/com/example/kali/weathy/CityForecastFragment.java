@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,10 @@ public class CityForecastFragment extends Fragment {
         wind.setText(weather.getWindSpeed() + "");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
         feelsLike.setText(weather.getFeelsLike() + "");
+
+        ImageView icon = (ImageView) view.findViewById(R.id.weather_status_imageview);
+        icon.setImageBitmap(weather.getIcon());
+
          switch (weather.getDescription()) {
             case "Clear":
                 getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
