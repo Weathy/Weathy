@@ -16,6 +16,7 @@ import com.example.kali.weathy.database.RequestWeatherIntentService;
 public class LoadingActivity extends AppCompatActivity{
     private  MyInnerReceiver receiver;
     private ProgressBar loadingProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,23 +38,6 @@ public class LoadingActivity extends AppCompatActivity{
             startActivity(intent1);
         }
     }
-//    private boolean hasActiveInternetConnection(Context context) {
-//        if (isNetworkAvailable(context)) {
-//            try {
-//                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://clients3.google.com/generate_204").openConnection());
-//                urlc.setRequestProperty("User-Agent", "Test");
-//                urlc.setRequestProperty("Connection", "close");
-//                urlc.setConnectTimeout(1500);
-//                urlc.connect();
-//                return (urlc.getResponseCode() == 204 && urlc.getContentLength() == 0);
-//            } catch (IOException e) {
-//                Log.e("error", "Error checking internet connection");
-//            }
-//        } else {
-//            Log.e("error", "No network available!");
-//        }
-//        return false;
-//    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager

@@ -5,14 +5,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.kali.weathy.CityForecastFragment;
-import com.example.kali.weathy.SearchFragment;
 import com.example.kali.weathy.TenDayFragment;
 import com.example.kali.weathy.TwentyFourFragment;
 
 public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
 
-    private final static int NUMBER_OF_FRAGMENTS = 4;
+    private final static int NUMBER_OF_FRAGMENTS = 3;
 
     public WeatherPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -27,8 +26,6 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
                 return TwentyFourFragment.newInstance("two");
             case 2:
                 return TenDayFragment.newInstance("three");
-            case 3:
-                return SearchFragment.newInstance("four");
             default:
                 return CityForecastFragment.newInstance("one");
 

@@ -1,5 +1,6 @@
 package com.example.kali.weathy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
+import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
@@ -54,6 +56,9 @@ public class WeatherActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 searchButton.setBackgroundResource(R.drawable.button_clicked);
+                Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
+                intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
+                startActivity(intent);
             }
         });
     }
