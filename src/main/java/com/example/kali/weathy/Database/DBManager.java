@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.kali.weathy.LoadingActivity;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("last_update", last_update);
         database.insert("weather", null, values);
         lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update);
+        Log.e("database" , lastWeather.toString());
         database.setTransactionSuccessful();
         database.endTransaction();
 
@@ -130,8 +132,10 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     private void loadData() {
+        Log.e("database1" , lastWeather.toString());
         if (lastWeather.getCityName() == null) {
             Cursor cursor = getWritableDatabase().rawQuery("SELECT cityName, currentTemp, condition,temp_min,temp_max, sunrise, sunset, windSpeed, humidity, pressure, feels_like, visibility,last_update  FROM  weather", null);
+            Log.e("database2" , cursor.toString());
             while (cursor.moveToNext()) {
                 String cityName = cursor.getString(cursor.getColumnIndex("cityName"));
                 int currentTemp = cursor.getInt(cursor.getColumnIndex("currentTemp"));

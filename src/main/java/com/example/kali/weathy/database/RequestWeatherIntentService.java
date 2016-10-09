@@ -69,7 +69,7 @@ public class RequestWeatherIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //DBManager.getInstance(context).getWritableDatabase().execSQL("delete from weather");
+        DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from weather");
         String city = intent.getStringExtra("city");
         try {
             URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
@@ -84,6 +84,7 @@ public class RequestWeatherIntentService extends IntentService {
 
             JSONObject weather = new JSONObject(weatherJSON.toString());
             description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
+            Log.e("desc" , description);
             icon = weather.getJSONArray("weather").getJSONObject(0).getString("icon");
             temp_min = (int) (weather.getJSONObject("main").getInt("temp_min") - KELVIN_CONSTANT);
             temp_max = (int) (weather.getJSONObject("main").getInt("temp_max") - KELVIN_CONSTANT);
@@ -124,7 +125,7 @@ public class RequestWeatherIntentService extends IntentService {
             sunset = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunset");
             sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
             Log.e("db" , cityName);
-            //DBManager.getInstance(context).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
+            DBManager.getInstance(getApplicationContext()).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate);
             //tenDay
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/"+city+".json");
@@ -151,7 +152,7 @@ public class RequestWeatherIntentService extends IntentService {
                 iconURL = currentDay.getString("icon_url");
                 date = currentDay.getJSONObject("date").getString("day") + "." + currentDay.getJSONObject("date").getString("monthname");
                 year = currentDay.getJSONObject("date").getInt("year");
-                //DBManager.getInstance(context).addTenDayWeather(date, maxTemp, minTemp, condition, tenDayWindSpeed, tenDayHumidity, weekDay, yearDay, year);
+                DBManager.getInstance(getApplicationContext()).addTenDayWeather(date, maxTemp, minTemp, condition, tenDayWindSpeed, tenDayHumidity, weekDay, yearDay, year);
             }
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+".json");
@@ -176,7 +177,7 @@ public class RequestWeatherIntentService extends IntentService {
                 hourlyIconURL = obj1.getString("icon_url");
                 hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
                 hourlyList.add(new Weather.TwentyFourWeather(hourlyCurrentTemp, hourlyIconURL, hourlyFeelsLike, Double.toString(hourlyWindSpeed), hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate));
-                //DBManager.getInstance(context).addTwentyHourWeather(hourlyCurrentTemp,hourlyFeelsLike,hourlyWindSpeed+"",hourlyHumidity,hourlyCondition,hourlyAirPressure,hourlyTime,hourlyDate);
+                DBManager.getInstance(context).addTwentyHourWeather(hourlyCurrentTemp,hourlyFeelsLike,hourlyWindSpeed+"",hourlyHumidity,hourlyCondition,hourlyAirPressure,hourlyTime,hourlyDate);
                 Intent intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
             }

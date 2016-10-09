@@ -37,11 +37,7 @@ public class CityForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_city_forecast, container, false);
-
-        while (weather == null || weather.getDescription() == null) {
-            weather = DBManager.getInstance(getActivity()).getLastWeather();
-        }
-
+        weather = DBManager.getInstance(getActivity()).getLastWeather();
         TextView cityNameTV = (TextView) getActivity().findViewById(R.id.city_name_textview);
         cityNameTV.setText(weather.getCityName());
         TextView visibilityTV = (TextView) view.findViewById(R.id.visibility_textview);

@@ -9,25 +9,43 @@ import android.net.NetworkInfo;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
 public class LoadingActivity extends AppCompatActivity{
     private  MyInnerReceiver receiver;
     private ProgressBar loadingProgressBar;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
-
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
-        Intent intent = new Intent(this, RequestWeatherIntentService.class);
-        intent.putExtra("city", "Sofia");
-        startService(intent);
+        if(isNetworkAvailable()){
+            if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
+                intent = new Intent(this, RequestWeatherIntentService.class);
+                intent.putExtra("city", "Sofia");
+                startService(intent);
+            }else{
+                intent = new Intent(LoadingActivity.this,WeatherActivity.class);
+                startActivity(intent);
+            }
+        }else {
+            if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
+                Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }else{
+                intent = new Intent(LoadingActivity.this,WeatherActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 
     class MyInnerReceiver extends BroadcastReceiver{
