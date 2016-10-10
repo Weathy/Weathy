@@ -23,10 +23,18 @@ public class TwentyFourFragment extends Fragment {
 
     private TwentyFourComunicator activity;
     private ArrayList<Weather.TwentyFourWeather> forecast;
+    public TwentyFourListAdaptor adaptor;
 
 
-    interface TwentyFourComunicator{
+    interface TwentyFourComunicator {
         ArrayList<Weather.TwentyFourWeather> getData();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -41,12 +49,8 @@ public class TwentyFourFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_twenty_four, container, false);
         forecast = (ArrayList<Weather.TwentyFourWeather>) DBManager.getInstance(getActivity()).getTwentyHourForecastObjects();
 
-//        RecyclerView rv = (RecyclerView) root.findViewById(R.id.recycler);
-//        rv.setAdapter(new TwentyFourAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTwentyHourForecastObjects()));
-//        rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
-
         ListView lv = (ListView) root.findViewById(R.id.listview);
-        TwentyFourListAdaptor adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
+        adaptor = new TwentyFourListAdaptor(getActivity(), forecast);
         lv.setAdapter(adaptor);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -75,16 +79,5 @@ public class TwentyFourFragment extends Fragment {
         TwentyFourFragment fragment = new TwentyFourFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-
-    public void refreshAdaptor(ArrayList<Weather.TwentyFourWeather> list) {
-        forecast = new ArrayList<>(list);
-        Log.e("hi1", list.size()+"");
     }
 }

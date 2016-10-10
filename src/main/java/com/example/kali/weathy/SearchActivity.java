@@ -1,10 +1,10 @@
 package com.example.kali.weathy;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +30,9 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
+
+
+
         progressBar = (ProgressBar) findViewById(R.id.progress_search);
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
         fragment.setOnPlaceSelectedListener(this);
@@ -57,8 +60,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         else{
             findViewById(R.id.activity_search).setBackgroundResource(R.drawable.loading_screen_background);
         }
-
-
     }
 
     @Override
@@ -72,18 +73,24 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     public void onError(Status status) {
-
-        Toast.makeText(this, "You did something stupid", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "You did something wrong", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(receiver != null){
+            unregisterReceiver(receiver);
+        }
+    }
 
     class MyInnerReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             Intent intent1 = new Intent(context,WeatherActivity.class);
+            intent1.putExtra("refresh", "refresh");
             startActivity(intent1);
+            finish();
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.kali.weathy;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,9 +23,16 @@ public class TenDayFragment extends Fragment {
 
     private Button searchButton;
     private TenDayComunicator activity;
+    public TenDayListAdaptor adaptor;
 
-    interface TenDayComunicator{
+    interface TenDayComunicator {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -39,7 +47,7 @@ public class TenDayFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_ten_day, container, false);
 
         ListView lv = (ListView) root.findViewById(R.id.one_day_lv);
-        TenDayListAdaptor adaptor = new TenDayListAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTenDayForecast());
+        adaptor = new TenDayListAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTenDayForecast());
         lv.setAdapter(adaptor);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,10 +68,10 @@ public class TenDayFragment extends Fragment {
     }
 
     public static TenDayFragment newInstance(String str) {
-        
+
         Bundle args = new Bundle();
         args.putString("str", str);
-        
+
         TenDayFragment fragment = new TenDayFragment();
         fragment.setArguments(args);
         return fragment;

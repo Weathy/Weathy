@@ -12,11 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <meta-data android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDGjktACHPLBVv4_3n7bIApgx_8vyScUZI"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDGjktACHPLBVv4_3n7bIApgx_8vyScUZI" />
 
         <activity
             android:name=".WeatherActivity"
@@ -46,7 +48,7 @@
             android:name=".database.RequestWeatherIntentService"
             android:exported="false" />
 
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity" />
     </application>
 
 </manifest>

@@ -7,8 +7,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.util.Log;
 
+import com.example.kali.weathy.WeatherActivity;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
@@ -69,7 +71,7 @@ public class RequestWeatherIntentService extends IntentService {
     private String hourlyIconURL;
     private String hourlyDate;
     private Bitmap hourlyIcon;
-    private ArrayList<Weather.TwentyFourWeather> hourlyList  = new ArrayList<>();
+    private ArrayList<Weather.TwentyFourWeather> hourlyList = new ArrayList<>();
 
     public RequestWeatherIntentService() {
         super("MyIntentService");
@@ -81,7 +83,7 @@ public class RequestWeatherIntentService extends IntentService {
         DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from weather");
         String city = intent.getStringExtra("city");
         try {
-            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
             HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             InputStream weatherStream = weatherConnection.getInputStream();
@@ -91,7 +93,7 @@ public class RequestWeatherIntentService extends IntentService {
             }
 
             JSONObject weather = new JSONObject(weatherJSON.toString());
-            Log.e("firstJSON" , weather.toString());
+            Log.e("firstJSON", weather.toString());
             description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
             icon = weather.getJSONArray("weather").getJSONObject(0).getString("icon");
             temp_min = (int) (weather.getJSONObject("main").getInt("temp_min") - KELVIN_CONSTANT);
@@ -102,7 +104,7 @@ public class RequestWeatherIntentService extends IntentService {
             currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/"+city+".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/" + city + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -111,7 +113,7 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            Log.e("secondJSON" , weather.toString());
+            Log.e("secondJSON", weather.toString());
             feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
             String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
             lastUpdate = up[0];
@@ -132,7 +134,7 @@ public class RequestWeatherIntentService extends IntentService {
             sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
             */
             {
-                String urlString = "http://openweathermap.org/img/w/"+icon+".png";
+                String urlString = "http://openweathermap.org/img/w/" + icon + ".png";
                 URL url = new URL(urlString);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
@@ -142,11 +144,13 @@ public class RequestWeatherIntentService extends IntentService {
                 input.close();
             }
 
-            DBManager.getInstance(getApplicationContext()).addWeather(cityName,currentTemp,description,temp_min,temp_max,sunrise,sunset,windSpeed+"",humidity,pressure,feelsLike,visibility+"",lastUpdate, iconImage);
-            //tenDay
+            DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility + "", lastUpdate, iconImage);
 
+            //Ten day data request
+
+            DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/"+city+".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -157,7 +161,7 @@ public class RequestWeatherIntentService extends IntentService {
             weather = new JSONObject(weatherJSON.toString());
             JSONObject forecastJSON = weather.getJSONObject("forecast").getJSONObject("simpleforecast");
             JSONArray forecastArray = forecastJSON.getJSONArray("forecastday");
-            for(int i = 0; i<forecastArray.length(); i++){
+            for (int i = 0; i < forecastArray.length(); i++) {
                 JSONObject currentDay = new JSONObject(forecastArray.get(i).toString());
 
                 maxTemp = currentDay.getJSONObject("high").getInt("celsius");
@@ -181,8 +185,13 @@ public class RequestWeatherIntentService extends IntentService {
 
                 DBManager.getInstance(getApplicationContext()).addTenDayWeather(date, maxTemp, minTemp, condition, tenDayWindSpeed, tenDayHumidity, weekDay, yearDay, year, tenDayIcon);
             }
+
+
+            //Twenty four hour data request
+
+            DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -192,20 +201,17 @@ public class RequestWeatherIntentService extends IntentService {
             }
             weather = new JSONObject(weatherJSON.toString());
             JSONArray twentyFourArray = weather.getJSONArray("hourly_forecast");
-            for(int i = 0; i<24; i++){
+            for (int i = 0; i < 24; i++) {
                 JSONObject obj1 = new JSONObject(twentyFourArray.getJSONObject(i).toString());
                 hourlyCurrentTemp = obj1.getJSONObject("temp").getInt("metric");
                 hourlyFeelsLike = obj1.getJSONObject("feelslike").getInt("metric");
                 hourlyWindSpeed = obj1.getJSONObject("wspd").getDouble("metric");
                 hourlyHumidity = obj1.getInt("humidity");
-                hourlyCondition= obj1.getString("condition");
+                hourlyCondition = obj1.getString("condition");
                 hourlyAirPressure = obj1.getJSONObject("mslp").getInt("metric");
-                hourlyTime = obj1.getJSONObject("FCTTIME").getString("hour")+":"+obj1.getJSONObject("FCTTIME").getString("min");
+                hourlyTime = obj1.getJSONObject("FCTTIME").getString("hour") + ":" + obj1.getJSONObject("FCTTIME").getString("min");
                 hourlyIconURL = obj1.getString("icon_url");
                 hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
-
-
-                Log.e("BLOB", "before download");
 
                 URL url = new URL(hourlyIconURL);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -215,10 +221,8 @@ public class RequestWeatherIntentService extends IntentService {
                 hourlyIcon = BitmapFactory.decodeStream(input);
                 input.close();
 
+                DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate, hourlyIcon);
 
-                Log.e("BLOB", "after download");
-
-                DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp,hourlyFeelsLike,hourlyWindSpeed+"",hourlyHumidity,hourlyCondition,hourlyAirPressure,hourlyTime,hourlyDate, hourlyIcon);
                 Intent intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
             }
@@ -232,29 +236,5 @@ public class RequestWeatherIntentService extends IntentService {
         }
 
     }
-
-    private class Icon extends AsyncTask<String, Void, Bitmap>{
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-
-            try {
-                URL url = new URL(params[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                return BitmapFactory.decodeStream(input);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-    }
-
 
 }

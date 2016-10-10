@@ -7,13 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.kali.weathy.LoadingActivity;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +40,6 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.e("create", "createDB");
         db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like INTEGER, visibility text,last_update text, icon BLOB  )");
         db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text, icon BLOB)");
         db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER, icon BLOB)");
@@ -59,7 +54,6 @@ public class DBManager extends SQLiteOpenHelper {
     public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, int feels_like, String visibility, String last_update, Bitmap icon) {
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
-        Log.e("db", cityName);
         ContentValues values = new ContentValues();
         values.put("cityName", cityName);
         values.put("currentTemp", currentTemp);
@@ -77,7 +71,6 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("icon", Utility.getBytes(icon));
         database.insert("weather", null, values);
         lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, icon);
-        Log.e("database" , lastWeather.toString());
         database.setTransactionSuccessful();
         database.endTransaction();
 
@@ -97,8 +90,6 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("date", date);
         values.put("icon", Utility.getBytes(icon));
         database.insert("twenty_hour_forecast", null, values);
-
-        Log.e("BLOB", "where it is added to db");
         twentyHourForecastObjects.add(new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date, icon));
         database.setTransactionSuccessful();
         database.endTransaction();
@@ -138,10 +129,8 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     private void loadData() {
-        Log.e("database1" , lastWeather.toString());
         if (lastWeather.getCityName() == null) {
             Cursor cursor = getWritableDatabase().rawQuery("SELECT cityName, currentTemp, condition,temp_min,temp_max, sunrise, sunset, windSpeed, humidity, pressure, feels_like, visibility,last_update, icon  FROM  weather", null);
-            Log.e("database2" , cursor.toString());
             while (cursor.moveToNext()) {
                 String cityName = cursor.getString(cursor.getColumnIndex("cityName"));
                 int currentTemp = cursor.getInt(cursor.getColumnIndex("currentTemp"));
@@ -157,7 +146,6 @@ public class DBManager extends SQLiteOpenHelper {
                 String visibility = cursor.getString(cursor.getColumnIndex("visibility"));
                 String last_update = cursor.getString(cursor.getColumnIndex("last_update"));
                 Bitmap icon = Utility.getIcon(cursor.getBlob(cursor.getColumnIndex("icon")));
-
 
                 lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, icon);
 
@@ -180,7 +168,6 @@ public class DBManager extends SQLiteOpenHelper {
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 String date = cursor.getString(cursor.getColumnIndex("date"));
                 Bitmap icon = Utility.getIcon(cursor.getBlob(cursor.getColumnIndex("icon")));
-                Log.e("BLOB", "where the cursor is");
 
                 Weather.TwentyFourWeather weather = new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date, icon);
                 twentyHourForecastObjects.add(weather);
