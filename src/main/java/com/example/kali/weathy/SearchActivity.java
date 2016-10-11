@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -22,13 +23,13 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private String cityName;
     private Intent intent;
     private ProgressBar progressBar;
-    private MyInnerReceiver receiver;
+    private SearchReceiver receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        receiver = new MyInnerReceiver();
+        receiver = new SearchReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 
 
@@ -66,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     public void onPlaceSelected(Place place) {
         progressBar.setVisibility(View.VISIBLE);
         cityName = place.getName().toString();
+        Log.e("place selected" , cityName);
         intent = new Intent(this, RequestWeatherIntentService.class);
         intent.putExtra("city", cityName);
         startService(intent);
@@ -77,14 +79,20 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
         if(receiver != null){
-            unregisterReceiver(receiver);
+            try {
+                unregisterReceiver(receiver);
+            }
+            catch (IllegalArgumentException e){
+
+            }
         }
+        super.onDestroy();
     }
 
-    class MyInnerReceiver extends BroadcastReceiver {
+    class SearchReceiver extends BroadcastReceiver {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             Intent intent1 = new Intent(context,WeatherActivity.class);

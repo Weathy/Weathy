@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -73,8 +71,15 @@ public class LoadingActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(receiver);
+    protected void onDestroy() {
+        if(receiver != null){
+            try {
+                unregisterReceiver(receiver);
+            }
+            catch (IllegalArgumentException e){
+
+            }
+        }
+        super.onDestroy();
     }
 }
