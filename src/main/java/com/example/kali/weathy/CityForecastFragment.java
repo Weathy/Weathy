@@ -53,7 +53,7 @@ public class CityForecastFragment extends Fragment {
         TextView humidity = (TextView) view.findViewById(R.id.humidity_textview);
         humidity.setText(weather.getHumidity() + "%");
         TextView wind = (TextView) view.findViewById(R.id.wind_meter_in_second_textview);
-        wind.setText(weather.getWindSpeed() + "");
+        wind.setText(weather.getWindSpeed() + "m/s");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
         feelsLike.setText(weather.getFeelsLike() + "");
 
