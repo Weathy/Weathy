@@ -31,6 +31,7 @@ public class LoadingActivity extends AppCompatActivity{
             if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
                 intent = new Intent(this, RequestWeatherIntentService.class);
                 intent.putExtra("city", "Sofia");
+                intent.putExtra("country", "Bulgaria");
                 startService(intent);
             }
             else{

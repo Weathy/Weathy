@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +22,14 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+
 public class SearchActivity extends AppCompatActivity implements PlaceSelectionListener{
     private String cityName;
+    private String country;
     private Intent intent;
     private ProgressBar progressBar;
     private SearchReceiver receiver;
@@ -46,12 +53,12 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         plevenButton = (Button) findViewById(R.id.pleven_button);
         ruseButton = (Button) findViewById(R.id.ruse_button);
 
-        sofiaButton.setOnClickListener(new CityRequestListener(sofiaButton.getText().toString(),SearchActivity.this));
-        plovdivButton.setOnClickListener(new CityRequestListener(plovdivButton.getText().toString(),SearchActivity.this));
-        varnaButton.setOnClickListener(new CityRequestListener(varnaButton.getText().toString(),SearchActivity.this));
-        burgasButton.setOnClickListener(new CityRequestListener(burgasButton.getText().toString(),SearchActivity.this));
-        plevenButton.setOnClickListener(new CityRequestListener(plevenButton.getText().toString(),SearchActivity.this));
-        ruseButton.setOnClickListener(new CityRequestListener(ruseButton.getText().toString(),SearchActivity.this));
+        sofiaButton.setOnClickListener(new CityRequestListener(sofiaButton.getText().toString(),"Bulgaria",SearchActivity.this));
+        plovdivButton.setOnClickListener(new CityRequestListener(plovdivButton.getText().toString(),"Bulgaria",SearchActivity.this));
+        varnaButton.setOnClickListener(new CityRequestListener(varnaButton.getText().toString(),"Bulgaria",SearchActivity.this));
+        burgasButton.setOnClickListener(new CityRequestListener(burgasButton.getText().toString(),"Bulgaria",SearchActivity.this));
+        plevenButton.setOnClickListener(new CityRequestListener(plevenButton.getText().toString(),"Bulgaria",SearchActivity.this));
+        ruseButton.setOnClickListener(new CityRequestListener(ruseButton.getText().toString(),"Bulgaria",SearchActivity.this));
 
         progressBar = (ProgressBar) findViewById(R.id.progress_search);
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
@@ -86,9 +93,19 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     public void onPlaceSelected(Place place) {
         progressBar.setVisibility(View.VISIBLE);
         cityName = place.getName().toString();
-        Log.e("place selected" , cityName);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocationName(cityName,1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Address address = addresses.get(0);
+        country = address.getCountryName();
+        Log.e("country" , country);
         intent = new Intent(this, RequestWeatherIntentService.class);
         intent.putExtra("city", cityName);
+        intent.putExtra("country", country);
         startService(intent);
     }
 
@@ -96,6 +113,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     public void onError(Status status) {
         Toast.makeText(this, "You did something wrong", Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     protected void onDestroy() {

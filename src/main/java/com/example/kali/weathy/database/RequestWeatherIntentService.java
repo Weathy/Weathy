@@ -82,6 +82,7 @@ public class RequestWeatherIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from weather");
         String city = intent.getStringExtra("city");
+        String country = intent.getStringExtra("country");
         try {
             URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
             HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -104,7 +105,7 @@ public class RequestWeatherIntentService extends IntentService {
             currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/Bulgaria/" + city + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/"+country+"/" + city + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -150,7 +151,12 @@ public class RequestWeatherIntentService extends IntentService {
 
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + ".json");
+            if(!country.equals("Bulgaria")) {
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + "," + country + ".json");
+            }
+            else{
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + ".json");
+            }
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -174,7 +180,6 @@ public class RequestWeatherIntentService extends IntentService {
                 iconURL = currentDay.getString("icon_url");
                 date = currentDay.getJSONObject("date").getString("day") + "." + currentDay.getJSONObject("date").getString("monthname");
                 year = currentDay.getJSONObject("date").getInt("year");
-
                 URL url = new URL(iconURL);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
@@ -191,7 +196,11 @@ public class RequestWeatherIntentService extends IntentService {
 
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + ".json");
+            if(!country.equals("Bulgaria")){
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+"," + country + ".json");
+            }else {
+                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + ".json");
+            }
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
