@@ -40,59 +40,66 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         android:layout_height="wrap_content" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:id="@+id/sofia_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sofia"/>
-
-        <Button
-            android:id="@+id/plovdiv_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Plovdiv" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:id="@+id/varna_button"
-            android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Varna"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/sofia_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sofia"/>
 
-        <Button
-            android:id="@+id/ruse_button"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/plovdiv_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plovdiv" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ruse" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/varna_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Varna"/>
+
+            <Button
+                android:id="@+id/ruse_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ruse" />
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:id="@+id/burgas_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Burgas"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/burgas_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Burgas"/>
 
-        <Button
-            android:id="@+id/pleven_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pleven" />
+            <Button
+                android:id="@+id/pleven_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pleven" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

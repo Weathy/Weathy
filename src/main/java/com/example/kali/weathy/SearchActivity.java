@@ -4,14 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kali.weathy.database.RequestWeatherIntentService;
+import com.example.kali.weathy.model.CityRequestListener;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
@@ -23,6 +26,12 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private Intent intent;
     private ProgressBar progressBar;
     private SearchReceiver receiver;
+    private Button sofiaButton;
+    private Button plovdivButton;
+    private Button varnaButton;
+    private Button burgasButton;
+    private Button plevenButton;
+    private Button ruseButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +39,19 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
         receiver = new SearchReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
+        sofiaButton = (Button) findViewById(R.id.sofia_button);
+        plovdivButton = (Button) findViewById(R.id.plovdiv_button);
+        varnaButton = (Button) findViewById(R.id.varna_button);
+        burgasButton = (Button) findViewById(R.id.burgas_button);
+        plevenButton = (Button) findViewById(R.id.pleven_button);
+        ruseButton = (Button) findViewById(R.id.ruse_button);
 
-
+        sofiaButton.setOnClickListener(new CityRequestListener(sofiaButton.getText().toString(),SearchActivity.this));
+        plovdivButton.setOnClickListener(new CityRequestListener(plovdivButton.getText().toString(),SearchActivity.this));
+        varnaButton.setOnClickListener(new CityRequestListener(varnaButton.getText().toString(),SearchActivity.this));
+        burgasButton.setOnClickListener(new CityRequestListener(burgasButton.getText().toString(),SearchActivity.this));
+        plevenButton.setOnClickListener(new CityRequestListener(plevenButton.getText().toString(),SearchActivity.this));
+        ruseButton.setOnClickListener(new CityRequestListener(ruseButton.getText().toString(),SearchActivity.this));
 
         progressBar = (ProgressBar) findViewById(R.id.progress_search);
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
@@ -95,6 +115,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         @Override
         public void onReceive(Context context, Intent intent) {
             Intent intent1 = new Intent(context,WeatherActivity.class);
+            intent1.putExtra("refresh", "refresh");
             startActivity(intent1);
             finish();
         }
