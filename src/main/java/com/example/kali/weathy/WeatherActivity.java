@@ -1,7 +1,9 @@
 package com.example.kali.weathy;
 
-import android.support.v4.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -9,11 +11,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.kali.weathy.adaptors.TenDayListAdaptor;
+import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
@@ -28,30 +31,18 @@ public class WeatherActivity extends AppCompatActivity
     public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
     private Button searchButton;
     private WeatherPagerAdapter adapter;
+    private  MyInnerReceiver receiver;
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateFragments();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        adapter = new WeatherPagerAdapter(getSupportFragmentManager());
+        receiver = new MyInnerReceiver();
+        registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 
-        String intent = getIntent().getStringExtra("refresh");
-        if(intent != null && !intent.isEmpty()){
-            updateFragments();
-        }
+        adapter = new WeatherPagerAdapter(getSupportFragmentManager());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,33 +66,6 @@ public class WeatherActivity extends AppCompatActivity
             }
         });
 
-    }
-
-    public void updateFragments() {
-        for (int i = 0; i < adapter.getCount(); i++) {
-            Log.e("fragments", "count" + adapter.getCount());
-            Fragment fragment = adapter.getRegisteredFragment(i);
-            if (fragment != null) {
-
-                Log.e("fragments", "2");
-                if (fragment instanceof TenDayFragment) {
-
-                    Log.e("fragments", "3");
-                    TenDayFragment f = (TenDayFragment) fragment;
-                    if (f.adaptor != null) {
-                        f.adaptor.notifyDataSetChanged();
-                    }
-                }
-                if (fragment instanceof TwentyFourFragment) {
-
-                    Log.e("fragments", "4");
-                    TwentyFourFragment f = (TwentyFourFragment) fragment;
-                    if (f.adaptor != null) {
-                        f.adaptor.notifyDataSetChanged();
-                    }
-                }
-            }
-        }
     }
 
 
@@ -132,6 +96,34 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     public ArrayList<Weather.TwentyFourWeather> getData() {
         return twentyFourHourForecast;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(receiver != null){
+            try {
+                unregisterReceiver(receiver);
+            }
+            catch (IllegalArgumentException e){
+
+            }
+        }
+        super.onDestroy();
+    }
+
+    class MyInnerReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
+            TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
+
+            twentyFourFragment.adaptor = new TwentyFourListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTwentyHourForecastObjects());
+            twentyFourFragment.adaptor.notifyDataSetChanged();
+
+            tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
+            tenDayFragment.adaptor.notifyDataSetChanged();
+        }
     }
 
 

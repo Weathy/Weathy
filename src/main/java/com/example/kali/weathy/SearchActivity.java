@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,7 +95,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         @Override
         public void onReceive(Context context, Intent intent) {
             Intent intent1 = new Intent(context,WeatherActivity.class);
-            intent1.putExtra("refresh", "refresh");
             startActivity(intent1);
             finish();
         }

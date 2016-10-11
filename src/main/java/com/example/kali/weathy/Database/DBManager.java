@@ -77,6 +77,10 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void addTwentyHourWeather(int currentTemp, int feels_like, String windSpeed, int humidity, String condition, int pressure, String time, String date, Bitmap icon) {
+        if(twentyHourForecastObjects.size()==24){
+            twentyHourForecastObjects = new ArrayList<>();
+        }
+
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
@@ -96,6 +100,10 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday, int year, Bitmap icon) {
+        if(tenDayForecast.size()==10){
+            tenDayForecast = new ArrayList<>();
+        }
+
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
