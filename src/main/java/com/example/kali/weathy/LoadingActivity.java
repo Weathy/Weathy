@@ -49,6 +49,7 @@ public class LoadingActivity extends AppCompatActivity{
                 intent.putExtra("city", "Sofia");
                 intent.putExtra("country", "Bulgaria");
                 startService(intent);
+                finish();
             }
         }
         else {

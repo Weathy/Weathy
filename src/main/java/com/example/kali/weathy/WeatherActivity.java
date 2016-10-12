@@ -1,6 +1,7 @@
 package com.example.kali.weathy;
 
 import android.app.Activity;
+import android.app.SearchableInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -107,9 +108,14 @@ public class WeatherActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.in_the_moment_item) {
+            vPager.setCurrentItem(0, true);
         } else if (id == R.id.twenty_four_item) {
+            vPager.setCurrentItem(1, true);
         } else if (id == R.id.ten_day_item) {
+            vPager.setCurrentItem(2, true);
         } else if (id == R.id.serch_item) {
+            Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
+            startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
