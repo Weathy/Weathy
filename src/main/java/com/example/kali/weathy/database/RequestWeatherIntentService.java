@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.kali.weathy.WeatherActivity;
 import com.example.kali.weathy.database.DBManager;
@@ -72,6 +73,7 @@ public class RequestWeatherIntentService extends IntentService {
     private String hourlyDate;
     private Bitmap hourlyIcon;
     private ArrayList<Weather.TwentyFourWeather> hourlyList = new ArrayList<>();
+    public static final int OPENWEATHER_ERROR_CODE = 500;
 
     public RequestWeatherIntentService() {
         super("MyIntentService");
@@ -84,9 +86,15 @@ public class RequestWeatherIntentService extends IntentService {
         String city = intent.getStringExtra("city");
         String country = intent.getStringExtra("country");
         try {
-            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+
             HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
+            if(weatherConnection.getResponseCode()==OPENWEATHER_ERROR_CODE){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                return;
+            }
             InputStream weatherStream = weatherConnection.getInputStream();
             Scanner weatherScanner = new Scanner(weatherStream);
             while (weatherScanner.hasNextLine()) {
@@ -105,7 +113,7 @@ public class RequestWeatherIntentService extends IntentService {
             currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/"+country+"/" + city + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/"+country+"/"+city+".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -113,7 +121,15 @@ public class RequestWeatherIntentService extends IntentService {
             while (weatherScanner.hasNextLine()) {
                 weatherJSON.append(weatherScanner.nextLine());
             }
+
+            Log.e("json" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
+            if(weather.getJSONObject("response").has("error")){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                Log.e("error" , weather.toString());
+                return;
+            }
             Log.e("secondJSON", weather.toString());
             feelsLike = weather.getJSONObject("current_observation").getInt("feelslike_c");
             String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
@@ -151,12 +167,7 @@ public class RequestWeatherIntentService extends IntentService {
 
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            if(!country.equals("Bulgaria")) {
-                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + "," + country + ".json");
-            }
-            else{
-                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + ".json");
-            }
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/"+city+"," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -164,7 +175,13 @@ public class RequestWeatherIntentService extends IntentService {
             while (weatherScanner.hasNextLine()) {
                 weatherJSON.append(weatherScanner.nextLine());
             }
+            Log.e("thirdJson" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
+            if(weather.getJSONObject("response").has("error")){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                return;
+            }
             JSONObject forecastJSON = weather.getJSONObject("forecast").getJSONObject("simpleforecast");
             JSONArray forecastArray = forecastJSON.getJSONArray("forecastday");
             for (int i = 0; i < forecastArray.length(); i++) {
@@ -196,19 +213,22 @@ public class RequestWeatherIntentService extends IntentService {
 
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            if(!country.equals("Bulgaria")){
-                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+"," + country + ".json");
-            }else {
-                weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + ".json");
-            }
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+"," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
+
+            Log.e("code4" , weatherConnection.getResponseCode()+"");
             weatherStream = weatherConnection.getInputStream();
             weatherScanner = new Scanner(weatherStream);
             while (weatherScanner.hasNextLine()) {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
+            if(weather.getJSONObject("response").has("error")){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                return;
+            }
             JSONArray twentyFourArray = weather.getJSONArray("hourly_forecast");
             for (int i = 0; i < 24; i++) {
                 JSONObject obj1 = new JSONObject(twentyFourArray.getJSONObject(i).toString());

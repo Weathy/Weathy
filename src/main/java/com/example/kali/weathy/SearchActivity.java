@@ -11,6 +11,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -57,6 +59,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private Location mLastLocation;
     private String latitude;
     private String longtitude;
+    private ErrorReceiver secondReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
         receiver = new SearchReceiver();
         registerReceiver(receiver, new IntentFilter("SerciveComplete"));
+        secondReceiver = new ErrorReceiver();
+        registerReceiver(secondReceiver,new IntentFilter("Error"));
         sofiaButton = (Button) findViewById(R.id.sofia_button);
         plovdivButton = (Button) findViewById(R.id.plovdiv_button);
         varnaButton = (Button) findViewById(R.id.varna_button);
@@ -94,7 +99,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     final AlertDialog.Builder builder =  new AlertDialog.Builder(SearchActivity.this);
                     final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                    final String message = "No GPS Connection!!!Do you want open GPS setting?";
+                    final String message = "No GPS Connection! Do you want open GPS setting?";
 
                     builder.setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface d, int id) {
@@ -171,6 +176,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         if (receiver != null) {
             try {
                 unregisterReceiver(receiver);
+                unregisterReceiver(secondReceiver);
                 mGoogleApiClient.disconnect();
             } catch (IllegalArgumentException e) {
 
@@ -182,13 +188,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         Log.e("connect" , "con");
@@ -215,6 +215,22 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
             startActivity(intent1);
             finish();
         }
+    }
+
+    class ErrorReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
     public void getLocation() {

@@ -19,6 +19,7 @@ public class LoadingActivity extends AppCompatActivity{
     private  MyInnerReceiver receiver;
     private ProgressBar loadingProgressBar;
     private Intent intent;
+    private ErrorReceiver secondReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class LoadingActivity extends AppCompatActivity{
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
+        secondReceiver = new ErrorReceiver();
+        registerReceiver(secondReceiver,new IntentFilter("Error"));
         if(isNetworkAvailable()){
             if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
                 intent = new Intent(this, RequestWeatherIntentService.class);
@@ -35,10 +38,10 @@ public class LoadingActivity extends AppCompatActivity{
                 startService(intent);
             }
             else{
-                intent = new Intent(LoadingActivity.this,WeatherActivity.class);
-                startActivity(intent);
-                unregisterReceiver(receiver);
-                finish();
+                intent = new Intent(this, RequestWeatherIntentService.class);
+                intent.putExtra("city", "Sofia");
+                intent.putExtra("country", "Bulgaria");
+                startService(intent);
             }
         }
         else {
@@ -64,6 +67,16 @@ public class LoadingActivity extends AppCompatActivity{
         }
     }
 
+
+    class ErrorReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
+            loadingProgressBar.setVisibility(View.GONE);
+        }
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -75,6 +88,7 @@ public class LoadingActivity extends AppCompatActivity{
     protected void onDestroy() {
         if(receiver != null){
             try {
+                unregisterReceiver(secondReceiver);
                 unregisterReceiver(receiver);
             }
             catch (IllegalArgumentException e){
