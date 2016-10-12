@@ -21,8 +21,9 @@ public class Weather {
     private String visibility;
     private String lastUpdate;
     private Bitmap icon;
+    private String dayLength;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String iconString, int temp_min, int temp_max, String visibility,String lastUpdate, Bitmap icon) {
+    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String iconString, int temp_min, int temp_max, String visibility,String lastUpdate,String dayLength, Bitmap icon) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -37,6 +38,7 @@ public class Weather {
         this.feelsLike = feelsLike;
         this.visibility = visibility;
         this.lastUpdate = lastUpdate;
+        this.dayLength = dayLength;
         this.icon = icon;
     }
 
@@ -98,6 +100,10 @@ public class Weather {
 
     public Bitmap getIcon() {
         return icon;
+    }
+
+    public String getDayLength() {
+        return dayLength;
     }
 
     public static class TwentyFourWeather implements Serializable {

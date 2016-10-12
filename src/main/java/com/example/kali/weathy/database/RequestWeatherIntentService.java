@@ -61,7 +61,7 @@ public class RequestWeatherIntentService extends IntentService {
     private String weekDay;
     private int yearDay;
     private int year;
-
+    private String dayLength;
     private int hourlyCurrentTemp;
     private int hourlyFeelsLike;
     private double hourlyWindSpeed;
@@ -72,6 +72,8 @@ public class RequestWeatherIntentService extends IntentService {
     private String hourlyIconURL;
     private String hourlyDate;
     private Bitmap hourlyIcon;
+    private String latitude;
+    private String longtitude;
     private ArrayList<Weather.TwentyFourWeather> hourlyList = new ArrayList<>();
     public static final int OPENWEATHER_ERROR_CODE = 500;
 
@@ -135,21 +137,9 @@ public class RequestWeatherIntentService extends IntentService {
             String[] up = weather.getJSONObject("current_observation").getString("local_time_rfc822").split("[+]");
             lastUpdate = up[0];
             cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
-
-           /* weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22"+city+"%2C%20bg%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys");
-            weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
-            weatherConnection.setRequestMethod("GET");
-            weatherStream = weatherConnection.getInputStream();
-            weatherScanner = new Scanner(weatherStream);
-            while (weatherScanner.hasNextLine()) {
-                weatherJSON.append(weatherScanner.nextLine());
-            }
-            weather = new JSONObject(weatherJSON.toString());
-            visibility = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("atmosphere").getDouble("visibility");
-            sunset = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunset");
-            sunrise = weather.getJSONObject("query").getJSONObject("results").getJSONObject("channel").getJSONObject("astronomy").getString("sunrise");
-            */
+            visibility =  weather.getJSONObject("current_observation").getDouble("visibility_km");
+            longtitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("longitude");
+            latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
             {
                 String urlString = "http://openweathermap.org/img/w/" + icon + ".png";
                 URL url = new URL(urlString);
@@ -160,8 +150,58 @@ public class RequestWeatherIntentService extends IntentService {
                 iconImage = BitmapFactory.decodeStream(input);
                 input.close();
             }
+            weatherJSON.delete(0, weatherJSON.length());
+            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"&formatted=0");
+            weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+            weatherConnection.setRequestMethod("GET");
+            weatherStream = weatherConnection.getInputStream();
+            weatherScanner = new Scanner(weatherStream);
+            while (weatherScanner.hasNextLine()) {
+                weatherJSON.append(weatherScanner.nextLine());
 
-            DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility + "", lastUpdate, iconImage);
+            }
+
+            Log.e("fourthJSON" , weatherJSON.toString());
+            weather = new JSONObject(weatherJSON.toString());
+            if(weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR") ){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                Log.e("error" , weather.toString());
+                return;
+            }
+
+            String[] suns = weather.getJSONObject("results").getString("sunset").split("T");
+            sunset = suns[1];
+            suns = sunset.split("\\+");
+            sunset = suns[0];
+            String[] sunr = weather.getJSONObject("results").getString("sunrise").split("T");
+            sunrise = sunr[1];
+            sunr = sunrise.split("\\+");
+            sunrise = sunr[0];
+
+            weatherJSON.delete(0, weatherJSON.length());
+            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"&");
+            weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+            weatherConnection.setRequestMethod("GET");
+            weatherStream = weatherConnection.getInputStream();
+            weatherScanner = new Scanner(weatherStream);
+            while (weatherScanner.hasNextLine()) {
+                weatherJSON.append(weatherScanner.nextLine());
+
+            }
+
+            Log.e("fourthJSON" , weatherJSON.toString());
+            weather = new JSONObject(weatherJSON.toString());
+            if(weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR") ){
+                Intent intent1 = new Intent("Error");
+                sendBroadcast(intent1);
+                Log.e("error" , weather.toString());
+                return;
+            }
+            dayLength = weather.getJSONObject("results").getString("day_length");
+
+
+            DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility + "", lastUpdate,dayLength, iconImage);
 
             //Ten day data request
 

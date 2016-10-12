@@ -3,6 +3,7 @@ package com.example.kali.weathy;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +35,25 @@ public class CityForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_city_forecast, container, false);
         weather = DBManager.getInstance(getActivity()).getLastWeather();
+        String[] lastUp = DBManager.getInstance(getActivity()).getLastWeather().getLastUpdate().split(" ");
+        String [] data = lastUp[4].split(":");
+        int last = Integer.parseInt(data[0]);
         TextView cityNameTV = (TextView) getActivity().findViewById(R.id.city_name_textview);
         cityNameTV.setText(weather.getCityName());
         TextView visibilityTV = (TextView) view.findViewById(R.id.visibility_textview);
-        visibilityTV.setText(weather.getVisibility() + "");
+        visibilityTV.setText(weather.getVisibility() + "km");
         TextView lastUpdateTV = (TextView) getActivity().findViewById(R.id.renewed_textview);
         lastUpdateTV.setText(weather.getLastUpdate());
+        TextView sunrise = (TextView) view.findViewById(R.id.sunset_id);
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
-        sunsetTV.setText(weather.getSunset());
+        if(last>20 || last<8){
+            sunrise.setText("Sunrise:");
+            sunsetTV.setText(weather.getSunrise() + "h");
+        }else {
+            sunrise.setText("Sunset:");
+            sunsetTV.setText(weather.getSunset() + "h");
+        }
+
         TextView feelsLikeTV = (TextView) view.findViewById(R.id.temperature_status_textview);
         feelsLikeTV.setText(weather.getFeelsLike() + "");
         TextView statusTV = (TextView) view.findViewById(R.id.weather_status_textview);
@@ -56,7 +68,8 @@ public class CityForecastFragment extends Fragment {
         wind.setText(weather.getWindSpeed() + "m/s");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
         feelsLike.setText(weather.getFeelsLike() + "");
-
+        TextView dayLength = (TextView) view.findViewById(R.id.day_length_textview);
+        dayLength.setText(weather.getDayLength()+"h");
         ImageView icon = (ImageView) view.findViewById(R.id.weather_status_imageview);
         icon.setImageBitmap(weather.getIcon());
 

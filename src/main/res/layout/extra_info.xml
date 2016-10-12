@@ -46,11 +46,12 @@
                 android:textSize="20sp"/>
 
             <TextView
+                android:id="@+id/sunset_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Time to sunset:"
+                android:text="Sunset:"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 
