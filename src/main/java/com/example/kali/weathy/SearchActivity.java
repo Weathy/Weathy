@@ -3,6 +3,7 @@ package com.example.kali.weathy;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -10,9 +11,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,6 +78,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+            mGoogleApiClient.connect();
         }
 
         sofiaButton.setOnClickListener(new CityRequestListener(sofiaButton.getText().toString(), "Bulgaria", SearchActivity.this));
@@ -88,8 +92,22 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
             public void onClick(View v) {
                 final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(SearchActivity.this, "NO GPS CONNECTION", Toast.LENGTH_SHORT).show();
-                }else{
+                    final AlertDialog.Builder builder =  new AlertDialog.Builder(SearchActivity.this);
+                    final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+                    final String message = "No GPS Connection!!!Do you want open GPS setting?";
+
+                    builder.setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface d, int id) {
+                            startActivity(new Intent(action));
+                            d.dismiss();
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface d, int id) {
+                            d.cancel();
+                        }
+                    });
+                    builder.create().show();
+                } else {
                     getLocation();
                 }
             }
@@ -162,12 +180,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     }
 
     @Override
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -179,6 +191,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        Log.e("connect" , "con");
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
     }
@@ -205,40 +218,48 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     }
 
     public void getLocation() {
-
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            Toast.makeText(this, "gps disable", Toast.LENGTH_SHORT).show();
-        }else {
-            if (mLastLocation != null) {
-                Log.e("location" , "!=null");
-                latitude = Double.toString(mLastLocation.getLatitude());
-                longtitude = Double.toString(mLastLocation.getLongitude());
-                double lat = Double.valueOf(mLastLocation.getLatitude());
-                double lng = Double.valueOf(mLastLocation.getLongitude());
-                Log.e("latitude", latitude);
-                Log.e("longitude", longtitude);
-                Geocoder gcd = new Geocoder(this, Locale.getDefault());
-                List<Address> addresses = null;
-                try {
-                    addresses = gcd.getFromLocation(lat,lng, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (addresses.size() > 0){
-                    this.cityName = addresses.get(0).getLocality();
-                    this.country = addresses.get(0).getCountryName();
-                    progressBar.setVisibility(View.VISIBLE);
-                    intent = new Intent(this, RequestWeatherIntentService.class);
-                    intent.putExtra("city", cityName);
-                    intent.putExtra("country", country);
-                    startService(intent);
-
-                }
-            }else{
-                Log.e("location" , "null");
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.e("location", "!=null");
+            latitude = Double.toString(mLastLocation.getLatitude());
+            longtitude = Double.toString(mLastLocation.getLongitude());
+            double lat = Double.valueOf(mLastLocation.getLatitude());
+            double lng = Double.valueOf(mLastLocation.getLongitude());
+            Log.e("latitude", latitude);
+            Log.e("longitude", longtitude);
+            Geocoder gcd = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = gcd.getFromLocation(lat, lng, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            if (addresses.size() > 0) {
+                this.cityName = addresses.get(0).getLocality();
+                this.country = addresses.get(0).getCountryName();
+                progressBar.setVisibility(View.VISIBLE);
+                intent = new Intent(this, RequestWeatherIntentService.class);
+                intent.putExtra("city", cityName);
+                intent.putExtra("country", country);
+                startService(intent);
+
+            }
+        } else {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.e("location" , "null");
+                return;
+            }
+            Log.e("con" , "null");
+
         }
     }
-
 }
