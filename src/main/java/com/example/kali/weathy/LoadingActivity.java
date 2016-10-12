@@ -1,5 +1,7 @@
 package com.example.kali.weathy;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +10,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.kali.weathy.database.AlarmReceiver;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
@@ -25,6 +29,9 @@ public class LoadingActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+
+        startAlarm();
+
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
@@ -97,4 +104,21 @@ public class LoadingActivity extends AppCompatActivity{
         }
         super.onDestroy();
     }
+
+
+    private void startAlarm(){
+        Log.e("ALARM", "HOY");
+        Intent alrm = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alrm, 0);
+
+        int interval = 1;
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), minsToMillis(interval), pendingIntent);
+    }
+
+    private long minsToMillis(int x){
+        return x*60*1000;
+    }
+
 }
