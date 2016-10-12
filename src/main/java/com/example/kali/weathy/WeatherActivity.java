@@ -1,5 +1,6 @@
 package com.example.kali.weathy;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +15,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
 import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
+import com.example.kali.weathy.database.RequestWeatherIntentService;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class WeatherActivity extends AppCompatActivity
     public ViewPager vPager;
     public ArrayList<Weather.TwentyFourWeather> twentyFourHourForecast = new ArrayList<>();
     private Button searchButton;
+    private Button refreshButton;
     private WeatherPagerAdapter adapter;
     private  MyInnerReceiver receiver;
 
@@ -41,6 +45,12 @@ public class WeatherActivity extends AppCompatActivity
 
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
+
+
+        TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
+        cityNameTV.setText(DBManager.getInstance(this).getLastWeather().getCityName());
+        TextView lastUpdateTV = (TextView) findViewById(R.id.renewed_textview);
+        lastUpdateTV.setText(DBManager.getInstance(this).getLastWeather().getLastUpdate());
 
         adapter = new WeatherPagerAdapter(getSupportFragmentManager());
 
@@ -63,6 +73,19 @@ public class WeatherActivity extends AppCompatActivity
                 intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        refreshButton = (Button) findViewById(R.id.refresh_button);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
+                String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
+                String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
+                intent.putExtra("city", city);
+                intent.putExtra("country", country.trim());
+                startService(intent);
             }
         });
 
@@ -115,6 +138,7 @@ public class WeatherActivity extends AppCompatActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
             TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
 
@@ -123,8 +147,10 @@ public class WeatherActivity extends AppCompatActivity
 
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
+
+            WeatherActivity.this.recreate();
+
         }
     }
-
 
 }

@@ -38,12 +38,8 @@ public class CityForecastFragment extends Fragment {
         String[] lastUp = DBManager.getInstance(getActivity()).getLastWeather().getLastUpdate().split(" ");
         String [] data = lastUp[4].split(":");
         int last = Integer.parseInt(data[0]);
-        TextView cityNameTV = (TextView) getActivity().findViewById(R.id.city_name_textview);
-        cityNameTV.setText(weather.getCityName());
         TextView visibilityTV = (TextView) view.findViewById(R.id.visibility_textview);
         visibilityTV.setText(weather.getVisibility() + "km");
-        TextView lastUpdateTV = (TextView) getActivity().findViewById(R.id.renewed_textview);
-        lastUpdateTV.setText(weather.getLastUpdate());
         TextView sunrise = (TextView) view.findViewById(R.id.sunset_id);
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
         if(last>20 || last<8){

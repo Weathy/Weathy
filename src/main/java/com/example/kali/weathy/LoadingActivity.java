@@ -71,6 +71,7 @@ public class LoadingActivity extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Intent intent1 = new Intent(context,WeatherActivity.class);
             startActivity(intent1);
+            finish();
         }
     }
 

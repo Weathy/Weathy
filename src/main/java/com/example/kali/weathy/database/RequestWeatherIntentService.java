@@ -292,9 +292,10 @@ public class RequestWeatherIntentService extends IntentService {
 
                 DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate, hourlyIcon);
 
-                Intent intent1 = new Intent("SerciveComplete");
-                sendBroadcast(intent1);
             }
+            Intent intent1 = new Intent("SerciveComplete");
+            sendBroadcast(intent1);
+
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

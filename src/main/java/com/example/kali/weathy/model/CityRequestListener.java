@@ -11,9 +11,6 @@ import android.widget.Toast;
 import com.example.kali.weathy.R;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
-/**
- * Created by iliqn on 11.10.2016 г..
- */
 
 public class CityRequestListener implements View.OnClickListener {
     private String city;

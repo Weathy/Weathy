@@ -3,10 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.kali.weathy.WeatherActivity"
     tools:showIn="@layout/app_bar_weather">
@@ -17,11 +17,17 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/search_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/button"
             android:layout_alignParentRight="true"
-            android:id="@+id/search_button" />
+            android:background="@drawable/button" />
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="R"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -30,32 +36,30 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/city_name_textview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/city_name_textview"
             android:gravity="center_horizontal"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/renewed_textview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/renewed_textview"
             android:gravity="center_horizontal"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.view.ViewPager xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:showIn="@layout/app_bar_weather">
-    </android.support.v4.view.ViewPager>
+        tools:showIn="@layout/app_bar_weather"></android.support.v4.view.ViewPager>
 
 
 </LinearLayout>
