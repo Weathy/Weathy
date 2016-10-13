@@ -47,7 +47,6 @@ public class TenDayListAdaptor extends ArrayAdapter{
         TextView maxT = (TextView) view.findViewById(R.id.max_temp_tv);
         maxT.setText(weather.getMaxTemp()+"℃");
         ImageView icon = (ImageView) view.findViewById(R.id.icon_iv);
-        icon.setImageBitmap(weather.getIcon());
 
         return view;
     }

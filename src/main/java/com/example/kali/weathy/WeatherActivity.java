@@ -2,7 +2,9 @@ package com.example.kali.weathy;
 
 import android.app.Activity;
 import android.app.SearchableInfo;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
@@ -115,7 +118,9 @@ public class WeatherActivity extends AppCompatActivity
             vPager.setCurrentItem(2, true);
         } else if (id == R.id.serch_item) {
             Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
+            intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
             startActivity(intent);
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -153,6 +158,10 @@ public class WeatherActivity extends AppCompatActivity
 
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
+
+            ComponentName thisWidget = new ComponentName( context, Widget.class );
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.weathy_widget_info);
+            AppWidgetManager.getInstance( context ).updateAppWidget( thisWidget, remoteViews );
 
             WeatherActivity.this.recreate();
 

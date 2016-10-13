@@ -17,13 +17,12 @@ public class Weather {
     private String windSpeed;
     private int humidity;
     private int pressure;
-    private int feelsLike;
+    private double feelsLike;
     private String visibility;
     private String lastUpdate;
-    private Bitmap icon;
     private String dayLength;
 
-    public Weather(String cityName,int currentTemp,int feelsLike ,int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String iconString, int temp_min, int temp_max, String visibility,String lastUpdate,String dayLength, Bitmap icon) {
+    public Weather(String cityName, int currentTemp, double feelsLike , int humidity, String windSpeed, int pressure, String sunrise, String sunset, String description, String iconString, int temp_min, int temp_max, String visibility, String lastUpdate, String dayLength) {
         this.cityName = cityName;
         this.currentTemp = currentTemp;
         this.humidity = humidity;
@@ -39,7 +38,6 @@ public class Weather {
         this.visibility = visibility;
         this.lastUpdate = lastUpdate;
         this.dayLength = dayLength;
-        this.icon = icon;
     }
 
     public String getCityName() {
@@ -86,7 +84,7 @@ public class Weather {
         return currentTemp;
     }
 
-    public int getFeelsLike() {
+    public double getFeelsLike() {
         return feelsLike;
     }
 
@@ -96,10 +94,6 @@ public class Weather {
 
     public String getLastUpdate() {
         return lastUpdate;
-    }
-
-    public Bitmap getIcon() {
-        return icon;
     }
 
     public String getDayLength() {
@@ -117,9 +111,7 @@ public class Weather {
         private int airPressure;
         private String time;
         private String date;
-        private Bitmap icon;
-
-        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, String windSpeed, int humidity, String condition, int airPressure, String time, String date, Bitmap icon) {
+        public TwentyFourWeather(int currentTemp, String iconURL, int feelsLike, String windSpeed, int humidity, String condition, int airPressure, String time, String date) {
             this.currentTemp = currentTemp;
             this.iconURL = iconURL;
             this.feelsLike = feelsLike;
@@ -129,9 +121,6 @@ public class Weather {
             this.airPressure = airPressure;
             this.time = time;
             this.date = date;
-            this.icon = icon;
-
-            Log.e("BLOB", "this one was created");
 
         }
 
@@ -171,9 +160,6 @@ public class Weather {
             return date;
         }
 
-        public Bitmap getIcon() {
-            return icon;
-        }
 
     }
 
@@ -189,9 +175,8 @@ public class Weather {
         private String weekDay;
         private int yearDay;
         private int year;
-        private Bitmap icon;
 
-        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay, int year, Bitmap icon) {
+        public TenDayWeather(String date, int maxTemp, int minTemp, String condition, String iconURL, Double windSpeed, int humidity, String weekDay, int yearDay, int year) {
             this.date = date;
             this.maxTemp = maxTemp;
             this.minTemp = minTemp;
@@ -202,7 +187,6 @@ public class Weather {
             this.weekDay = weekDay;
             this.yearDay = yearDay;
             this.year = year;
-            this.icon = icon;
         }
 
         public String getDate() {
@@ -245,8 +229,5 @@ public class Weather {
             return year;
         }
 
-        public Bitmap getIcon() {
-            return icon;
-        }
     }
 }

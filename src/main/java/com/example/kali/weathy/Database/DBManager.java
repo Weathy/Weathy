@@ -32,7 +32,7 @@ public class DBManager extends SQLiteOpenHelper {
     private DBManager(Context context) {
         super(context, "myDB", null, version);
         this.context = context;
-        lastWeather = new Weather(null, 0, 0, 0, null, 0, null, null, null, null, 0, 0, null, null,null, null);
+        lastWeather = new Weather(null, 0, 0, 0, null, 0, null, null, null, null, 0, 0, null, null,null);
         twentyHourForecastObjects = new ArrayList<>();
         tenDayForecast = new ArrayList<>();
         loadData();
@@ -40,9 +40,9 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like INTEGER, visibility text,last_update text, day_length text , icon BLOB  )");
-        db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text, icon BLOB)");
-        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER, icon BLOB)");
+        db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like REAL, visibility text,last_update text, day_length text )");
+        db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
+        db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER)");
 
     }
 
@@ -51,7 +51,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
-    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, int feels_like, String visibility, String last_update,String dayLength, Bitmap icon) {
+    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, double feels_like, String visibility, String last_update,String dayLength) {
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
         ContentValues values = new ContentValues();
@@ -69,15 +69,14 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("visibility", visibility);
         values.put("last_update", last_update);
         values.put("day_length", dayLength);
-        values.put("icon", Utility.getBytes(icon));
         database.insert("weather", null, values);
-        lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,dayLength, icon);
+        lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,dayLength);
         database.setTransactionSuccessful();
         database.endTransaction();
 
     }
 
-    public void addTwentyHourWeather(int currentTemp, int feels_like, String windSpeed, int humidity, String condition, int pressure, String time, String date, Bitmap icon) {
+    public void addTwentyHourWeather(int currentTemp, int feels_like, String windSpeed, int humidity, String condition, int pressure, String time, String date) {
         if(twentyHourForecastObjects.size()==24){
             twentyHourForecastObjects = new ArrayList<>();
         }
@@ -93,14 +92,13 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("pressure", pressure);
         values.put("time", time);
         values.put("date", date);
-        values.put("icon", Utility.getBytes(icon));
         database.insert("twenty_hour_forecast", null, values);
-        twentyHourForecastObjects.add(new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date, icon));
+        twentyHourForecastObjects.add(new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date));
         database.setTransactionSuccessful();
         database.endTransaction();
     }
 
-    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday, int year, Bitmap icon) {
+    public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday, int year) {
         if(tenDayForecast.size()==10){
             tenDayForecast = new ArrayList<>();
         }
@@ -117,9 +115,8 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("weekday", weekday);
         values.put("yearday", yearday);
         values.put("year", year);
-        values.put("icon", Utility.getBytes(icon));
         database.insert("ten_day_forecast", null, values);
-        tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year, icon));
+        tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year));
         database.setTransactionSuccessful();
         database.endTransaction();
 
@@ -139,7 +136,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     private void loadData() {
         if (lastWeather.getCityName() == null) {
-            Cursor cursor = getWritableDatabase().rawQuery("SELECT cityName, currentTemp, condition,temp_min,temp_max, sunrise, sunset, windSpeed, humidity, pressure, feels_like, visibility,last_update, day_length, icon  FROM  weather", null);
+            Cursor cursor = getWritableDatabase().rawQuery("SELECT cityName, currentTemp, condition,temp_min,temp_max, sunrise, sunset, windSpeed, humidity, pressure, feels_like, visibility,last_update, day_length  FROM  weather", null);
             while (cursor.moveToNext()) {
                 String cityName = cursor.getString(cursor.getColumnIndex("cityName"));
                 int currentTemp = cursor.getInt(cursor.getColumnIndex("currentTemp"));
@@ -155,9 +152,8 @@ public class DBManager extends SQLiteOpenHelper {
                 String visibility = cursor.getString(cursor.getColumnIndex("visibility"));
                 String last_update = cursor.getString(cursor.getColumnIndex("last_update"));
                 String day_length = cursor.getString(cursor.getColumnIndex("day_length"));
-                Bitmap icon = Utility.getIcon(cursor.getBlob(cursor.getColumnIndex("icon")));
 
-                lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,day_length, icon);
+                lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,day_length);
 
             }
 
@@ -167,7 +163,7 @@ public class DBManager extends SQLiteOpenHelper {
         }
 
         if (twentyHourForecastObjects.isEmpty()) {
-            Cursor cursor = getWritableDatabase().rawQuery("SELECT currentTemp, feels_like, windSpeed, humidity, condition, pressure, time, date, icon FROM  twenty_hour_forecast", null);
+            Cursor cursor = getWritableDatabase().rawQuery("SELECT currentTemp, feels_like, windSpeed, humidity, condition, pressure, time, date FROM  twenty_hour_forecast", null);
             while (cursor.moveToNext()) {
                 int currentTemp = cursor.getInt(cursor.getColumnIndex("currentTemp"));
                 int feels_like = cursor.getInt(cursor.getColumnIndex("feels_like"));
@@ -177,9 +173,8 @@ public class DBManager extends SQLiteOpenHelper {
                 int pressure = cursor.getInt(cursor.getColumnIndex("pressure"));
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 String date = cursor.getString(cursor.getColumnIndex("date"));
-                Bitmap icon = Utility.getIcon(cursor.getBlob(cursor.getColumnIndex("icon")));
 
-                Weather.TwentyFourWeather weather = new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date, icon);
+                Weather.TwentyFourWeather weather = new Weather.TwentyFourWeather(currentTemp, null, feels_like, windSpeed, humidity, condition, pressure, time, date);
                 twentyHourForecastObjects.add(weather);
 
             }
@@ -190,7 +185,7 @@ public class DBManager extends SQLiteOpenHelper {
         }
 
         if (tenDayForecast.isEmpty()) {
-            Cursor cursor = getWritableDatabase().rawQuery("SELECT date, min_temp, max_temp, condition, windspeed, humidity, weekday, yearday, year, icon FROM  ten_day_forecast", null);
+            Cursor cursor = getWritableDatabase().rawQuery("SELECT date, min_temp, max_temp, condition, windspeed, humidity, weekday, yearday, year FROM  ten_day_forecast", null);
             while (cursor.moveToNext()) {
                 String date = cursor.getString(cursor.getColumnIndex("date"));
                 int min_temp = cursor.getInt(cursor.getColumnIndex("min_temp"));
@@ -201,9 +196,8 @@ public class DBManager extends SQLiteOpenHelper {
                 String weekday = cursor.getString(cursor.getColumnIndex("weekday"));
                 int yearday = cursor.getInt(cursor.getColumnIndex("yearday"));
                 int year = cursor.getInt(cursor.getColumnIndex("year"));
-                Bitmap icon = Utility.getIcon(cursor.getBlob(cursor.getColumnIndex("icon")));
 
-                Weather.TenDayWeather weather = new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year, icon);
+                Weather.TenDayWeather weather = new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year);
                 tenDayForecast.add(weather);
 
             }

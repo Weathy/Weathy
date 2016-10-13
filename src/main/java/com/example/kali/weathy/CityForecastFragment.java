@@ -36,13 +36,17 @@ public class CityForecastFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_city_forecast, container, false);
         weather = DBManager.getInstance(getActivity()).getLastWeather();
         String[] lastUp = DBManager.getInstance(getActivity()).getLastWeather().getLastUpdate().split(" ");
-        String [] data = lastUp[4].split(":");
-        int last = Integer.parseInt(data[0]);
+        String [] data = lastUp[1].split(":");
+        int hour = Integer.parseInt(data[0]);
         TextView visibilityTV = (TextView) view.findViewById(R.id.visibility_textview);
-        visibilityTV.setText(weather.getVisibility() + "km");
+        if(weather.getVisibility().equals("N/A")){
+            visibilityTV.setText(weather.getVisibility());
+        }else{
+            visibilityTV.setText(weather.getVisibility() + "km");
+        }
         TextView sunrise = (TextView) view.findViewById(R.id.sunset_id);
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
-        if(last>20 || last<8){
+        if(hour>20 || hour<8){
             sunrise.setText("Sunrise:");
             sunsetTV.setText(weather.getSunrise() + "h");
         }else {
@@ -67,7 +71,6 @@ public class CityForecastFragment extends Fragment {
         TextView dayLength = (TextView) view.findViewById(R.id.day_length_textview);
         dayLength.setText(weather.getDayLength()+"h");
         ImageView icon = (ImageView) view.findViewById(R.id.weather_status_imageview);
-        icon.setImageBitmap(weather.getIcon());
 
          switch (weather.getDescription()) {
             case "Clear":

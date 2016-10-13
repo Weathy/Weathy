@@ -46,7 +46,6 @@ public class TwentyFourDialogFragment extends DialogFragment {
         TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
         airPressure.setText(weather.getAirPressure() + "hPa");
         ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
-        icon.setImageBitmap(weather.getIcon());
 
         Button close = (Button) root.findViewById(R.id.close_dialog_button);
         close.setOnClickListener(new View.OnClickListener() {

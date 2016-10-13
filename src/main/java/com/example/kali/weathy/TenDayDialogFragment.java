@@ -47,7 +47,6 @@ public class TenDayDialogFragment extends DialogFragment {
         TextView dayOfTheYear = (TextView) root.findViewById(R.id.dialog_day_of_the_year_tv);
         dayOfTheYear.setText(weather.getYearDay()+"");
         ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
-        icon.setImageBitmap(weather.getIcon());
 
         Button close = (Button) root.findViewById(R.id.close_dialog_button);
         close.setOnClickListener(new View.OnClickListener() {

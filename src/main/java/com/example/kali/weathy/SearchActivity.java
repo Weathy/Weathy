@@ -55,6 +55,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private Button plevenButton;
     private Button ruseButton;
     private Button gpsButton;
+    private Button backButton;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private String latitude;
@@ -143,12 +144,24 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         } else {
             findViewById(R.id.activity_search).setBackgroundResource(R.drawable.loading_screen_background);
         }
+
+        backButton = (Button) findViewById(R.id.back_search_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchActivity.this, WeatherActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override
     public void onPlaceSelected(Place place) {
         progressBar.setVisibility(View.VISIBLE);
         cityName = place.getName().toString();
+        Log.e("addres" , place.getAddress()+"");
+        Locale locale = place.getLocale();
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = null;
         try {

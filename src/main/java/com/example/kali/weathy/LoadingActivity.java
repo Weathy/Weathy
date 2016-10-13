@@ -30,8 +30,6 @@ public class LoadingActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
-        startAlarm();
-
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
@@ -42,11 +40,13 @@ public class LoadingActivity extends AppCompatActivity{
                 intent = new Intent(this, RequestWeatherIntentService.class);
                 intent.putExtra("city", "Sofia");
                 intent.putExtra("country", "Bulgaria");
+                Log.e("internet" , "net" );
                 startService(intent);
             }
             else{
                 intent = new Intent(this, RequestWeatherIntentService.class);
                 intent.putExtra("city", "Sofia");
+                Log.e("no internet" , "no net" );
                 intent.putExtra("country", "Bulgaria");
                 startService(intent);
             }
@@ -83,6 +83,7 @@ public class LoadingActivity extends AppCompatActivity{
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
             loadingProgressBar.setVisibility(View.GONE);
 
+
         }
     }
 
@@ -108,12 +109,12 @@ public class LoadingActivity extends AppCompatActivity{
     }
 
 
-    private void startAlarm(){
+  /*  private void startAlarm(){
         Log.e("ALARM", "HOY");
         Intent alrm = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alrm, 0);
 
-        int interval = 1;
+        int interval = 60;
 
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), minsToMillis(interval), pendingIntent);
@@ -122,5 +123,5 @@ public class LoadingActivity extends AppCompatActivity{
     private long minsToMillis(int x){
         return x*60*1000;
     }
-
+*/
 }

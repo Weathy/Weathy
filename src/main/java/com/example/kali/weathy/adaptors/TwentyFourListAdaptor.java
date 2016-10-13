@@ -60,7 +60,6 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         TextView feelslike = (TextView) view.findViewById(R.id.tf_feelslike_textview);
         feelslike.setText(weather.getFeelsLike() + "");
         ImageView icon = (ImageView) view.findViewById(R.id.tf_icon_imageview);
-        icon.setImageBitmap(weather.getIcon());
 
         TextView date = (TextView) view.findViewById(R.id.date_textview);
 
