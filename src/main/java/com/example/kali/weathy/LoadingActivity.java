@@ -49,7 +49,6 @@ public class LoadingActivity extends AppCompatActivity{
                 intent.putExtra("city", "Sofia");
                 intent.putExtra("country", "Bulgaria");
                 startService(intent);
-                finish();
             }
         }
         else {
@@ -83,6 +82,7 @@ public class LoadingActivity extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
             loadingProgressBar.setVisibility(View.GONE);
+
         }
     }
 

@@ -5,6 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorTransparent">#32000000</color>
     <color name="colorGreyTrans">#64000000</color>
-    <color name="colorDialogBackgroud">#fdf7c8</color>
+    <color name="colorDialogBackgroud">#fffce3</color>
     <color name="transparent">#00000000</color>
 </resources>
