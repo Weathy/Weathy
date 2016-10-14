@@ -158,8 +158,6 @@ public class WeatherActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.e("widget", "receiver1");
-
             TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
             TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
 
@@ -169,7 +167,8 @@ public class WeatherActivity extends AppCompatActivity
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
 
-            Log.e("widget", "receiver2");
+            DBManager.getInstance(WeatherActivity.this).addLastSearch();
+
             WeatherActivity.this.recreate();
         }
 

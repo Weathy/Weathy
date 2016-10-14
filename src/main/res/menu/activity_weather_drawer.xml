@@ -17,6 +17,10 @@
             android:id="@+id/serch_item"
             android:icon="@android:drawable/ic_menu_search"
             android:title="Search" />
+        <item
+            android:id="@+id/last_searches"
+            android:title="Last searches"
+            android:icon="@drawable/favs"/>
     </group>
 
 </menu>
