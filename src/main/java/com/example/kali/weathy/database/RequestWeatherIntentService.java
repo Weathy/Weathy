@@ -270,7 +270,7 @@ public class RequestWeatherIntentService extends IntentService {
                 intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
             }
-
+            DBManager.getInstance(getApplicationContext()).addLastSearch();
 
             Log.e("current1" , Long.toString(System.currentTimeMillis()-time));
 

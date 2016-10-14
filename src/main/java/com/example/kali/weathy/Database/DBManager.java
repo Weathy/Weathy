@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.kali.weathy.model.Weather;
 
@@ -128,6 +129,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void addLastSearch(){
+        Log.e("manager", "outside");
         String city = lastWeather.getCityName().split(",")[0];
         String country = lastWeather.getCityName().split(" ")[1];
 
@@ -135,11 +137,14 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         database.beginTransaction();
         values.put("city", city);
+        Log.e("manager", "inside");
         values.put("country", country);
         database.insert("last_search", null, values);
         lastSearch.put(city, country);
         database.setTransactionSuccessful();
         database.endTransaction();
+
+        Log.e("manager", "after");
 
     }
 
