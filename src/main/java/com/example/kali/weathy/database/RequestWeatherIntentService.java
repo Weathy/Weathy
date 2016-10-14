@@ -31,7 +31,7 @@ public class RequestWeatherIntentService extends IntentService {
     public static final int OPENWEATHER_ERROR_CODE = 500;
     private StringBuilder weatherJSON = new StringBuilder();
     private int currentTemp;
-    private double feelsLike;
+    private String feelsLike;
     private String cityName;
     private String description;
     private int temp_min;
@@ -121,7 +121,7 @@ public class RequestWeatherIntentService extends IntentService {
                 return;
             }
             Log.e("secondJSON", weather.toString());
-            feelsLike = Double.parseDouble(weather.getJSONObject("current_observation").getString("feelslike_c"));
+            feelsLike = weather.getJSONObject("current_observation").getString("feelslike_c");
             Calendar c = Calendar.getInstance();
             lastUpdateBuilder = new StringBuilder();
             lastUpdateBuilder.append(c.get(Calendar.DAY_OF_MONTH)+".");
@@ -137,7 +137,7 @@ public class RequestWeatherIntentService extends IntentService {
             latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"&formatted=0");
+            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -147,7 +147,7 @@ public class RequestWeatherIntentService extends IntentService {
 
             }
 
-            Log.e("fourthJSON" , weatherJSON.toString());
+            Log.e("trhirdJSON" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
             if(weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR") ){
                 Intent intent1 = new Intent("Error");
@@ -156,14 +156,9 @@ public class RequestWeatherIntentService extends IntentService {
                 return;
             }
 
-            String[] suns = weather.getJSONObject("results").getString("sunset").split("T");
-            sunset = suns[1];
-            suns = sunset.split("\\+");
-            sunset = suns[0];
-            String[] sunr = weather.getJSONObject("results").getString("sunrise").split("T");
-            sunrise = sunr[1];
-            sunr = sunrise.split("\\+");
-            sunrise = sunr[0];
+            sunset = weather.getJSONObject("results").getString("sunset");
+            sunrise = weather.getJSONObject("results").getString("sunrise");
+
             dayLength = weather.getJSONObject("results").getString("day_length");
             weatherJSON.delete(0, weatherJSON.length());
             DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate,dayLength);
@@ -180,7 +175,7 @@ public class RequestWeatherIntentService extends IntentService {
             while (weatherScanner.hasNextLine()) {
                 weatherJSON.append(weatherScanner.nextLine());
             }
-            Log.e("sixthJSON" , weatherJSON.toString());
+            Log.e("fourthJSON" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
             if(weather.getJSONObject("response").has("error")){
                 Intent intent1 = new Intent("Error");
@@ -189,8 +184,9 @@ public class RequestWeatherIntentService extends IntentService {
             }
             JSONObject forecastJSON = weather.getJSONObject("forecast").getJSONObject("simpleforecast");
             JSONArray forecastArray = forecastJSON.getJSONArray("forecastday");
+            JSONObject currentDay;
             for (int i = 0; i < forecastArray.length(); i++) {
-                JSONObject currentDay = new JSONObject(forecastArray.get(i).toString());
+                currentDay = new JSONObject(forecastArray.get(i).toString());
 
                 maxTemp = currentDay.getJSONObject("high").getInt("celsius");
                 minTemp = currentDay.getJSONObject("low").getInt("celsius");
@@ -219,7 +215,7 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            Log.e("seventhJSON", weather.toString());
+            Log.e("fifthJSON", weather.toString());
             if(weather.getJSONObject("response").has("error")){
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);

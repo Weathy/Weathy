@@ -31,7 +31,7 @@ public class DBManager extends SQLiteOpenHelper {
     private DBManager(Context context) {
         super(context, "myDB", null, version);
         this.context = context;
-        lastWeather = new Weather(null, 0, 0, 0, null, 0, null, null, null, null, 0, 0, null, null, null);
+        lastWeather = new Weather(null, 0, null, 0, null, 0, null, null, null, null, 0, 0, null, null, null);
         twentyHourForecastObjects = new ArrayList<>();
         tenDayForecast = new ArrayList<>();
         loadData();
@@ -40,7 +40,7 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE weather (cityName text, currentTemp INTEGER, condition text,temp_min INTEGER,temp_max INTEGER, sunrise text, sunset text, windSpeed text, humidity INTEGER, pressure INTEGER, feels_like REAL, visibility text,last_update text, day_length text )");
-        db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like INTEGER, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
+        db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like text, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
         db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER)");
 
     }
@@ -50,7 +50,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
-    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, double feels_like, String visibility, String last_update, String dayLength) {
+    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, String feels_like, String visibility, String last_update, String dayLength) {
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
         ContentValues values = new ContentValues();
@@ -147,7 +147,7 @@ public class DBManager extends SQLiteOpenHelper {
                 String windSpeed = cursor.getString(cursor.getColumnIndex("windSpeed"));
                 int humidity = cursor.getInt(cursor.getColumnIndex("humidity"));
                 int pressure = cursor.getInt(cursor.getColumnIndex("pressure"));
-                int feels_like = cursor.getInt(cursor.getColumnIndex("feels_like"));
+                String feels_like = cursor.getString(cursor.getColumnIndex("feels_like"));
                 String visibility = cursor.getString(cursor.getColumnIndex("visibility"));
                 String last_update = cursor.getString(cursor.getColumnIndex("last_update"));
                 String day_length = cursor.getString(cursor.getColumnIndex("day_length"));

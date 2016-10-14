@@ -65,11 +65,12 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:text="Feels like:"
+                    android:text="Feels:"
                     android:maxLines="1"
                     android:gravity="center|end"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp"
+                    android:id="@+id/textView" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -81,27 +82,6 @@
                     android:textSize="20sp"
                     android:id="@+id/temperature_status_textview"/>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_weight="1"
-                        android:layout_height="0dp"
-                        android:text="&#xb0;"
-                        android:maxLines="1"
-                        android:gravity="top|end"
-                        android:textColor="@android:color/white"
-                        android:textSize="25sp" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                </LinearLayout>
 
 
 

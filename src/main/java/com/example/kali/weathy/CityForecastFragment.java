@@ -40,14 +40,14 @@ public class CityForecastFragment extends Fragment {
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
         if(hour>20 || hour<8){
             sunrise.setText("Sunrise:");
-            sunsetTV.setText(weather.getSunrise() + "h");
+            sunsetTV.setText(weather.getSunrise());
         }else {
             sunrise.setText("Sunset:");
-            sunsetTV.setText(weather.getSunset() + "h");
+            sunsetTV.setText(weather.getSunset());
         }
 
         TextView feelsLikeTV = (TextView) view.findViewById(R.id.temperature_status_textview);
-        feelsLikeTV.setText(weather.getFeelsLike() + "");
+        feelsLikeTV.setText(weather.getFeelsLike());
         TextView statusTV = (TextView) view.findViewById(R.id.weather_status_textview);
         statusTV.setText(weather.getDescription());
         TextView degreeTV = (TextView) view.findViewById(R.id.degrees_tv);
@@ -59,7 +59,7 @@ public class CityForecastFragment extends Fragment {
         TextView wind = (TextView) view.findViewById(R.id.wind_meter_in_second_textview);
         wind.setText(weather.getWindSpeed() + "m/s");
         TextView feelsLike = (TextView) view.findViewById(R.id.temperature_status_textview);
-        feelsLike.setText(weather.getFeelsLike() + "");
+        feelsLike.setText(weather.getFeelsLike() + "\u2103");
         TextView dayLength = (TextView) view.findViewById(R.id.day_length_textview);
         dayLength.setText(weather.getDayLength()+"h");
         ImageView icon = (ImageView) view.findViewById(R.id.weather_status_imageview);

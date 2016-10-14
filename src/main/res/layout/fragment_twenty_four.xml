@@ -14,20 +14,19 @@
         android:text="24-Hour Forecast"
         android:maxLines="1"
         android:gravity="center"
-        android:background="@android:color/transparent"
+        android:background="@color/colorGreyTrans"
         android:textColor="@android:color/white"
-        android:textSize="35sp"/>
+        android:textSize="40sp"
+        android:id="@+id/textView3"
+        android:layout_marginBottom="15dp"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listview"></ListView>
+        android:id="@+id/listview"
+        android:dividerHeight="15dp">
 
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/recycler" />-->
+    </ListView>
 
 
 

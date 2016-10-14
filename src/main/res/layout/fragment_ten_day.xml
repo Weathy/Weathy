@@ -12,6 +12,7 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="40sp"
+        android:layout_marginBottom="15dp"
         android:text="10-Day forecast"
         android:background="@color/colorGreyTrans" />
 
@@ -19,6 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/one_day_lv"
-        android:dividerHeight="10dp"/>
+        android:dividerHeight="15dp"/>
 
 </LinearLayout>
