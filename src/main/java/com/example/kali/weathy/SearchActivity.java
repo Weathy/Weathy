@@ -160,18 +160,37 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     public void onPlaceSelected(Place place) {
         progressBar.setVisibility(View.VISIBLE);
         cityName = place.getName().toString();
-        Log.e("addres" , place.getAddress()+"");
-        Locale locale = place.getLocale();
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        List<Address> addresses = null;
-        try {
-            addresses = geocoder.getFromLocationName(cityName, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String [] cityNameConcat = cityName.split(" ");
+        if(cityNameConcat.length!=1){
+            StringBuilder city = new StringBuilder();
+            for (int i = 0 ; i<cityNameConcat.length ; i++){
+                 if(i == cityNameConcat.length-1){
+                     city.append(cityNameConcat[i]);
+                }else {
+                     city.append(cityNameConcat[i]).append("%20");
+                 }
+            }
+            cityName = city.toString();
+            Log.e("name" , cityName);
         }
-        Address address = addresses.get(0);
-        country = address.getCountryName();
-        Log.e("country", country);
+
+        String[] placeAdress = place.getAddress().toString().split(",");
+        Log.e("place" , place.getAddress().toString());
+        if(placeAdress.length==1){
+            country = placeAdress[0];
+        }else {
+            if (placeAdress.length != 2) {
+                if(placeAdress[placeAdress.length-1].equals(" USA")){
+                    country = placeAdress[1];
+                }else{
+                    country = placeAdress[placeAdress.length - 1];
+                }
+            } else {
+                country = placeAdress[1];
+            }
+        }
+        country = country.trim();
+        Log.e("country" , country);
         intent = new Intent(this, RequestWeatherIntentService.class);
         intent.putExtra("city", cityName);
         intent.putExtra("country", country);

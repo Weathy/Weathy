@@ -106,7 +106,8 @@ public class RequestWeatherIntentService extends IntentService {
             currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/"+country+"/"+city+".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
+            Log.e("medJSON" , weatherInfo.toString());
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -120,6 +121,22 @@ public class RequestWeatherIntentService extends IntentService {
                 sendBroadcast(intent1);
                 Log.e("error" , weather.toString());
                 return;
+            }
+            if( weather.getJSONObject("response").has("results")){
+               while(weather.getJSONObject("response").has("results")){
+                   city = weather.getJSONObject("response").getJSONArray("results").getJSONObject(0).getString("city");
+                   weatherJSON.delete(0, weatherJSON.length());
+                   weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
+                   Log.e("medJSON" , weatherInfo.toString());
+                   weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+                   weatherConnection.setRequestMethod("GET");
+                   weatherStream = weatherConnection.getInputStream();
+                   weatherScanner = new Scanner(weatherStream);
+                   while (weatherScanner.hasNextLine()) {
+                       weatherJSON.append(weatherScanner.nextLine());
+                   }
+                   weather = new JSONObject(weatherJSON.toString());
+               }
             }
             Log.e("secondJSON", weather.toString());
             feelsLike = weather.getJSONObject("current_observation").getString("feelslike_c");
@@ -135,8 +152,10 @@ public class RequestWeatherIntentService extends IntentService {
             cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
             visibility =  weather.getJSONObject("current_observation").getString("visibility_km");
             longtitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("longitude");
+            Log.e("long" , longtitude);
             latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
 
+            Log.e("lat" , latitude);
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
