@@ -1,10 +1,15 @@
 package com.example.kali.weathy.database;
 
 import android.app.IntentService;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.example.kali.weathy.Widget;
 import com.example.kali.weathy.model.Weather;
 
 import org.json.JSONArray;
@@ -23,6 +28,7 @@ import java.util.Scanner;
 public class RequestWeatherIntentService extends IntentService {
 
     private static final double KELVIN_CONSTANT = 272.15;
+    public static final int OPENWEATHER_ERROR_CODE = 500;
     private StringBuilder weatherJSON = new StringBuilder();
     private int currentTemp;
     private double feelsLike;
@@ -59,8 +65,6 @@ public class RequestWeatherIntentService extends IntentService {
     private String latitude;
     private String longtitude;
     private StringBuilder lastUpdateBuilder;
-    private ArrayList<Weather.TwentyFourWeather> hourlyList = new ArrayList<>();
-    public static final int OPENWEATHER_ERROR_CODE = 500;
 
     public RequestWeatherIntentService() {
         super("MyIntentService");
@@ -249,5 +253,6 @@ public class RequestWeatherIntentService extends IntentService {
         }
 
     }
+
 
 }

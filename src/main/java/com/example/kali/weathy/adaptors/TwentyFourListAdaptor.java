@@ -1,7 +1,6 @@
 package com.example.kali.weathy.adaptors;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kali.weathy.R;
-import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.List;
@@ -40,7 +38,6 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         secondDatePlace = 23 - firstHour;
     }
 
-    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -62,7 +59,6 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         ImageView icon = (ImageView) view.findViewById(R.id.tf_icon_imageview);
 
         TextView date = (TextView) view.findViewById(R.id.date_textview);
-
 
         firstHour = Integer.parseInt(weather.getTime().split(":")[0]);
 

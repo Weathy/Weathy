@@ -87,7 +87,17 @@
                     android:textColor="@android:color/holo_blue_bright"
                     android:textSize="@dimen/widget_text_size"
                     android:maxLines="1"
-                    android:gravity="start|center"/>
+                    android:gravity="end|center"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="|"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/widget_text_size"
+                    android:maxLines="1"
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="0dp"

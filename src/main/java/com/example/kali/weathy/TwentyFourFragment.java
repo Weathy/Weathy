@@ -1,11 +1,9 @@
 package com.example.kali.weathy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,29 +18,8 @@ import java.util.ArrayList;
 
 
 public class TwentyFourFragment extends Fragment {
-
-    private TwentyFourComunicator activity;
     private ArrayList<Weather.TwentyFourWeather> forecast;
     public TwentyFourListAdaptor adaptor;
-
-
-    interface TwentyFourComunicator {
-        ArrayList<Weather.TwentyFourWeather> getData();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adaptor.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.activity = (TwentyFourComunicator) context;
-        this.forecast = new ArrayList<>();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,15 +46,5 @@ public class TwentyFourFragment extends Fragment {
         });
 
         return root;
-    }
-
-    public static TwentyFourFragment newInstance(String str) {
-
-        Bundle args = new Bundle();
-        args.putString("str", str);
-
-        TwentyFourFragment fragment = new TwentyFourFragment();
-        fragment.setArguments(args);
-        return fragment;
     }
 }

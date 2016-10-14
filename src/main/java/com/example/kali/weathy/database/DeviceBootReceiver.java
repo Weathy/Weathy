@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 
 public class DeviceBootReceiver extends BroadcastReceiver {
+
+    public static int INTERVAL = 60; //min
+
+
     public DeviceBootReceiver() {
     }
 
@@ -16,10 +20,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             Intent alrm = new Intent(context, AlarmReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alrm, 0);
 
-            int interval = 60;
-
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minsToMillis(interval), pendingIntent);
+            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minsToMillis(INTERVAL), pendingIntent);
         }
     }
 

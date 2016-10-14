@@ -31,21 +31,24 @@ public class TwentyFourDialogFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.fragment_twenty_four_dialog, container, false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        TextView date = (TextView) root.findViewById(R.id.dialog_date_tv);
-        date.setText(weather.getTime() + " - " + weather.getDate());
-        TextView currentTemp = (TextView) root.findViewById(R.id.dialog_current_temp_tv);
-        currentTemp.setText(weather.getCurrentTemp() + "℃");
-        TextView condition = (TextView) root.findViewById(R.id.dialog_condition_tv);
-        condition.setText(weather.getCondition());
-        TextView feelsLike = (TextView) root.findViewById(R.id.dialog_feels_like_tv);
-        feelsLike.setText(weather.getFeelsLike() + "℃");
-        TextView windSpeed = (TextView) root.findViewById(R.id.dialog_wind_speed_tv);
-        windSpeed.setText(weather.getWindSpeed() + "m/s");
-        TextView humidity = (TextView) root.findViewById(R.id.dialog_humidity_tv);
-        humidity.setText(weather.getHumidity() + "%");
-        TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
-        airPressure.setText(weather.getAirPressure() + "hPa");
-        ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
+        if(weather != null) {
+            TextView date = (TextView) root.findViewById(R.id.dialog_date_tv);
+            date.setText(weather.getTime() + " - " + weather.getDate());
+            TextView currentTemp = (TextView) root.findViewById(R.id.dialog_current_temp_tv);
+            currentTemp.setText(weather.getCurrentTemp() + "℃");
+            TextView condition = (TextView) root.findViewById(R.id.dialog_condition_tv);
+            condition.setText(weather.getCondition());
+            TextView feelsLike = (TextView) root.findViewById(R.id.dialog_feels_like_tv);
+            feelsLike.setText(weather.getFeelsLike() + "℃");
+            TextView windSpeed = (TextView) root.findViewById(R.id.dialog_wind_speed_tv);
+            windSpeed.setText(weather.getWindSpeed() + "m/s");
+            TextView humidity = (TextView) root.findViewById(R.id.dialog_humidity_tv);
+            humidity.setText(weather.getHumidity() + "%");
+            TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
+            airPressure.setText(weather.getAirPressure() + "hPa");
+            ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
+
+        }
 
         Button close = (Button) root.findViewById(R.id.close_dialog_button);
         close.setOnClickListener(new View.OnClickListener() {

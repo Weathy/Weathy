@@ -5,8 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.util.Log;
+
 import com.example.kali.weathy.model.Weather;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class DBManager extends SQLiteOpenHelper {
     private DBManager(Context context) {
         super(context, "myDB", null, version);
         this.context = context;
-        lastWeather = new Weather(null, 0, 0, 0, null, 0, null, null, null, null, 0, 0, null, null,null);
+        lastWeather = new Weather(null, 0, 0, 0, null, 0, null, null, null, null, 0, 0, null, null, null);
         twentyHourForecastObjects = new ArrayList<>();
         tenDayForecast = new ArrayList<>();
         loadData();
@@ -51,7 +50,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
-    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, double feels_like, String visibility, String last_update,String dayLength) {
+    public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, double feels_like, String visibility, String last_update, String dayLength) {
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
         ContentValues values = new ContentValues();
@@ -70,14 +69,14 @@ public class DBManager extends SQLiteOpenHelper {
         values.put("last_update", last_update);
         values.put("day_length", dayLength);
         database.insert("weather", null, values);
-        lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,dayLength);
+        lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, dayLength);
         database.setTransactionSuccessful();
         database.endTransaction();
 
     }
 
     public void addTwentyHourWeather(int currentTemp, int feels_like, String windSpeed, int humidity, String condition, int pressure, String time, String date) {
-        if(twentyHourForecastObjects.size()==24){
+        if (twentyHourForecastObjects.size() == 24) {
             twentyHourForecastObjects = new ArrayList<>();
         }
 
@@ -99,7 +98,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void addTenDayWeather(String date, int max_temp, int min_temp, String condition, Double windspeed, int humidity, String weekday, int yearday, int year) {
-        if(tenDayForecast.size()==10){
+        if (tenDayForecast.size() == 10) {
             tenDayForecast = new ArrayList<>();
         }
 
@@ -153,11 +152,11 @@ public class DBManager extends SQLiteOpenHelper {
                 String last_update = cursor.getString(cursor.getColumnIndex("last_update"));
                 String day_length = cursor.getString(cursor.getColumnIndex("day_length"));
 
-                lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update,day_length);
+                lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, day_length);
 
             }
 
-            if(!cursor.isClosed()){
+            if (!cursor.isClosed()) {
                 cursor.close();
             }
         }
@@ -179,7 +178,7 @@ public class DBManager extends SQLiteOpenHelper {
 
             }
 
-            if(!cursor.isClosed()){
+            if (!cursor.isClosed()) {
                 cursor.close();
             }
         }
@@ -202,11 +201,9 @@ public class DBManager extends SQLiteOpenHelper {
 
             }
 
-            if(!cursor.isClosed()){
+            if (!cursor.isClosed()) {
                 cursor.close();
             }
-
         }
     }
-
 }

@@ -10,7 +10,6 @@ import com.example.kali.weathy.CityForecastFragment;
 import com.example.kali.weathy.TenDayFragment;
 import com.example.kali.weathy.TwentyFourFragment;
 
-import java.util.HashMap;
 
 public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
@@ -44,7 +43,6 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         return NUMBER_OF_FRAGMENTS;
     }
 
-
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
@@ -58,8 +56,5 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         super.destroyItem(container, position, object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
-    }
 }
 

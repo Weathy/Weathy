@@ -1,9 +1,7 @@
 package com.example.kali.weathy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,34 +14,28 @@ import com.example.kali.weathy.model.Weather;
 
 public class CityForecastFragment extends Fragment {
 
-    private CityForecastComunicator activity;
     private View view;
     private Weather weather;
-
-    interface CityForecastComunicator {
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.activity = (CityForecastComunicator) context;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_city_forecast, container, false);
+
         weather = DBManager.getInstance(getActivity()).getLastWeather();
+
         String[] lastUp = DBManager.getInstance(getActivity()).getLastWeather().getLastUpdate().split(" ");
         String [] data = lastUp[1].split(":");
+
         int hour = Integer.parseInt(data[0]);
         TextView visibilityTV = (TextView) view.findViewById(R.id.visibility_textview);
+
         if(weather.getVisibility().equals("N/A")){
             visibilityTV.setText(weather.getVisibility());
         }else{
             visibilityTV.setText(weather.getVisibility() + "km");
         }
+
         TextView sunrise = (TextView) view.findViewById(R.id.sunset_id);
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
         if(hour>20 || hour<8){
@@ -88,17 +80,6 @@ public class CityForecastFragment extends Fragment {
         }
         return view;
     }
-
-    public static CityForecastFragment newInstance(String str) {
-
-        Bundle args = new Bundle();
-        args.putString("str", str);
-
-        CityForecastFragment fragment = new CityForecastFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onResume() {
         weather = DBManager.getInstance(getActivity()).getLastWeather();

@@ -1,8 +1,5 @@
 package com.example.kali.weathy.model;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import java.io.Serializable;
 
 public class Weather {
@@ -128,10 +125,6 @@ public class Weather {
             return currentTemp;
         }
 
-        public String getIconURL() {
-            return iconURL;
-        }
-
         public int getFeelsLike() {
             return feelsLike;
         }
@@ -203,10 +196,6 @@ public class Weather {
 
         public String getCondition() {
             return condition;
-        }
-
-        public String getIconURL() {
-            return iconURL;
         }
 
         public Double getWindSpeed() {
