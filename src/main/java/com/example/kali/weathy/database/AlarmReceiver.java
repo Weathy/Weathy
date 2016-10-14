@@ -10,13 +10,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         if(DBManager.getInstance(context).getLastWeather().getCityName() != null) {
             Intent intent1 = new Intent(context, RequestWeatherIntentService.class);
             intent.putExtra("city", DBManager.getInstance(context).getLastWeather().getCityName().split(",")[0]);
             intent.putExtra("country", DBManager.getInstance(context).getLastWeather().getCityName().split(" ")[1]);
+            intent.putExtra("alarm", "alarm");
             context.startService(intent1);
         }
-
     }
 }

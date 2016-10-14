@@ -79,6 +79,7 @@ public class RequestWeatherIntentService extends IntentService {
         DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from weather");
         String city = intent.getStringExtra("city");
         String country = intent.getStringExtra("country");
+        String fromAlarm = intent.getStringExtra("alarm");
         try {
             URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
             HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -236,8 +237,22 @@ public class RequestWeatherIntentService extends IntentService {
                 DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate);
 
             }
-            Intent intent1 = new Intent("SerciveComplete");
-            sendBroadcast(intent1);
+
+            Intent intent1 = null;
+
+            if(fromAlarm != null){
+                intent1 = new Intent(this, Widget.class);
+                intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+                int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), Widget.class));
+                intent1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                sendBroadcast(intent1);
+            }
+            else{
+                intent1 = new Intent("SerciveComplete");
+                sendBroadcast(intent1);
+            }
+
+
             Log.e("current1" , Long.toString(System.currentTimeMillis()-time));
 
         } catch (MalformedURLException e) {
