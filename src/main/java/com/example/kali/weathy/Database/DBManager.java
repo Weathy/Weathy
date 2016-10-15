@@ -164,11 +164,8 @@ public class DBManager extends SQLiteOpenHelper {
         return new ArrayList<>(lastSearch.keySet());
     }
 
-    public String[] getRequestData(String city){
-        String[] data = new String[2];
-        data[0] = city;
-        data[1] = lastSearch.get(city);
-        return data;
+    public String getRequestData(String city){
+        return lastSearch.get(city);
     }
 
     private void loadData() {

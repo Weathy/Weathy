@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -118,6 +120,10 @@ public class WeatherActivity extends AppCompatActivity
             vPager.setCurrentItem(0, true);
         } else if (id == R.id.twenty_four_item) {
             vPager.setCurrentItem(1, true);
+        } else  if (id == R.id.last_searches) {
+            FragmentManager fm = getSupportFragmentManager();
+            DialogFragment newFragment = new LastSearchDialogFragment();
+            newFragment.show(fm, "lastSearchDialog");
         } else if (id == R.id.ten_day_item) {
             vPager.setCurrentItem(2, true);
         } else if (id == R.id.serch_item) {
@@ -165,10 +171,6 @@ public class WeatherActivity extends AppCompatActivity
 
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
-
-            DBManager.getInstance(WeatherActivity.this).addLastSearch();
-            Log.e("update" , "update");
-            //WeatherActivity.this.recreate();
         }
     }
 

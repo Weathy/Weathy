@@ -34,7 +34,7 @@ public class TenDayDialogFragment extends DialogFragment {
 
         if(weather != null) {
             TextView date = (TextView) root.findViewById(R.id.dialog_date_tv);
-            date.setText(weather.getWeekDay() + ", " + weather.getDate() + "/" + weather.getYear());
+            date.setText(weather.getWeekDay() + ", " + weather.getDate() + "." + weather.getYear());
             TextView condition = (TextView) root.findViewById(R.id.dialog_condition_tv);
             condition.setText(weather.getCondition());
             TextView maxTemp = (TextView) root.findViewById(R.id.dialog_max_temp_tv);

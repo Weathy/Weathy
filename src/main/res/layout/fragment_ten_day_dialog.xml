@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginBottom="10dp"
         android:background="@color/colorDialogBackgroud">
 
         <LinearLayout
@@ -54,7 +55,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Condition |"
@@ -65,7 +66,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"
@@ -81,7 +82,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Max temperature |"
@@ -91,7 +92,7 @@
                 android:background="@color/transparent"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"
@@ -107,7 +108,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Min temperature |"
@@ -117,7 +118,7 @@
                 android:background="@color/transparent"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"
@@ -133,7 +134,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Wind speed |"
@@ -143,7 +144,7 @@
                 android:background="@color/transparent"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"
@@ -159,7 +160,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Humidity |"
@@ -169,7 +170,7 @@
                 android:background="@color/transparent"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"
@@ -185,7 +186,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:text="Day of the year |"
@@ -195,7 +196,7 @@
                 android:background="@color/transparent"/>
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="match_parent"
                 android:maxLines="1"
                 android:gravity="start"

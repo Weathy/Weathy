@@ -251,7 +251,7 @@ public class RequestWeatherIntentService extends IntentService {
                 hourlyAirPressure = obj1.getJSONObject("mslp").getInt("metric");
                 hourlyTime = obj1.getJSONObject("FCTTIME").getString("hour") + ":" + obj1.getJSONObject("FCTTIME").getString("min");
                 hourlyIconURL = obj1.getString("icon_url");
-                hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name") + "." + obj1.getJSONObject("FCTTIME").getString("year");
+                hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name");
                 DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate);
 
             }
@@ -268,6 +268,7 @@ public class RequestWeatherIntentService extends IntentService {
             else{
                 intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
+                DBManager.getInstance(getApplicationContext()).addLastSearch();
             }
 
 

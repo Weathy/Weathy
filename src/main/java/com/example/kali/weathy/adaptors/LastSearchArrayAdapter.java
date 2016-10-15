@@ -2,6 +2,7 @@ package com.example.kali.weathy.adaptors;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class LastSearchArrayAdapter extends ArrayAdapter{
             LayoutInflater inflater = LayoutInflater.from(context);
             view = inflater.inflate(R.layout.last_search_cv, null);
         }
+
         TextView cityTV = (TextView) view.findViewById(R.id.last_search_tv);
         cityTV.setText(items.get(position));
 
