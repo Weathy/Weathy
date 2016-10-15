@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
+import java.util.Calendar;
+
 
 public class CityForecastFragment extends Fragment {
 
@@ -63,26 +65,68 @@ public class CityForecastFragment extends Fragment {
         TextView dayLength = (TextView) view.findViewById(R.id.day_length_textview);
         dayLength.setText(weather.getDayLength()+"h");
         ImageView icon = (ImageView) view.findViewById(R.id.weather_status_imageview);
+        setIcon(icon, weather.getDescription());
 
-         switch (weather.getDescription()) {
-            case "Clear":
-                getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
-                return view;
-            case "Clouds":
-                getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_cloudy);
-                return view;
-            case "Thunderstorm":
-                getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.day_thunderstorm);
-                return view;
-            case "Rain":
-                getActivity().findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
-                return view;
-        }
         return view;
     }
     @Override
     public void onResume() {
         weather = DBManager.getInstance(getActivity()).getLastWeather();
         super.onResume();
+    }
+
+    private void setIcon(ImageView view, String condition){
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+
+        if (hour > 7 || hour < 20) {
+            switch (condition) {
+                case "Clear":
+                    view.setImageResource(R.drawable.big_clear_day);
+                    break;
+                case "Clouds":
+                    view.setImageResource(R.drawable.big_cloudy);
+                    break;
+                case "Drizzle":
+                    view.setImageResource(R.drawable.big_rain_day);
+                    break;
+                case "Thunderstorm":
+                    view.setImageResource(R.drawable.big_thunderstorm);
+                    break;
+                case "Snow":
+                    view.setImageResource(R.drawable.big_snow);
+                    break;
+                case "Atmosphere":
+                    view.setImageResource(R.drawable.big_atm);
+                    break;
+                default:
+                    view.setImageResource(R.drawable.big_not_available);
+                    break;
+            }
+        } else {
+            switch (condition) {
+                case "Clear":
+                    view.setImageResource(R.drawable.big_clear_night);
+                    break;
+                case "Clouds":
+                    view.setImageResource(R.drawable.big_cloudy);
+                    break;
+                case "Drizzle":
+                    view.setImageResource(R.drawable.big_rain_night);
+                    break;
+                case "Thunderstorm":
+                    view.setImageResource(R.drawable.thunderstorm_night);
+                    break;
+                case "Snow":
+                    view.setImageResource(R.drawable.big_snow);
+                    break;
+                case "Atmosphere":
+                    view.setImageResource(R.drawable.big_atm);
+                    break;
+                default:
+                    view.setImageResource(R.drawable.big_not_available);
+                    break;
+            }
+        }
     }
 }
