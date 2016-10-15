@@ -47,7 +47,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private String country;
     private Intent intent;
     private ProgressBar progressBar;
-    private SearchReceiver receiver;
     private Button sofiaButton;
     private Button plovdivButton;
     private Button varnaButton;
@@ -68,8 +67,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        receiver = new SearchReceiver();
-        registerReceiver(receiver, new IntentFilter("SerciveComplete"));
         secondReceiver = new ErrorReceiver();
         registerReceiver(secondReceiver,new IntentFilter("Error"));
         firstQueryReceiver = new FirstQueryReceiver();
@@ -208,16 +205,13 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     protected void onDestroy() {
-        if (receiver != null) {
             try {
-                unregisterReceiver(receiver);
                 unregisterReceiver(secondReceiver);
                 unregisterReceiver(firstQueryReceiver);
                 mGoogleApiClient.disconnect();
             } catch (IllegalArgumentException e) {
 
             }
-        }
         super.onDestroy();
     }
 
@@ -242,16 +236,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     }
 
-    class SearchReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Intent intent1 = new Intent(context, WeatherActivity.class);
-            intent1.putExtra("refresh", "refresh");
-            startActivity(intent1);
-            finish();
-        }
-    }
 
     class ErrorReceiver extends BroadcastReceiver{
 
@@ -320,13 +304,9 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Intent intent1 = new Intent(context,WeatherActivity.class);
-            startActivity(intent1);
+            setResult(200,null,null);
             finish();
 
         }
     }
-
-
-
 }

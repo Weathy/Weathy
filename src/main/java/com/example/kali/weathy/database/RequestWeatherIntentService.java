@@ -152,10 +152,7 @@ public class RequestWeatherIntentService extends IntentService {
             longtitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("longitude");
             latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
 
-            Intent queryCompleteIntent = new Intent("FirstQueryComplete");
-            sendBroadcast(queryCompleteIntent);
-            Log.e("midTime" , Long.toString(System.currentTimeMillis()-time));
-            time = System.currentTimeMillis();
+
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -183,6 +180,9 @@ public class RequestWeatherIntentService extends IntentService {
             weatherJSON.delete(0, weatherJSON.length());
             DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate,dayLength);
 
+            Intent queryCompleteIntent = new Intent("FirstQueryComplete");
+            sendBroadcast(queryCompleteIntent);
+            Log.e("midTime" , Long.toString(System.currentTimeMillis()-time));
             //Ten day data request
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
@@ -250,7 +250,6 @@ public class RequestWeatherIntentService extends IntentService {
                 hourlyCondition = obj1.getString("condition");
                 hourlyAirPressure = obj1.getJSONObject("mslp").getInt("metric");
                 hourlyTime = obj1.getJSONObject("FCTTIME").getString("hour") + ":" + obj1.getJSONObject("FCTTIME").getString("min");
-                hourlyIconURL = obj1.getString("icon_url");
                 hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name");
                 DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate);
 
@@ -283,6 +282,5 @@ public class RequestWeatherIntentService extends IntentService {
         }
 
     }
-
 
 }

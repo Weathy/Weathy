@@ -1,9 +1,5 @@
 package com.example.kali.weathy;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.SearchableInfo;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -11,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,19 +17,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
 import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
-import com.example.kali.weathy.database.AlarmReceiver;
 import com.example.kali.weathy.database.DBManager;
-import com.example.kali.weathy.database.DeviceBootReceiver;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
-import com.example.kali.weathy.model.Weather;
-
-import java.util.ArrayList;
 
 public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,17 +33,18 @@ public class WeatherActivity extends AppCompatActivity
     private Button refreshButton;
     private WeatherPagerAdapter adapter;
     private  MyInnerReceiver receiver;
-
+    private FirstQueryReceiver firstQueryReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-
         updateWidgets(this);
 
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 
+        firstQueryReceiver = new FirstQueryReceiver();
+        registerReceiver(firstQueryReceiver,new IntentFilter("FirstQueryComplete"));
 
         TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
         cityNameTV.setText(DBManager.getInstance(this).getLastWeather().getCityName());
@@ -81,8 +70,7 @@ public class WeatherActivity extends AppCompatActivity
                 searchButton.setBackgroundResource(R.drawable.button_clicked);
                 Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
                 intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent , 200);
             }
         });
 
@@ -95,7 +83,6 @@ public class WeatherActivity extends AppCompatActivity
                 String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
                 intent.putExtra("city", city);
                 intent.putExtra("country", country.trim());
-                startService(intent);
             }
         });
 
@@ -120,10 +107,6 @@ public class WeatherActivity extends AppCompatActivity
             vPager.setCurrentItem(0, true);
         } else if (id == R.id.twenty_four_item) {
             vPager.setCurrentItem(1, true);
-        } else  if (id == R.id.last_searches) {
-            FragmentManager fm = getSupportFragmentManager();
-            DialogFragment newFragment = new LastSearchDialogFragment();
-            newFragment.show(fm, "lastSearchDialog");
         } else if (id == R.id.ten_day_item) {
             vPager.setCurrentItem(2, true);
         } else if (id == R.id.serch_item) {
@@ -142,6 +125,7 @@ public class WeatherActivity extends AppCompatActivity
         if(receiver != null){
             try {
                 unregisterReceiver(receiver);
+                unregisterReceiver(firstQueryReceiver);
             }
             catch (IllegalArgumentException e){
 
@@ -175,4 +159,17 @@ public class WeatherActivity extends AppCompatActivity
     }
 
 
+    class FirstQueryReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("recreate" , "recreate");
+            WeatherActivity.this.recreate();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        WeatherActivity.this.recreate();
+    }
 }
