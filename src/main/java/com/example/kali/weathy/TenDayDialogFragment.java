@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.model.Weather;
 
 public class TenDayDialogFragment extends DialogFragment {
@@ -48,6 +49,7 @@ public class TenDayDialogFragment extends DialogFragment {
             TextView dayOfTheYear = (TextView) root.findViewById(R.id.dialog_day_of_the_year_tv);
             dayOfTheYear.setText(weather.getYearDay() + "");
             ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
+            TwentyFourListAdaptor.setIcon(icon, weather.getCondition());
 
         }
 

@@ -1,13 +1,13 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
     android:layout_margin="10dp"
     android:id="@+id/one_day_cardview"
     android:fitsSystemWindows="true"
-    app:cardBackgroundColor="@color/colorGreyTrans">
+    app:cardBackgroundColor="@color/colorTransparent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="match_parent"
+            android:background="@color/colorGreyTrans"
             android:id="@+id/icon_iv"/>
         <TextView
             android:layout_width="0dp"

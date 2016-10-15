@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.model.Weather;
 
 public class TwentyFourDialogFragment extends DialogFragment {
@@ -47,6 +48,7 @@ public class TwentyFourDialogFragment extends DialogFragment {
             TextView airPressure = (TextView) root.findViewById(R.id.dialog_air_pressure_tv);
             airPressure.setText(weather.getAirPressure() + "hPa");
             ImageView icon = (ImageView) root.findViewById(R.id.dialog_icon_iv);
+            TwentyFourListAdaptor.setIcon(icon, weather.getCondition());
 
         }
 
