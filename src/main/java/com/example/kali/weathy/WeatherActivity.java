@@ -2,9 +2,6 @@ package com.example.kali.weathy;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.SearchableInfo;
 import android.appwidget.AppWidgetManager;
@@ -14,8 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -48,7 +43,6 @@ public class WeatherActivity extends AppCompatActivity
     private Button refreshButton;
     private WeatherPagerAdapter adapter;
     private  MyInnerReceiver receiver;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,12 +120,6 @@ public class WeatherActivity extends AppCompatActivity
             vPager.setCurrentItem(1, true);
         } else if (id == R.id.ten_day_item) {
             vPager.setCurrentItem(2, true);
-        } else if (id == R.id.last_searches) {
-            Log.e("manager", DBManager.getInstance(this).getLastSearchCities().size()+"");
-            Log.e("manager", DBManager.getInstance(this).getLastWeather().getCityName());
-            FragmentManager fm = getSupportFragmentManager();
-            DialogFragment newFragment = new LastSearchDialogFragment();
-            newFragment.show(fm, "lastSearchDialog");
         } else if (id == R.id.serch_item) {
             Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
             intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
@@ -178,10 +166,11 @@ public class WeatherActivity extends AppCompatActivity
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
 
-            WeatherActivity.this.recreate();
+            DBManager.getInstance(WeatherActivity.this).addLastSearch();
+            Log.e("update" , "update");
+            //WeatherActivity.this.recreate();
         }
-
-
     }
+
 
 }

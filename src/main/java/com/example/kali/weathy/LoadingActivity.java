@@ -25,6 +25,7 @@ public class LoadingActivity extends AppCompatActivity{
     private  MyInnerReceiver receiver;
     private ProgressBar loadingProgressBar;
     private Intent intent;
+    private FirstQueryReceiver firstQueryReceiver;
     private ErrorReceiver secondReceiver;
 
     @Override
@@ -36,8 +37,9 @@ public class LoadingActivity extends AppCompatActivity{
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
         secondReceiver = new ErrorReceiver();
-
         registerReceiver(secondReceiver,new IntentFilter("Error"));
+        firstQueryReceiver = new FirstQueryReceiver();
+        registerReceiver(firstQueryReceiver,new IntentFilter("FirstQueryComplete"));
         if(isNetworkAvailable()){
             if(DBManager.getInstance(this).getLastWeather().getCityName()==null){
                 intent = new Intent(this, RequestWeatherIntentService.class);
@@ -72,9 +74,9 @@ public class LoadingActivity extends AppCompatActivity{
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Intent intent1 = new Intent(context,WeatherActivity.class);
+           /* Intent intent1 = new Intent(context,WeatherActivity.class);
             startActivity(intent1);
-            finish();
+            finish();*/
         }
     }
 
@@ -86,6 +88,17 @@ public class LoadingActivity extends AppCompatActivity{
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
             loadingProgressBar.setVisibility(View.GONE);
 
+
+        }
+    }
+
+    class FirstQueryReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent intent1 = new Intent(context,WeatherActivity.class);
+            startActivity(intent1);
+            finish();
 
         }
     }
@@ -103,6 +116,7 @@ public class LoadingActivity extends AppCompatActivity{
             try {
                 unregisterReceiver(secondReceiver);
                 unregisterReceiver(receiver);
+                unregisterReceiver(firstQueryReceiver);
             }
             catch (IllegalArgumentException e){
 

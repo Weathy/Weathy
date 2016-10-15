@@ -61,6 +61,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private String latitude;
     private String longtitude;
     private ErrorReceiver secondReceiver;
+    private FirstQueryReceiver firstQueryReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,8 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         registerReceiver(receiver, new IntentFilter("SerciveComplete"));
         secondReceiver = new ErrorReceiver();
         registerReceiver(secondReceiver,new IntentFilter("Error"));
+        firstQueryReceiver = new FirstQueryReceiver();
+        registerReceiver(firstQueryReceiver,new IntentFilter("FirstQueryComplete"));
         sofiaButton = (Button) findViewById(R.id.sofia_button);
         plovdivButton = (Button) findViewById(R.id.plovdiv_button);
         varnaButton = (Button) findViewById(R.id.varna_button);
@@ -209,6 +212,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
             try {
                 unregisterReceiver(receiver);
                 unregisterReceiver(secondReceiver);
+                unregisterReceiver(firstQueryReceiver);
                 mGoogleApiClient.disconnect();
             } catch (IllegalArgumentException e) {
 
@@ -310,4 +314,19 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
         }
     }
+
+
+    class FirstQueryReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent intent1 = new Intent(context,WeatherActivity.class);
+            startActivity(intent1);
+            finish();
+
+        }
+    }
+
+
+
 }
