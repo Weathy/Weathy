@@ -6,7 +6,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +36,7 @@ public class WeatherActivity extends AppCompatActivity
     private Button searchButton;
     private Button refreshButton;
     private WeatherPagerAdapter adapter;
-    private MyInnerReceiver receiver;
+    private  MyInnerReceiver receiver;
     private FirstQueryReceiver firstQueryReceiver;
 
     @Override
@@ -42,10 +46,10 @@ public class WeatherActivity extends AppCompatActivity
         updateWidgets(this);
 
         receiver = new MyInnerReceiver();
-        registerReceiver(receiver, new IntentFilter("SerciveComplete"));
+        registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 
         firstQueryReceiver = new FirstQueryReceiver();
-        registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
+        registerReceiver(firstQueryReceiver,new IntentFilter("FirstQueryComplete"));
 
         TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
         cityNameTV.setText(DBManager.getInstance(this).getLastWeather().getCityName());
@@ -70,7 +74,7 @@ public class WeatherActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
                 intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
-                startActivityForResult(intent, 200);
+                startActivityForResult(intent , 200);
             }
         });
 
@@ -86,6 +90,7 @@ public class WeatherActivity extends AppCompatActivity
             }
         });
 
+
         switch (DBManager.getInstance(this).getLastWeather().getDescription()) {
             case "Clear":
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
@@ -99,6 +104,7 @@ public class WeatherActivity extends AppCompatActivity
             case "Rain":
                 findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
                 break;
+
         }
 
     }
@@ -129,26 +135,32 @@ public class WeatherActivity extends AppCompatActivity
             intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
             startActivity(intent);
 
+        } else if (id == R.id.last_searches) {
+            FragmentManager fm = getSupportFragmentManager();
+            DialogFragment newFragment = new LastSearchDialogFragment();
+            newFragment.show(fm, "lastSearchDialog");
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+
+        }
 
     @Override
     protected void onDestroy() {
-        if (receiver != null) {
+        if(receiver != null){
             try {
                 unregisterReceiver(receiver);
                 unregisterReceiver(firstQueryReceiver);
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e){
 
             }
         }
         super.onDestroy();
     }
 
-    private void updateWidgets(Context context) {
+    private void updateWidgets(Context context){
         Intent intent = new Intent(this, Widget.class);
         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), Widget.class));
@@ -173,11 +185,11 @@ public class WeatherActivity extends AppCompatActivity
     }
 
 
-    class FirstQueryReceiver extends BroadcastReceiver {
+    class FirstQueryReceiver extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("recreate", "recreate");
+            Log.e("recreate" , "recreate");
             WeatherActivity.this.recreate();
         }
     }
@@ -186,4 +198,5 @@ public class WeatherActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         WeatherActivity.this.recreate();
     }
+
 }

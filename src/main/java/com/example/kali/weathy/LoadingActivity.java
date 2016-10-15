@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -37,19 +36,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
-
 
 public class LoadingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -63,30 +52,33 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     private String country;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+    private GPSReceive gpsReveicer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+        loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
+        secondReceiver = new ErrorReceiver();
+        registerReceiver(secondReceiver, new IntentFilter("Error"));
+        firstQueryReceiver = new FirstQueryReceiver();
+        gpsReveicer = new GPSReceive();
+        registerReceiver(gpsReveicer, new IntentFilter("GPSChanged"));
+        registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(LoadingActivity.this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-            mGoogleApiClient.connect();
         }
-        loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
-        secondReceiver = new ErrorReceiver();
-        registerReceiver(secondReceiver, new IntentFilter("Error"));
-        firstQueryReceiver = new FirstQueryReceiver();
-        registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
+        mGoogleApiClient.connect();
+        Log.e("api", mGoogleApiClient.toString());
         if (isNetworkAvailable()) {
             if (DBManager.getInstance(this).getLastWeather().getCityName() == null) {
-                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Log.e("gps", "gps");
-                } else {
+                final LocationManager manager = (LocationManager) getSystemService(LoadingActivity.LOCATION_SERVICE);
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(LoadingActivity.this);
                     final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
                     final String message = "No GPS Connection! Do you want open GPS setting?";
@@ -102,6 +94,8 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                         }
                     });
                     builder.create().show();
+                } else {
+                    new GPSTask().execute();
                 }
             } else {
                 intent = new Intent(this, RequestWeatherIntentService.class);
@@ -125,13 +119,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnected(@Nullable Bundle bundle) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -171,6 +159,15 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    class GPSReceive extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("asd", "asd");
+            new GPSTask().execute();
+        }
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -184,6 +181,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         try {
             unregisterReceiver(secondReceiver);
             unregisterReceiver(firstQueryReceiver);
+            unregisterReceiver(gpsReveicer);
         } catch (IllegalArgumentException e) {
 
         }
@@ -202,5 +200,49 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         return x * 60 * 1000;
     }
 
+    class GPSTask extends AsyncTask<Void, Void, Void> {
 
- }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Log.e("getLocation", "fafs");
+            while (mLastLocation == null) {
+                if (ActivityCompat.checkSelfPermission(LoadingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LoadingActivity.this
+                        , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    return null;
+                }
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+                }
+                if (mLastLocation != null) {
+                    Log.e("location", "!=null");
+                    latitude = Double.toString(mLastLocation.getLatitude());
+                    longtitude = Double.toString(mLastLocation.getLongitude());
+                    double lat = Double.valueOf(mLastLocation.getLatitude());
+                    double lng = Double.valueOf(mLastLocation.getLongitude());
+                    Log.e("latitude", latitude);
+                    Log.e("longitude", longtitude);
+                    Geocoder gcd = new Geocoder(LoadingActivity.this, Locale.getDefault());
+                    List<Address> addresses = null;
+                    try {
+                        addresses = gcd.getFromLocation(lat, lng, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addresses.size() > 0) {
+                        cityName = addresses.get(0).getLocality();
+                        country = addresses.get(0).getCountryName();
+                        intent = new Intent(LoadingActivity.this, RequestWeatherIntentService.class);
+                        intent.putExtra("city", cityName);
+                        intent.putExtra("country", country);
+                        startService(intent);
+
+                    }
+                }
+
+            return null;
+        }
+    }
+}
+

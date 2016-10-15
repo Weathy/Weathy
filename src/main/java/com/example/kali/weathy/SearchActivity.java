@@ -84,8 +84,10 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
-            mGoogleApiClient.connect();
+
         }
+        Log.e("api" , mGoogleApiClient.toString());
+        mGoogleApiClient.connect();
 
         sofiaButton.setOnClickListener(new CityRequestListener(sofiaButton.getText().toString(), "Bulgaria", SearchActivity.this));
         plovdivButton.setOnClickListener(new CityRequestListener(plovdivButton.getText().toString(), "Bulgaria", SearchActivity.this));
