@@ -96,7 +96,6 @@ public class RequestWeatherIntentService extends IntentService {
             }
 
             JSONObject weather = new JSONObject(weatherJSON.toString());
-            Log.e("firstJSON", weather.toString());
             description = weather.getJSONArray("weather").getJSONObject(0).getString("main");
             temp_min = (int) (weather.getJSONObject("main").getInt("temp_min") - KELVIN_CONSTANT);
             temp_max = (int) (weather.getJSONObject("main").getInt("temp_max") - KELVIN_CONSTANT);
@@ -107,7 +106,6 @@ public class RequestWeatherIntentService extends IntentService {
 
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
-            Log.e("medJSON" , weatherInfo.toString());
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -152,10 +150,12 @@ public class RequestWeatherIntentService extends IntentService {
             cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
             visibility =  weather.getJSONObject("current_observation").getString("visibility_km");
             longtitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("longitude");
-            Log.e("long" , longtitude);
             latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
 
-            Log.e("lat" , latitude);
+            Intent queryCompleteIntent = new Intent("FirstQueryComplete");
+            sendBroadcast(queryCompleteIntent);
+            Log.e("midTime" , Long.toString(System.currentTimeMillis()-time));
+            time = System.currentTimeMillis();
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
@@ -184,7 +184,6 @@ public class RequestWeatherIntentService extends IntentService {
             DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate,dayLength);
 
             //Ten day data request
-
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
             weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/"+city+"," + country + ".json");
@@ -270,7 +269,7 @@ public class RequestWeatherIntentService extends IntentService {
                 intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
             }
-            DBManager.getInstance(getApplicationContext()).addLastSearch();
+
 
             Log.e("current1" , Long.toString(System.currentTimeMillis()-time));
 
