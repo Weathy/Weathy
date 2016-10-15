@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 import com.example.kali.weathy.model.CityRequestListener;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,6 +39,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -129,19 +131,38 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         String condition = getIntent().getStringExtra("condition");
 
         if (condition != null) {
-            switch (condition) {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            switch (DBManager.getInstance(this).getLastWeather().getDescription()) {
                 case "Clear":
+                    if(hour>=20 || hour<=7){
+                        findViewById(R.id.activity_search).setBackgroundResource(R.drawable.night_clear);
+                        break;
+                    }
                     findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_clear);
                     break;
                 case "Clouds":
+                    if(hour>=20 || hour<=7){
+                        findViewById(R.id.activity_search).setBackgroundResource(R.drawable.night_cloudy);
+                        break;
+                    }
                     findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_cloudy);
                     break;
                 case "Thunderstorm":
+                    if(hour>=20 || hour<=7){
+                        findViewById(R.id.activity_search).setBackgroundResource(R.drawable.night_thunderstorm);
+                        break;
+                    }
                     findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_thunderstorm);
                     break;
                 case "Rain":
-                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.rain);
+                    if(hour>=20 || hour<=7){
+                        findViewById(R.id.activity_search).setBackgroundResource(R.drawable.night_rain);
+                        break;
+                    }
+                    findViewById(R.id.activity_search).setBackgroundResource(R.drawable.day_rain);
                     break;
+
             }
         } else {
             findViewById(R.id.activity_search).setBackgroundResource(R.drawable.loading_screen_background);

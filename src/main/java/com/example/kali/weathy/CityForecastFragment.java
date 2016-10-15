@@ -79,7 +79,7 @@ public class CityForecastFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
 
-        if (hour > 7 || hour < 20) {
+        if (hour > 7 && hour < 20) {
             switch (condition) {
                 case "Clear":
                     view.setImageResource(R.drawable.big_clear_day);

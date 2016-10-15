@@ -29,6 +29,8 @@ import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
+import java.util.Calendar;
+
 public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -90,19 +92,36 @@ public class WeatherActivity extends AppCompatActivity
             }
         });
 
-
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
         switch (DBManager.getInstance(this).getLastWeather().getDescription()) {
             case "Clear":
+                if(hour>=20 || hour<=7){
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.night_clear);
+                    break;
+                }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
                 break;
             case "Clouds":
+                if(hour>=20 || hour<=7){
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.night_cloudy);
+                    break;
+                }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_cloudy);
                 break;
             case "Thunderstorm":
+                if(hour>=20 || hour<=7){
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.night_thunderstorm);
+                    break;
+                }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_thunderstorm);
                 break;
             case "Rain":
-                findViewById(R.id.content).setBackgroundResource(R.drawable.rain);
+                if(hour>=20 || hour<=7){
+                    findViewById(R.id.content).setBackgroundResource(R.drawable.night_rain);
+                    break;
+                }
+                findViewById(R.id.content).setBackgroundResource(R.drawable.day_rain);
                 break;
 
         }

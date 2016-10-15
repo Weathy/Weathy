@@ -91,7 +91,7 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
 
-        if (hour > 7 || hour < 20) {
+        if (hour > 7 && hour < 20) {
             switch (condition) {
                 case "Chance of Flurries":
                     view.setImageResource(R.drawable.flurryes);

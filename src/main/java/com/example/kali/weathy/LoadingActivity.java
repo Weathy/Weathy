@@ -91,6 +91,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface d, int id) {
                             d.cancel();
+                            LoadingActivity.this.finish();
                         }
                     });
                     builder.create().show();
@@ -163,7 +164,6 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("asd", "asd");
             new GPSTask().execute();
         }
     }
@@ -205,7 +205,6 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         @Override
         protected Void doInBackground(Void... params) {
 
-            Log.e("getLocation", "fafs");
             while (mLastLocation == null) {
                 if (ActivityCompat.checkSelfPermission(LoadingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LoadingActivity.this
                         , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -216,13 +215,10 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                         mGoogleApiClient);
                 }
                 if (mLastLocation != null) {
-                    Log.e("location", "!=null");
                     latitude = Double.toString(mLastLocation.getLatitude());
                     longtitude = Double.toString(mLastLocation.getLongitude());
                     double lat = Double.valueOf(mLastLocation.getLatitude());
                     double lng = Double.valueOf(mLastLocation.getLongitude());
-                    Log.e("latitude", latitude);
-                    Log.e("longitude", longtitude);
                     Geocoder gcd = new Geocoder(LoadingActivity.this, Locale.getDefault());
                     List<Address> addresses = null;
                     try {
