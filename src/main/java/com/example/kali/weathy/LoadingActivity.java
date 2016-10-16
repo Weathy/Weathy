@@ -4,18 +4,19 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,14 +28,22 @@ import com.example.kali.weathy.database.RequestWeatherIntentService;
 import com.example.kali.weathy.model.GPSTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 
-public class LoadingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+public class LoadingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener , LocationListener {
 
     private ProgressBar loadingProgressBar;
     private Intent intent;
     private FirstQueryReceiver firstQueryReceiver;
     private ErrorReceiver secondReceiver;
-    private GPSReceive gpsReveicer;
+    private String latitude;
+    private String longtitude;
+    private String cityName;
+    private String country;
 
 
     @Override
@@ -46,28 +55,11 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         registerReceiver(secondReceiver, new IntentFilter("Error"));
         firstQueryReceiver = new FirstQueryReceiver();
         registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
-        gpsReveicer = new GPSReceive();
-        registerReceiver(gpsReveicer, new IntentFilter("GPSChanged"));
         if (isNetworkAvailable()) {
             if (DBManager.getInstance(this).getLastWeather().getCityName() == null) {
                 final LocationManager manager = (LocationManager) getSystemService(LoadingActivity.LOCATION_SERVICE);
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(LoadingActivity.this);
-                    final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                    final String message = "No GPS Connection! Do you want open GPS setting?";
-                    builder.setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface d, int id) {
-                            startActivity(new Intent(action));
-                            d.dismiss();
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface d, int id) {
-                            d.cancel();
-                            LoadingActivity.this.finish();
-
-                        }
-                    });
-                    builder.create().show();
+                    new GPSTask(LoadingActivity.this).execute();
                 } else {
                     new GPSTask(LoadingActivity.this).execute();
                 }
@@ -98,15 +90,49 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        latitude = Double.toString(location.getLatitude());
+        longtitude = Double.toString(location.getLongitude());
+        Log.e("lat" , latitude);
+        Log.e("long" , longtitude);
+        double lat = Double.valueOf(location.getLatitude());
+        double lng = Double.valueOf(location.getLongitude());
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e("address" , addresses.toString());
+        if (addresses.size() > 0) {
+            cityName = addresses.get(0).getLocality();
+            country = addresses.get(0).getCountryName();
+            cityName = LoadingActivity.bulgariansToEngTranlit(addresses.get(0).getLocality());
+            country = LoadingActivity.bulgariansToEngTranlit(addresses.get(0).getCountryName());
+
+        }
+        if(!(cityName.equals(DBManager.getInstance(this).getLastWeather().getCityName()))) {
+            intent = new Intent(this, RequestWeatherIntentService.class);
+            intent.putExtra("city", cityName);
+            intent.putExtra("country", country);
+            startService(intent);
+        }else{
+            intent = new Intent(this, RequestWeatherIntentService.class);
+            intent.putExtra("city", DBManager.getInstance(this).getLastWeather().getCityName().split(",")[0]);
+            intent.putExtra("country", DBManager.getInstance(this).getLastWeather().getCityName().split(" ")[1]);
+            startService(intent);
+        }
+    }
+
 
     class ErrorReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
-            loadingProgressBar.setVisibility(View.GONE);
-
-
         }
     }
 
@@ -118,14 +144,6 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
             startActivity(intent1);
             finish();
 
-        }
-    }
-
-    class GPSReceive extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            new GPSTask(LoadingActivity.this).execute();
         }
     }
 
@@ -142,7 +160,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         try {
             unregisterReceiver(secondReceiver);
             unregisterReceiver(firstQueryReceiver);
-            unregisterReceiver(gpsReveicer);
+            //unregisterReceiver(gpsReveicer);
         } catch (IllegalArgumentException e) {
 
         }

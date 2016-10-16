@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +21,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
@@ -30,7 +31,6 @@ import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -39,7 +39,6 @@ public class WeatherActivity extends AppCompatActivity
 
     public ViewPager vPager;
     private Button searchButton;
-    private Button refreshButton;
     private WeatherPagerAdapter adapter;
     private  MyInnerReceiver receiver;
     private FirstQueryReceiver firstQueryReceiver;
@@ -52,12 +51,17 @@ public class WeatherActivity extends AppCompatActivity
         layout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
-                String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
-                String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
-                intent.putExtra("city", city);
-                intent.putExtra("country", country.trim());
-                startService(intent);
+                if(!isNetworkAvailable()){
+                    Toast.makeText(WeatherActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
+                    String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
+                    String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
+                    intent.putExtra("city", city);
+                    intent.putExtra("country", country.trim());
+                    startService(intent);
+                }
             }
         });
 
@@ -94,19 +98,6 @@ public class WeatherActivity extends AppCompatActivity
                 startActivityForResult(intent , 200);
             }
         });
-
-        refreshButton = (Button) findViewById(R.id.refresh_button);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
-                String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
-                String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
-                intent.putExtra("city", city);
-                intent.putExtra("country", country.trim());
-            }
-        });
-
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         switch (DBManager.getInstance(this).getLastWeather().getDescription()) {
@@ -200,6 +191,14 @@ public class WeatherActivity extends AppCompatActivity
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), Widget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
     class MyInnerReceiver extends BroadcastReceiver {

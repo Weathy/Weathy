@@ -30,10 +30,11 @@ public class CityRequestListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        dialog = new SpotsDialog(activity);
+        dialog = new SpotsDialog(activity,R.style.Dialog_Style);
         dialog.setCancelable(false);
         dialog.show();
         if(!isNetworkAvailable()){
+            dialog.dismiss();
             Toast.makeText(activity, "No Internet Connection!", Toast.LENGTH_SHORT).show();
             return;
         }
