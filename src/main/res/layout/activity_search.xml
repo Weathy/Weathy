@@ -2,18 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/activity_search">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
         <Button
             android:id="@+id/back_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorGreyTrans"
+            android:textColor="@android:color/white"
+            android:background="@drawable/left_button_shape"
             android:text="BACK"/>
 
         <Button
@@ -21,13 +25,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GPS"
-            android:background="@color/colorTransparent"
-            android:layout_alignParentRight="true"/>
+            android:textColor="@android:color/white"
+            android:background="@drawable/right_button_shape"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp">
 
         <fragment
             android:id="@+id/place_fragment"
@@ -50,6 +58,9 @@
                 android:id="@+id/sofia_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Sofia"/>
 
@@ -57,6 +68,9 @@
                 android:id="@+id/plovdiv_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Plovdiv" />
         </LinearLayout>
@@ -72,6 +86,9 @@
                 android:id="@+id/varna_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Varna"/>
 
@@ -79,6 +96,9 @@
                 android:id="@+id/ruse_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Ruse" />
         </LinearLayout>
@@ -95,6 +115,9 @@
                 android:id="@+id/burgas_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Burgas"/>
 
@@ -102,6 +125,9 @@
                 android:id="@+id/pleven_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
                 android:text="Pleven" />
         </LinearLayout>

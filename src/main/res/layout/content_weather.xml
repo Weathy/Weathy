@@ -24,22 +24,26 @@
     tools:showIn="@layout/app_bar_weather">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/search_button"
+            android:id="@+id/drawer_button"
             android:layout_width="40dp"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/white"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button" />
+            android:background="@drawable/menu_icon" />
 
         <Button
-            android:id="@+id/refresh_button"
-            android:layout_width="40dp"
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:text="search"
+            android:textColor="@android:color/white"
             android:layout_height="40dp"
-            android:text="R"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/right_button_shape" />
     </RelativeLayout>
 
     <LinearLayout

@@ -20,6 +20,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:theme="@style/drawerStyle.Drawer"
+        app:itemTextColor="@android:color/white"
+        android:background="@color/colorButton"
         app:headerLayout="@layout/nav_header_weather"
         app:menu="@menu/activity_weather_drawer" />
 
