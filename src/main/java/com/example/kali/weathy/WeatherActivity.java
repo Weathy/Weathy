@@ -46,7 +46,8 @@ public class WeatherActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         updateWidgets(this);
-
+        Log.e("translate" ,
+                LoadingActivity.bulgariansToEngTranlit("София"));
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 

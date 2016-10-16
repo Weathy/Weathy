@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import static android.content.Context.LOCATION_SERVICE;
