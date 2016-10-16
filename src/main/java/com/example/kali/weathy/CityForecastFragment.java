@@ -90,6 +90,9 @@ public class CityForecastFragment extends Fragment {
                 case "Drizzle":
                     view.setImageResource(R.drawable.big_rain_day);
                     break;
+                case "Rain":
+                    view.setImageResource(R.drawable.big_rain_day);
+                    break;
                 case "Thunderstorm":
                     view.setImageResource(R.drawable.big_thunderstorm);
                     break;
@@ -112,6 +115,9 @@ public class CityForecastFragment extends Fragment {
                     view.setImageResource(R.drawable.big_cloudy);
                     break;
                 case "Drizzle":
+                    view.setImageResource(R.drawable.big_rain_night);
+                    break;
+                case "Rain":
                     view.setImageResource(R.drawable.big_rain_night);
                     break;
                 case "Thunderstorm":

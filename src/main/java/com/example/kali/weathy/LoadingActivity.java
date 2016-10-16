@@ -59,6 +59,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
+
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading_progress_bar);
         secondReceiver = new ErrorReceiver();
         registerReceiver(secondReceiver, new IntentFilter("Error"));
@@ -66,6 +67,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         gpsReveicer = new GPSReceive();
         registerReceiver(gpsReveicer, new IntentFilter("GPSChanged"));
         registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
+
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(LoadingActivity.this)
@@ -73,8 +75,10 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                     .addApi(LocationServices.API)
                     .build();
         }
+
         mGoogleApiClient.connect();
         Log.e("api", mGoogleApiClient.toString());
+
         if (isNetworkAvailable()) {
             if (DBManager.getInstance(this).getLastWeather().getCityName() == null) {
                 final LocationManager manager = (LocationManager) getSystemService(LoadingActivity.LOCATION_SERVICE);
@@ -96,7 +100,12 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                     });
                     builder.create().show();
                 } else {
-                    new GPSTask().execute();
+                    intent = new Intent(this, RequestWeatherIntentService.class);
+                    intent.putExtra("city", "Sofia");
+                    intent.putExtra("country", "Bulgaria");
+                    startService(intent);
+//                    Log.e("task", "execute");
+//                    new GPSTask().execute();
                 }
             } else {
                 intent = new Intent(this, RequestWeatherIntentService.class);
@@ -120,7 +129,6 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     public void onConnected(@Nullable Bundle bundle) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -206,6 +214,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         protected Void doInBackground(Void... params) {
 
             while (mLastLocation == null) {
+                Log.e("task", "while");
                 if (ActivityCompat.checkSelfPermission(LoadingActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LoadingActivity.this
                         , Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -214,15 +223,19 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                         mGoogleApiClient);
                 }
+                Log.e("task", mLastLocation.toString());
                 if (mLastLocation != null) {
                     latitude = Double.toString(mLastLocation.getLatitude());
                     longtitude = Double.toString(mLastLocation.getLongitude());
+                    Log.e("task", latitude.toString());
+                    Log.e("task", longtitude.toString());
                     double lat = Double.valueOf(mLastLocation.getLatitude());
                     double lng = Double.valueOf(mLastLocation.getLongitude());
                     Geocoder gcd = new Geocoder(LoadingActivity.this, Locale.getDefault());
                     List<Address> addresses = null;
                     try {
                         addresses = gcd.getFromLocation(lat, lng, 1);
+                        Log.e("task", addresses.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
