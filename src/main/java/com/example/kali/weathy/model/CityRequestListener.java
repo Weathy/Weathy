@@ -11,21 +11,28 @@ import android.widget.Toast;
 import com.example.kali.weathy.R;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class CityRequestListener implements View.OnClickListener {
     private String city;
     private String country;
     private Intent intent;
     private Activity activity;
+    private SpotsDialog dialog;
 
     public CityRequestListener(String city,String country,Activity activity){
         this.city = city;
         this.country = country;
         this.activity = activity;
+
     }
 
     @Override
     public void onClick(View v) {
+        dialog = new SpotsDialog(activity);
+        dialog.setCancelable(false);
+        dialog.show();
         if(!isNetworkAvailable()){
             Toast.makeText(activity, "No Internet Connection!", Toast.LENGTH_SHORT).show();
             return;
@@ -33,7 +40,6 @@ public class CityRequestListener implements View.OnClickListener {
         intent = new Intent(activity, RequestWeatherIntentService.class);
         intent.putExtra("city" , city);
         intent.putExtra("country" , country);
-        activity.findViewById(R.id.progress_search).setVisibility(View.VISIBLE);
         activity.startService(intent);
     }
 

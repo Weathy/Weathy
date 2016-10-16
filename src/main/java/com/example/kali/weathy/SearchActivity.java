@@ -34,12 +34,13 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.util.Calendar;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class SearchActivity extends AppCompatActivity implements PlaceSelectionListener , GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
     private String cityName;
     private String country;
     private Intent intent;
-    private ProgressBar progressBar;
     private Button sofiaButton;
     private Button plovdivButton;
     private Button varnaButton;
@@ -51,12 +52,15 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private ErrorReceiver secondReceiver;
     private FirstQueryReceiver firstQueryReceiver;
     private GPSReceive gpsReveicer;
+    private SpotsDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        dialog = new SpotsDialog(this);
+        dialog.setCancelable(false);
         secondReceiver = new ErrorReceiver();
         registerReceiver(secondReceiver,new IntentFilter("Error"));
         firstQueryReceiver = new FirstQueryReceiver();
@@ -98,11 +102,11 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                     });
                     builder.create().show();
                 } else {
+                    dialog.show();
                     new GPSTask(SearchActivity.this).execute();
                 }
             }
         });
-        progressBar = (ProgressBar) findViewById(R.id.progress_search);
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
         fragment.setOnPlaceSelectedListener(this);
         fragment.setHint("Search for location");
@@ -161,7 +165,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     public void onPlaceSelected(Place place) {
-        progressBar.setVisibility(View.VISIBLE);
+        dialog.show();
         cityName = place.getName().toString();
         String [] cityNameConcat = cityName.split(" ");
         if(cityNameConcat.length!=1){
@@ -212,13 +216,13 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     protected void onDestroy() {
-            try {
-                unregisterReceiver(secondReceiver);
-                unregisterReceiver(firstQueryReceiver);
-                unregisterReceiver(gpsReveicer);
-            } catch (IllegalArgumentException e) {
-
-            }
+        dialog.dismiss();
+        try {
+            unregisterReceiver(secondReceiver);
+            unregisterReceiver(firstQueryReceiver);
+            unregisterReceiver(gpsReveicer);
+        } catch (IllegalArgumentException e) {
+         }
         super.onDestroy();
     }
 
@@ -237,7 +241,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
         }
     }
 

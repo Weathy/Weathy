@@ -20,8 +20,11 @@ import com.example.kali.weathy.adaptors.LastSearchArrayAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
+import dmax.dialog.SpotsDialog;
+
 public class LastSearchDialogFragment extends DialogFragment {
 
+    public static SpotsDialog lastSearchDialog;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -31,10 +34,13 @@ public class LastSearchDialogFragment extends DialogFragment {
         ListView lv = (ListView) root.findViewById(R.id.last_search_lv);
         LastSearchArrayAdapter adapter = new LastSearchArrayAdapter(getActivity(), DBManager.getInstance(getActivity()).getLastSearchCities());
         lv.setAdapter(adapter);
-
+        lastSearchDialog = new SpotsDialog(getActivity());
+        lastSearchDialog.setCancelable(false);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                lastSearchDialog.show();
                 TextView v = (TextView) view.findViewById(R.id.last_search_tv);
                 v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 view.setLayoutParams(new CardView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

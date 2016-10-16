@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.baoyz.widget.PullRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:refreshType="smartisan"
+        app:paddingStart="200dp">
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
@@ -31,6 +43,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -55,14 +68,14 @@
 
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:showIn="@layout/app_bar_weather"></android.support.v4.view.ViewPager>
+        tools:showIn="@layout/app_bar_weather">
 
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>
 
-
-
+</com.baoyz.widget.PullRefreshLayout>

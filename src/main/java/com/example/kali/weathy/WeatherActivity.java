@@ -6,8 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -21,15 +19,20 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
 import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+
 
 public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,14 +43,25 @@ public class WeatherActivity extends AppCompatActivity
     private WeatherPagerAdapter adapter;
     private  MyInnerReceiver receiver;
     private FirstQueryReceiver firstQueryReceiver;
-
+    private PullRefreshLayout layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        layout = (PullRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        layout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
+                String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
+                String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
+                intent.putExtra("city", city);
+                intent.putExtra("country", country.trim());
+                startService(intent);
+            }
+        });
+
         updateWidgets(this);
-        Log.e("translate" ,
-                LoadingActivity.bulgariansToEngTranlit("София"));
         receiver = new MyInnerReceiver();
         registerReceiver(receiver,new IntentFilter("SerciveComplete"));
 
@@ -201,6 +215,7 @@ public class WeatherActivity extends AppCompatActivity
 
             tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
             tenDayFragment.adaptor.notifyDataSetChanged();
+            layout.setRefreshing(false);
         }
     }
 
@@ -211,6 +226,10 @@ public class WeatherActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             Log.e("recreate" , "recreate");
             WeatherActivity.this.recreate();
+            if(LastSearchDialogFragment.lastSearchDialog!=null) {
+                LastSearchDialogFragment.lastSearchDialog.dismiss();
+            }
+
         }
     }
 
