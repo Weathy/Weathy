@@ -51,4 +51,22 @@
     <string name="weathy">Weathy</string>
     <string name="humidity_tff">Humidity |</string>
 
+
+    <string name="db_cityName">cityName</string>
+    <string name="db_current_temp">currentTemp</string>
+    <string name="db_condition">condition</string>
+    <string name="db_temp_min">temp_min</string>
+    <string name="db_temp_max">temp_max</string>
+    <string name="db_sunrise">sunrise</string>
+    <string name="db_sunset">sunset</string>
+    <string name="db_wind_speed">windSpeed</string>
+    <string name="db_humidity">humidity</string>
+    <string name="db_pressure">pressure</string>
+    <string name="db_feels_like">feels_like</string>
+    <string name="db_visibility">visibility</string>
+    <string name="db_last_update">last_update</string>
+    <string name="db_day_length">day_length</string>
+    <string name="db_date">date</string>
+    <string name="db_time">time</string>
+
 </resources>

@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.kali.weathy.Widget;
 
@@ -178,7 +179,14 @@ public class RequestWeatherIntentService extends IntentService {
                 return;
             }
             sunset = weather.getJSONObject("results").getString("sunset");
+            int temp = Integer.parseInt(sunset.split(":")[0]);
+            temp+=15;
+            sunset = temp + ":" + sunset.split(":")[1] + ":" + sunset.split(":")[2];
             sunrise = weather.getJSONObject("results").getString("sunrise");
+            temp = Integer.parseInt(sunrise.split(":")[0]);
+            temp+=3;
+            sunrise = "0" + temp + ":" + sunrise.split(":")[1] + ":" + sunrise.split(":")[2];
+
             dayLength = weather.getJSONObject("results").getString("day_length");
             weatherJSON.delete(0, weatherJSON.length());
             DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate, dayLength);
