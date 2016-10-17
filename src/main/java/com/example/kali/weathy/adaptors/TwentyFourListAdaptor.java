@@ -1,6 +1,7 @@
 package com.example.kali.weathy.adaptors;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,6 +145,9 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
                     break;
                 case "Sunny":
                     view.setImageResource(R.drawable.clear_day);
+                    break;
+                case "Overcast":
+                    view.setImageResource(R.drawable.mostly_cloudy_day);
                     break;
                 case "Thunderstorm":
                     view.setImageResource(R.drawable.thunderstorm_day);
