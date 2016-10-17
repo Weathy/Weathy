@@ -1,6 +1,19 @@
 <resources>
     <string name="app_name">Weathy</string>
-
+    <string name="erroe_query">Error</string>
+    <string name="gps_changed">GPSChanged</string>
+    <string name="first_query_complete">FirstQueryComplete</string>
+    <string name="service_complete">SerciveComplete</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="no_city_match"> No cities match your search query!</string>
+    <string name="bulgaria_string">Bulgaria</string>
+    <string name="search_for_location_hint">Search for location...</string>
+    <string name="not_available">N/A</string>
+    <string name="clear">Clear</string>
+    <string name="clouds">Clouds</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <string name="rain">Rain</string>
+    <string name="you_did_some_wrong">You did something wrong!</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Search</string>
@@ -37,5 +50,23 @@
     <string name="today">Today</string>
     <string name="weathy">Weathy</string>
     <string name="humidity_tff">Humidity |</string>
+
+
+    <string name="db_cityName">cityName</string>
+    <string name="db_current_temp">currentTemp</string>
+    <string name="db_condition">condition</string>
+    <string name="db_temp_min">temp_min</string>
+    <string name="db_temp_max">temp_max</string>
+    <string name="db_sunrise">sunrise</string>
+    <string name="db_sunset">sunset</string>
+    <string name="db_wind_speed">windSpeed</string>
+    <string name="db_humidity">humidity</string>
+    <string name="db_pressure">pressure</string>
+    <string name="db_feels_like">feels_like</string>
+    <string name="db_visibility">visibility</string>
+    <string name="db_last_update">last_update</string>
+    <string name="db_day_length">day_length</string>
+    <string name="db_date">date</string>
+    <string name="db_time">time</string>
 
 </resources>
