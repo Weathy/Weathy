@@ -36,5 +36,6 @@
     <string name="wind">Wind:</string>
     <string name="today">Today</string>
     <string name="weathy">Weathy</string>
+    <string name="humidity_tff">Humidity |</string>
 
 </resources>

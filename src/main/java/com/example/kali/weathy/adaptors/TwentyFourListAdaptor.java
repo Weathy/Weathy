@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kali.weathy.R;
+import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.model.Weather;
 
 import java.util.Calendar;
@@ -67,6 +68,26 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
 
         firstHour = Integer.parseInt(weather.getTime().split(":")[0]);
 
+        while(true){
+            if (items.size() != 0) {
+                this.firstDate = items.get(0).getDate();
+                this.firstHour = Integer.parseInt(items.get(0).getTime().split(":")[0]);
+
+                for (int i = 0; i < items.size(); i++) {
+                    if (!firstDate.equals(items.get(i).getDate())) {
+                        secondDate = items.get(i).getDate();
+                        break;
+                    }
+                }
+                secondDatePlace = 23 - firstHour;
+            }
+            if(firstDate != null){
+                if(!firstDate.isEmpty()){
+                    break;
+                }
+            }
+        }
+
         if (position == 0) {
             view.findViewById(R.id.card_view_first).setVisibility(View.VISIBLE);
             date.setVisibility(View.VISIBLE);
@@ -90,6 +111,7 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
     }
 
     public static void setIcon(ImageView view, String condition) {
+
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
 

@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
+import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
@@ -82,7 +84,6 @@ public class WeatherActivity extends AppCompatActivity
         cityNameTV.setText(DBManager.getInstance(this).getLastWeather().getCityName());
         TextView lastUpdateTV = (TextView) findViewById(R.id.renewed_textview);
         lastUpdateTV.setText(DBManager.getInstance(this).getLastWeather().getLastUpdate());
-
         adapter = new WeatherPagerAdapter(getSupportFragmentManager());
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,8 +93,11 @@ public class WeatherActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         vPager = (ViewPager) findViewById(R.id.view_pager);
         vPager.setAdapter(adapter);
+        PageListener pageListener = new PageListener();
+        vPager.setOnPageChangeListener(pageListener);
 
         searchButton = (Button) findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -243,15 +247,6 @@ public class WeatherActivity extends AppCompatActivity
     class MyInnerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-//            TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
-//            TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
-//
-//            twentyFourFragment.adaptor = new TwentyFourListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTwentyHourForecastObjects());
-//            twentyFourFragment.adaptor.notifyDataSetChanged();
-//
-//            tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
-//            tenDayFragment.adaptor.notifyDataSetChanged();
             vPager.getAdapter().notifyDataSetChanged();
             layout.setRefreshing(false);
         }
@@ -270,5 +265,18 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         WeatherActivity.this.recreate();
+    }
+
+    private class PageListener extends ViewPager.SimpleOnPageChangeListener{
+
+        @Override
+        public void onPageSelected(int position) {
+            if(position==1){
+                TwentyFourFragment fragment = (TwentyFourFragment) adapter.getItem(position);
+                if(fragment.adaptor != null){
+                    fragment.adaptor = new TwentyFourListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTwentyHourForecastObjects());
+                }
+            }
+        }
     }
 }
