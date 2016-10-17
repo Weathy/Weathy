@@ -25,8 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
-import com.example.kali.weathy.adaptors.TenDayListAdaptor;
-import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
@@ -177,16 +175,15 @@ public class WeatherActivity extends AppCompatActivity
             Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
             intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
             startActivity(intent);
-
         } else if (id == R.id.last_searches) {
             FragmentManager fm = getSupportFragmentManager();
             DialogFragment newFragment = new LastSearchDialogFragment();
             newFragment.show(fm, "lastSearchDialog");
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-
     }
 
     @Override
@@ -244,7 +241,6 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     class MyInnerReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
 

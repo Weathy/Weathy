@@ -1,5 +1,9 @@
 package com.example.kali.weathy;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -9,24 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.kali.weathy.adaptors.TenDayListAdaptor;
 import com.example.kali.weathy.database.DBManager;
 
 public class TenDayFragment extends Fragment {
 
-    public TenDayListAdaptor adaptor;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        adaptor.notifyDataSetChanged();
-    }
+    public TenDayListAdaptor adaptor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_ten_day, container, false);
+
+
 
         ListView lv = (ListView) root.findViewById(R.id.one_day_lv);
         adaptor = new TenDayListAdaptor(getActivity(), DBManager.getInstance(getActivity()).getTenDayForecast());
