@@ -15,14 +15,28 @@
         android:text="@string/weathy"
         android:textColor="@android:color/white"/>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:gravity="center"
-        android:textSize="40sp"
-        android:textColor="@android:color/white"
-        android:id="@+id/widnget_current_temp_tv"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
+            android:id="@+id/widnget_current_temp_tv"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:id="@+id/widget_icon_imageview"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
