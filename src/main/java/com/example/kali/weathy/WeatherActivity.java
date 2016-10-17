@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +30,10 @@ import com.example.kali.weathy.adaptors.TwentyFourListAdaptor;
 import com.example.kali.weathy.adaptors.WeatherPagerAdapter;
 import com.example.kali.weathy.database.DBManager;
 import com.example.kali.weathy.database.RequestWeatherIntentService;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Calendar;
 
@@ -38,23 +42,28 @@ public class WeatherActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public ViewPager vPager;
+    private Button menuButton;
     private Button searchButton;
     private WeatherPagerAdapter adapter;
-    private  MyInnerReceiver receiver;
+    private MyInnerReceiver receiver;
     private FirstQueryReceiver firstQueryReceiver;
     private PullRefreshLayout layout;
+    private GoogleApiClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        updateWidgets();
+
         layout = (PullRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         layout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!isNetworkAvailable()){
+                if (!isNetworkAvailable()) {
                     Toast.makeText(WeatherActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Intent intent = new Intent(WeatherActivity.this, RequestWeatherIntentService.class);
                     String city = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[0];
                     String country = DBManager.getInstance(WeatherActivity.this).getLastWeather().getCityName().split(",")[1];
@@ -65,12 +74,11 @@ public class WeatherActivity extends AppCompatActivity
             }
         });
 
-        updateWidgets(this);
         receiver = new MyInnerReceiver();
-        registerReceiver(receiver,new IntentFilter("SerciveComplete"));
+        registerReceiver(receiver, new IntentFilter("SerciveComplete"));
 
         firstQueryReceiver = new FirstQueryReceiver();
-        registerReceiver(firstQueryReceiver,new IntentFilter("FirstQueryComplete"));
+        registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
 
         TextView cityNameTV = (TextView) findViewById(R.id.city_name_textview);
         cityNameTV.setText(DBManager.getInstance(this).getLastWeather().getCityName());
@@ -79,7 +87,7 @@ public class WeatherActivity extends AppCompatActivity
 
         adapter = new WeatherPagerAdapter(getSupportFragmentManager());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -95,43 +103,54 @@ public class WeatherActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(WeatherActivity.this, SearchActivity.class);
                 intent.putExtra("condition", DBManager.getInstance(WeatherActivity.this).getLastWeather().getDescription());
-                startActivityForResult(intent , 200);
+                startActivityForResult(intent, 200);
             }
         });
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        menuButton = (Button) findViewById(R.id.drawer_button);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+
         switch (DBManager.getInstance(this).getLastWeather().getDescription()) {
             case "Clear":
-                if(hour>=20 || hour<=7){
+                if (hour >= 20 || hour <= 7) {
                     findViewById(R.id.content).setBackgroundResource(R.drawable.night_clear);
                     break;
                 }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_clear);
                 break;
             case "Clouds":
-                if(hour>=20 || hour<=7){
+                if (hour >= 20 || hour <= 7) {
                     findViewById(R.id.content).setBackgroundResource(R.drawable.night_cloudy);
                     break;
                 }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_cloudy);
                 break;
             case "Thunderstorm":
-                if(hour>=20 || hour<=7){
+                if (hour >= 20 || hour <= 7) {
                     findViewById(R.id.content).setBackgroundResource(R.drawable.night_thunderstorm);
                     break;
                 }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_thunderstorm);
                 break;
             case "Rain":
-                if(hour>=20 || hour<=7){
+                if (hour >= 20 || hour <= 7) {
                     findViewById(R.id.content).setBackgroundResource(R.drawable.night_rain);
                     break;
                 }
                 findViewById(R.id.content).setBackgroundResource(R.drawable.day_rain);
                 break;
-
         }
 
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -145,7 +164,6 @@ public class WeatherActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -165,27 +183,26 @@ public class WeatherActivity extends AppCompatActivity
             DialogFragment newFragment = new LastSearchDialogFragment();
             newFragment.show(fm, "lastSearchDialog");
         }
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
 
-        }
+    }
 
     @Override
     protected void onDestroy() {
-        if(receiver != null){
+        if (receiver != null) {
             try {
                 unregisterReceiver(receiver);
                 unregisterReceiver(firstQueryReceiver);
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
 
             }
         }
         super.onDestroy();
     }
 
-    private void updateWidgets(Context context){
+    private void updateWidgets() {
         Intent intent = new Intent(this, Widget.class);
         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
         int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), Widget.class));
@@ -199,6 +216,31 @@ public class WeatherActivity extends AppCompatActivity
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
+    }
+
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Weather Page")
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     class MyInnerReceiver extends BroadcastReceiver {
@@ -219,16 +261,14 @@ public class WeatherActivity extends AppCompatActivity
     }
 
 
-    class FirstQueryReceiver extends BroadcastReceiver{
+    class FirstQueryReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("recreate" , "recreate");
             WeatherActivity.this.recreate();
-            if(LastSearchDialogFragment.lastSearchDialog!=null) {
+            if (LastSearchDialogFragment.lastSearchDialog != null) {
                 LastSearchDialogFragment.lastSearchDialog.dismiss();
             }
-
         }
     }
 

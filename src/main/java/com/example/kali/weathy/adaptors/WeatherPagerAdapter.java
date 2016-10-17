@@ -15,7 +15,6 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
     private SparseArray<Fragment> registeredFragments;
 
-
     private final static int NUMBER_OF_FRAGMENTS = 3;
 
     public WeatherPagerAdapter(FragmentManager fm) {
@@ -34,7 +33,6 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
                 return new TenDayFragment();
             default:
                 return new CityForecastFragment();
-
         }
     }
 

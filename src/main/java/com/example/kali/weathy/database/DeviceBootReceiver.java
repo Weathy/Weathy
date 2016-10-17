@@ -10,7 +10,6 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 
     public static int INTERVAL = 60; //min
 
-
     public DeviceBootReceiver() {
     }
 
@@ -24,7 +23,6 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minsToMillis(INTERVAL), pendingIntent);
         }
     }
-
     private long minsToMillis(int x){
         return x*60*1000;
     }

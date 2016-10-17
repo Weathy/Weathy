@@ -53,18 +53,6 @@ public class Weather {
         return description;
     }
 
-    public String getIconString() {
-        return iconString;
-    }
-
-    public int getTemp_min() {
-        return temp_min;
-    }
-
-    public int getTemp_max() {
-        return temp_max;
-    }
-
     public String getSunrise() {
         return sunrise;
     }

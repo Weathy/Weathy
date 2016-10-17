@@ -18,13 +18,13 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:background="@drawable/left_button_shape"
-            android:text="BACK"/>
+            android:text="@string/back"/>
 
         <Button
             android:id="@+id/gps_search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GPS"
+            android:text="@string/gps"
             android:textColor="@android:color/white"
             android:background="@drawable/right_button_shape"
             android:layout_alignParentTop="true"
@@ -62,7 +62,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Sofia"/>
+                android:text="@string/sofia"/>
 
             <Button
                 android:id="@+id/plovdiv_button"
@@ -72,7 +72,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Plovdiv" />
+                android:text="@string/plovdiv" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,7 +90,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Varna"/>
+                android:text="@string/varna"/>
 
             <Button
                 android:id="@+id/ruse_button"
@@ -100,7 +100,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Ruse" />
+                android:text="@string/ruse" />
         </LinearLayout>
 
 
@@ -119,7 +119,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Burgas"/>
+                android:text="@string/burgas"/>
 
             <Button
                 android:id="@+id/pleven_button"
@@ -129,7 +129,7 @@
                 android:textColor="@android:color/white"
                 android:background="@drawable/city_button_shape"
                 android:layout_height="wrap_content"
-                android:text="Pleven" />
+                android:text="@string/pleven" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

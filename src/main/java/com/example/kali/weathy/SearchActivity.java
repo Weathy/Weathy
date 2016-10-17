@@ -2,7 +2,6 @@ package com.example.kali.weathy;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Address;
@@ -11,16 +10,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kali.weathy.database.DBManager;
@@ -59,8 +54,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
     private ErrorReceiver secondReceiver;
     private FirstQueryReceiver firstQueryReceiver;
     private SpotsDialog dialog;
-    private String latitude;
-    private String longtitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +100,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                 }
             }
         });
+
         PlaceAutocompleteFragment fragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_fragment);
         fragment.setOnPlaceSelectedListener(this);
         fragment.setHint("Search for location");
@@ -179,13 +173,10 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
                  }
             }
             cityName = city.toString();
-            Log.e("name" , cityName);
         }else{
             cityName = LoadingActivity.bulgariansToEngTranlit(cityName);
         }
-        Log.e("cityasd" , cityName);
         String[] placeAdress = place.getAddress().toString().split(",");
-        Log.e("place" , place.getAddress().toString());
         if(placeAdress.length==1){
             country = placeAdress[0];
         }else {
@@ -201,7 +192,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         }
         country = country.trim();
         country = LoadingActivity.bulgariansToEngTranlit(country);
-        Log.e("country" , country);
         intent = new Intent(this, RequestWeatherIntentService.class);
         intent.putExtra("city", cityName);
         intent.putExtra("country", country);
@@ -236,12 +226,6 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     public void onLocationChanged(Location location) {
-
-        Log.e("success" , "success");
-        latitude = Double.toString(location.getLatitude());
-        longtitude = Double.toString(location.getLongitude());
-        Log.e("lat" , latitude);
-        Log.e("long" , longtitude);
         double lat = Double.valueOf(location.getLatitude());
         double lng = Double.valueOf(location.getLongitude());
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
@@ -251,7 +235,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.e("address" , addresses.toString());
+
         if (addresses.size() > 0) {
             cityName = addresses.get(0).getLocality();
             country = addresses.get(0).getCountryName();
@@ -274,12 +258,10 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
 
     class ErrorReceiver extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             dialog.dismiss();
             Toast.makeText(context, "No cities match your search query!", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -290,14 +272,11 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
         return activeNetworkInfo != null;
     }
 
-
     class FirstQueryReceiver extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             setResult(200,null,null);
             finish();
-
         }
     }
 }

@@ -3,9 +3,38 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Search</string>
+    <string name="sunset">Sunset:</string>
+    <string name="sunrise">Sunrise:</string>
+    <string name="back">BACK</string>
+    <string name="gps">GPS</string>
+    <string name="sofia">Sofia</string>
+    <string name="plovdiv">Plovdiv</string>
+    <string name="varna">Varna</string>
+    <string name="ruse">Ruse</string>
+    <string name="burgas">Burgas</string>
+    <string name="pleven">Pleven</string>
+    <string name="search">search</string>
+    <string name="air_pressure">Air pressure:</string>
+    <string name="humidity">Humidity:</string>
+    <string name="visibility">Visibility:</string>
+    <string name="sunset_sunrise">Sunset:</string>
+    <string name="day_length">Day length:</string>
+    <string name="_10_day_forecast">10-Day forecast</string>
+    <string name="condition">Condition |</string>
+    <string name="max_temperature">Max temperature |</string>
+    <string name="min_temperature">Min temperature |</string>
+    <string name="wind_speed">Wind speed |</string>
+    <string name="humidity_tdf">Humidity |</string>
+    <string name="day_of_the_year">Day of the year |</string>
+    <string name="_24_hour_forecast">24-Hour Forecast</string>
+    <string name="current_temperature">Current temperature |</string>
+    <string name="feels_like">Feels like |</string>
+    <string name="air_pressure_ohf">Air pressure |</string>
+    <string name="feels_like_ohv">Feels like:</string>
+    <string name="feels">Feels:</string>
+    <string name="wind">Wind:</string>
+    <string name="today">Today</string>
+    <string name="weathy">Weathy</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

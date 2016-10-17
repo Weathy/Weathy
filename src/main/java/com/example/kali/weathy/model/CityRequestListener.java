@@ -13,7 +13,6 @@ import com.example.kali.weathy.database.RequestWeatherIntentService;
 
 import dmax.dialog.SpotsDialog;
 
-
 public class CityRequestListener implements View.OnClickListener {
     private String city;
     private String country;
@@ -25,7 +24,6 @@ public class CityRequestListener implements View.OnClickListener {
         this.city = city;
         this.country = country;
         this.activity = activity;
-
     }
 
     @Override
@@ -43,8 +41,6 @@ public class CityRequestListener implements View.OnClickListener {
         intent.putExtra("country" , country);
         activity.startService(intent);
     }
-
-
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager

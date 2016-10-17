@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.util.Log;
 
 import com.example.kali.weathy.Widget;
 import org.json.JSONArray;
@@ -67,8 +66,6 @@ public class RequestWeatherIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long time = System.currentTimeMillis();
-        Log.e("current" , time+"");
 
         DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from weather");
         String city = intent.getStringExtra("city");
@@ -111,7 +108,6 @@ public class RequestWeatherIntentService extends IntentService {
             if(weather.getJSONObject("response").has("error")){
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
-                Log.e("error" , weather.toString());
                 return;
             }
             if( weather.getJSONObject("response").has("results")){
@@ -119,7 +115,6 @@ public class RequestWeatherIntentService extends IntentService {
                    city = weather.getJSONObject("response").getJSONArray("results").getJSONObject(0).getString("city");
                    weatherJSON.delete(0, weatherJSON.length());
                    weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
-                   Log.e("medJSON" , weatherInfo.toString());
                    weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                    weatherConnection.setRequestMethod("GET");
                    weatherStream = weatherConnection.getInputStream();
@@ -130,7 +125,6 @@ public class RequestWeatherIntentService extends IntentService {
                    weather = new JSONObject(weatherJSON.toString());
                }
             }
-            Log.e("secondJSON", weather.toString());
             feelsLike = weather.getJSONObject("current_observation").getString("feelslike_c");
             Calendar c = Calendar.getInstance();
             lastUpdateBuilder = new StringBuilder();
@@ -158,12 +152,10 @@ public class RequestWeatherIntentService extends IntentService {
 
             }
 
-            Log.e("trhirdJSON" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
             if(weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR") ){
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
-                Log.e("error" , weather.toString());
                 return;
             }
 
@@ -176,7 +168,7 @@ public class RequestWeatherIntentService extends IntentService {
 
             Intent queryCompleteIntent = new Intent("FirstQueryComplete");
             sendBroadcast(queryCompleteIntent);
-            Log.e("midTime" , Long.toString(System.currentTimeMillis()-time));
+
             //Ten day data request
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
@@ -188,7 +180,6 @@ public class RequestWeatherIntentService extends IntentService {
             while (weatherScanner.hasNextLine()) {
                 weatherJSON.append(weatherScanner.nextLine());
             }
-            Log.e("fourthJSON" , weatherJSON.toString());
             weather = new JSONObject(weatherJSON.toString());
             if(weather.getJSONObject("response").has("error")){
                 Intent intent1 = new Intent("Error");
@@ -228,7 +219,6 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            Log.e("fifthJSON", weather.toString());
             if(weather.getJSONObject("response").has("error")){
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
@@ -246,7 +236,6 @@ public class RequestWeatherIntentService extends IntentService {
                 hourlyTime = obj1.getJSONObject("FCTTIME").getString("hour") + ":" + obj1.getJSONObject("FCTTIME").getString("min");
                 hourlyDate = obj1.getJSONObject("FCTTIME").getString("weekday_name") + ", " + obj1.getJSONObject("FCTTIME").getString("mday") + "." + obj1.getJSONObject("FCTTIME").getString("month_name");
                 DBManager.getInstance(getApplicationContext()).addTwentyHourWeather(hourlyCurrentTemp, hourlyFeelsLike, hourlyWindSpeed + "", hourlyHumidity, hourlyCondition, hourlyAirPressure, hourlyTime, hourlyDate);
-
             }
 
             Intent intent1 = null;
@@ -264,8 +253,6 @@ public class RequestWeatherIntentService extends IntentService {
                 DBManager.getInstance(getApplicationContext()).addLastSearch();
             }
 
-
-            Log.e("current1" , Long.toString(System.currentTimeMillis()-time));
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

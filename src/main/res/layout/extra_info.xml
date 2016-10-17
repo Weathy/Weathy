@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Air pressure:"
+                android:text="@string/air_pressure"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Humidity:"
+                android:text="@string/humidity"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Visibility:"
+                android:text="@string/visibility"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Sunset:"
+                android:text="@string/sunset_sunrise"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|end"
                 android:maxLines="1"
-                android:text="Day length:"
+                android:text="@string/day_length"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"/>
 

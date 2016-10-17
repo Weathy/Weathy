@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DBManager extends SQLiteOpenHelper {
 
@@ -49,12 +48,10 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE twenty_hour_forecast (currentTemp INTEGER,feels_like text, windSpeed text, humidity INTEGER, condition text, pressure INTEGER,time text, date text)");
         db.execSQL("CREATE TABLE ten_day_forecast (date text, min_temp INTEGER, max_temp INTEGER, condition text, windspeed REAL, humidity INTEGER, weekday text, yearday INTEGER, year INTEGER)");
         db.execSQL("CREATE TABLE last_search (city text, country text)");
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
     public void addWeather(String cityName, int currentTemp, String condition, int temp_min, int temp_max, String sunrise, String sunset, String windSpeed, int humidity, int pressure, String feels_like, String visibility, String last_update, String dayLength) {
@@ -79,14 +76,12 @@ public class DBManager extends SQLiteOpenHelper {
         lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, dayLength);
         database.setTransactionSuccessful();
         database.endTransaction();
-
     }
 
     public void addTwentyHourWeather(int currentTemp, int feels_like, String windSpeed, int humidity, String condition, int pressure, String time, String date) {
         if (twentyHourForecastObjects.size() == 24) {
             twentyHourForecastObjects = new ArrayList<>();
         }
-
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
@@ -108,7 +103,6 @@ public class DBManager extends SQLiteOpenHelper {
         if (tenDayForecast.size() == 10) {
             tenDayForecast = new ArrayList<>();
         }
-
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
@@ -125,27 +119,20 @@ public class DBManager extends SQLiteOpenHelper {
         tenDayForecast.add(new Weather.TenDayWeather(date, max_temp, min_temp, condition, null, windspeed, humidity, weekday, yearday, year));
         database.setTransactionSuccessful();
         database.endTransaction();
-
     }
 
-    public void addLastSearch(){
-        Log.e("manager", "outside");
+    public void addLastSearch() {
         String city = lastWeather.getCityName().split(",")[0];
         String country = lastWeather.getCityName().split(" ")[1];
-
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
         database.beginTransaction();
         values.put("city", city);
-        Log.e("manager", "inside");
         values.put("country", country);
         database.insert("last_search", null, values);
         lastSearch.put(city, country);
         database.setTransactionSuccessful();
         database.endTransaction();
-
-        Log.e("manager", "after");
-
     }
 
     public Weather getLastWeather() {
@@ -160,11 +147,11 @@ public class DBManager extends SQLiteOpenHelper {
         return Collections.unmodifiableList(tenDayForecast);
     }
 
-    public List<String> getLastSearchCities(){
+    public List<String> getLastSearchCities() {
         return new ArrayList<>(lastSearch.keySet());
     }
 
-    public String getRequestData(String city){
+    public String getRequestData(String city) {
         return lastSearch.get(city);
     }
 
@@ -190,7 +177,6 @@ public class DBManager extends SQLiteOpenHelper {
                 lastWeather = new Weather(cityName, currentTemp, feels_like, humidity, windSpeed, pressure, sunrise, sunset, condition, null, temp_min, temp_max, visibility, last_update, day_length);
 
             }
-
             if (!cursor.isClosed()) {
                 cursor.close();
             }
@@ -212,7 +198,6 @@ public class DBManager extends SQLiteOpenHelper {
                 twentyHourForecastObjects.add(weather);
 
             }
-
             if (!cursor.isClosed()) {
                 cursor.close();
             }
@@ -235,20 +220,18 @@ public class DBManager extends SQLiteOpenHelper {
                 tenDayForecast.add(weather);
 
             }
-
             if (!cursor.isClosed()) {
                 cursor.close();
             }
         }
 
-        if(lastSearch.isEmpty()){
+        if (lastSearch.isEmpty()) {
             Cursor cursor = getWritableDatabase().rawQuery("SELECT city, country FROM  last_search", null);
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 String city = cursor.getString(cursor.getColumnIndex("city"));
                 String country = cursor.getString(cursor.getColumnIndex("country"));
                 lastSearch.put(city, country);
             }
-
             if (!cursor.isClosed()) {
                 cursor.close();
             }

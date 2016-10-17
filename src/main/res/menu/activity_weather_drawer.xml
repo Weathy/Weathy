@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/forecast">
         <item
             android:id="@+id/in_the_moment_item"
-            android:icon="@drawable/in_the_moment"
             android:title="In The Moment" />
         <item
             android:id="@+id/twenty_four_item"
-            android:icon="@drawable/twenty_four"
             android:title="24 Hours" />
         <item
             android:id="@+id/ten_day_item"
-            android:icon="@drawable/ten_days"
             android:title="Ten Days" />
         <item
             android:id="@+id/serch_item"
-            android:icon="@android:drawable/ic_menu_search"
             android:title="Search" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/last_search">
         <item
             android:id="@+id/last_searches"
             android:title="Last searches"/>

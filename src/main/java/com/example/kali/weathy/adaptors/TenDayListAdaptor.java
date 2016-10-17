@@ -1,7 +1,6 @@
 package com.example.kali.weathy.adaptors;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.example.kali.weathy.R;
 import com.example.kali.weathy.model.Weather;
 
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -50,5 +48,4 @@ public class TenDayListAdaptor extends ArrayAdapter{
 
         return view;
     }
-
 }

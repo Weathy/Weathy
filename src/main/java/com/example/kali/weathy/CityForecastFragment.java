@@ -41,21 +41,19 @@ public class CityForecastFragment extends Fragment {
         TextView sunrise = (TextView) view.findViewById(R.id.sunset_id);
         TextView sunsetTV = (TextView) view.findViewById(R.id.time_sunset_textview);
         if(hour>20 || hour<8){
-            sunrise.setText("Sunrise:");
+            sunrise.setText(R.string.sunrise);
             sunsetTV.setText(weather.getSunrise());
         }else {
-            sunrise.setText("Sunset:");
+            sunrise.setText(R.string.sunset);
             sunsetTV.setText(weather.getSunset());
         }
 
-        TextView feelsLikeTV = (TextView) view.findViewById(R.id.temperature_status_textview);
-        feelsLikeTV.setText(weather.getFeelsLike());
         TextView statusTV = (TextView) view.findViewById(R.id.weather_status_textview);
         statusTV.setText(weather.getDescription());
         TextView degreeTV = (TextView) view.findViewById(R.id.degrees_tv);
         degreeTV.setText(weather.getCurrentTemp() + "");
         TextView airPresure = (TextView) view.findViewById(R.id.air_pressure_textview);
-        airPresure.setText(weather.getPressure() + " HPa");
+        airPresure.setText(weather.getPressure() + "hPa");
         TextView humidity = (TextView) view.findViewById(R.id.humidity_textview);
         humidity.setText(weather.getHumidity() + "%");
         TextView wind = (TextView) view.findViewById(R.id.wind_meter_in_second_textview);

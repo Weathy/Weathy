@@ -1,7 +1,6 @@
 package com.example.kali.weathy.adaptors;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
         super(context, R.layout.one_hour_view, items);
         this.context = context;
         this.items = items;
-        if(items.size() != 0) {
+        if (items.size() != 0) {
             this.firstDate = items.get(0).getDate();
             this.firstHour = Integer.parseInt(items.get(0).getTime().split(":")[0]);
 
@@ -81,7 +80,6 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
                 date.setVisibility(View.GONE);
             }
         }
-
         return view;
     }
 
@@ -209,8 +207,5 @@ public class TwentyFourListAdaptor extends ArrayAdapter {
                     break;
             }
         }
-
-        Log.e("condition", condition);
-
     }
 }

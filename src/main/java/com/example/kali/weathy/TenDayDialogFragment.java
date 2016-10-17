@@ -63,5 +63,4 @@ public class TenDayDialogFragment extends DialogFragment {
 
         return root;
     }
-
 }
