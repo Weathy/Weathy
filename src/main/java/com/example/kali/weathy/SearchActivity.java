@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -226,6 +227,7 @@ public class SearchActivity extends AppCompatActivity implements PlaceSelectionL
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.e("onLocChangeBySearch" ,"onLocChangeBySearch" );
         double lat = Double.valueOf(location.getLatitude());
         double lng = Double.valueOf(location.getLongitude());
         Geocoder gcd = new Geocoder(this, Locale.getDefault());

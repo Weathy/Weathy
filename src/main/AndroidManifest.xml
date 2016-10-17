@@ -49,6 +49,13 @@
                 android:resource="@xml/widget_provider" />
         </receiver>
 
+        <receiver android:name=".model.GPSReceiver">
+            <intent-filter>
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".database.RequestWeatherIntentService"
             android:exported="false" />

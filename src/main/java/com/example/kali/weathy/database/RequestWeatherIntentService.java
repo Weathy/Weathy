@@ -97,7 +97,7 @@ public class RequestWeatherIntentService extends IntentService {
             currentTemp = (int) (weather.getJSONObject("main").getInt("temp") - KELVIN_CONSTANT);
 
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/f3c4f49a53cf0325/conditions/q/" + country + "/" + city + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -115,7 +115,7 @@ public class RequestWeatherIntentService extends IntentService {
                 while (weather.getJSONObject("response").has("results")) {
                     city = weather.getJSONObject("response").getJSONArray("results").getJSONObject(0).getString("city");
                     weatherJSON.delete(0, weatherJSON.length());
-                    weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
+                    weatherInfo = new URL("http://api.wunderground.com/api/f3c4f49a53cf0325/conditions/q/" + country + "/" + city + ".json");
                     weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
                     weatherConnection.setRequestMethod("GET");
                     weatherStream = weatherConnection.getInputStream();
@@ -189,7 +189,7 @@ public class RequestWeatherIntentService extends IntentService {
             //Ten day data request
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + "," + country + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/f3c4f49a53cf0325/forecast10day/q/" + city + "," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -225,7 +225,7 @@ public class RequestWeatherIntentService extends IntentService {
             //Twenty four hour data request
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + "," + country + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/f3c4f49a53cf0325/hourly/q/" + city + "," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();

@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
     private ErrorReceiver secondReceiver;
     private String cityName;
     private String country;
+    private GPSReceive gpsReveicer;
 
 
     @Override
@@ -52,6 +54,8 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         secondReceiver = new ErrorReceiver();
         registerReceiver(secondReceiver, new IntentFilter("Error"));
         firstQueryReceiver = new FirstQueryReceiver();
+        gpsReveicer = new GPSReceive();
+        registerReceiver(gpsReveicer, new IntentFilter("GPSChanged"));
         registerReceiver(firstQueryReceiver, new IntentFilter("FirstQueryComplete"));
 
         if (isNetworkAvailable()) {
@@ -94,7 +98,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onLocationChanged(Location location) {
-
+        Log.e("onLocationChanged" , "onLocationChanged");
         double lat = Double.valueOf(location.getLatitude());
         double lng = Double.valueOf(location.getLongitude());
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
@@ -143,6 +147,14 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    class GPSReceive extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("asd", "asd");
+            new GPSTask(LoadingActivity.this).execute();
+        }
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -156,7 +168,7 @@ public class LoadingActivity extends AppCompatActivity implements GoogleApiClien
         try {
             unregisterReceiver(secondReceiver);
             unregisterReceiver(firstQueryReceiver);
-            //unregisterReceiver(gpsReveicer);
+            unregisterReceiver(gpsReveicer);
         } catch (IllegalArgumentException e) {
 
         }
