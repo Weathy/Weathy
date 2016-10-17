@@ -33,7 +33,7 @@ public class LastSearchDialogFragment extends DialogFragment {
         ListView lv = (ListView) root.findViewById(R.id.last_search_lv);
         LastSearchArrayAdapter adapter = new LastSearchArrayAdapter(getActivity(), DBManager.getInstance(getActivity()).getLastSearchCities());
         lv.setAdapter(adapter);
-        lastSearchDialog = new SpotsDialog(getActivity());
+        lastSearchDialog = new SpotsDialog(getActivity(), R.style.Dialog_Style);
         lastSearchDialog.setCancelable(false);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
