@@ -14,12 +14,14 @@ import com.example.kali.weathy.TwentyFourFragment;
 public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
     private SparseArray<Fragment> registeredFragments;
+    private FragmentManager manager;
 
     private final static int NUMBER_OF_FRAGMENTS = 3;
 
     public WeatherPagerAdapter(FragmentManager fm) {
         super(fm);
         registeredFragments = new SparseArray<>();
+        this.manager = fm;
     }
 
     @Override
@@ -53,6 +55,5 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         registeredFragments.remove(position);
         super.destroyItem(container, position, object);
     }
-
 }
 

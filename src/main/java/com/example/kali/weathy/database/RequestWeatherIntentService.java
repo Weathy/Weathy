@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 
 import com.example.kali.weathy.Widget;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,10 +73,10 @@ public class RequestWeatherIntentService extends IntentService {
         String country = intent.getStringExtra("country");
         String fromAlarm = intent.getStringExtra("alarm");
         try {
-            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
+            URL weatherInfo = new URL("http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=9d01db38e0b771b0eb2fffa9e3640dd9");
             HttpURLConnection weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
-            if(weatherConnection.getResponseCode()==OPENWEATHER_ERROR_CODE){
+            if (weatherConnection.getResponseCode() == OPENWEATHER_ERROR_CODE) {
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
                 return;
@@ -105,44 +106,63 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            if(weather.getJSONObject("response").has("error")){
+            if (weather.getJSONObject("response").has("error")) {
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
                 return;
             }
-            if( weather.getJSONObject("response").has("results")){
-               while(weather.getJSONObject("response").has("results")){
-                   city = weather.getJSONObject("response").getJSONArray("results").getJSONObject(0).getString("city");
-                   weatherJSON.delete(0, weatherJSON.length());
-                   weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
-                   weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
-                   weatherConnection.setRequestMethod("GET");
-                   weatherStream = weatherConnection.getInputStream();
-                   weatherScanner = new Scanner(weatherStream);
-                   while (weatherScanner.hasNextLine()) {
-                       weatherJSON.append(weatherScanner.nextLine());
-                   }
-                   weather = new JSONObject(weatherJSON.toString());
-               }
+            if (weather.getJSONObject("response").has("results")) {
+                while (weather.getJSONObject("response").has("results")) {
+                    city = weather.getJSONObject("response").getJSONArray("results").getJSONObject(0).getString("city");
+                    weatherJSON.delete(0, weatherJSON.length());
+                    weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/conditions/q/" + country + "/" + city + ".json");
+                    weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
+                    weatherConnection.setRequestMethod("GET");
+                    weatherStream = weatherConnection.getInputStream();
+                    weatherScanner = new Scanner(weatherStream);
+                    while (weatherScanner.hasNextLine()) {
+                        weatherJSON.append(weatherScanner.nextLine());
+                    }
+                    weather = new JSONObject(weatherJSON.toString());
+                }
             }
             feelsLike = weather.getJSONObject("current_observation").getString("feelslike_c");
             Calendar c = Calendar.getInstance();
             lastUpdateBuilder = new StringBuilder();
-            lastUpdateBuilder.append(c.get(Calendar.DAY_OF_MONTH)+".");
-            lastUpdateBuilder.append(Integer.toString((c.get(Calendar.MONTH)+1)));
-            lastUpdateBuilder.append("."+  c.get(Calendar.YEAR)+",");
-            lastUpdateBuilder.append(" " +  c.get(Calendar.HOUR_OF_DAY)+":");
-            lastUpdateBuilder.append(c.get(Calendar.MINUTE)+":");
-            lastUpdateBuilder.append(c.get(Calendar.SECOND));
+            if (c.get(Calendar.DAY_OF_MONTH) < 10) {
+                lastUpdateBuilder.append("0" + c.get(Calendar.DAY_OF_MONTH) + ".");
+            } else {
+                lastUpdateBuilder.append(c.get(Calendar.DAY_OF_MONTH) + ".");
+            }
+            if (c.get(Calendar.MONTH) < 9) {
+                lastUpdateBuilder.append("0" + (c.get(Calendar.MONTH) + 1));
+            } else {
+                lastUpdateBuilder.append(Integer.toString((c.get(Calendar.MONTH) + 1)));
+            }
+            lastUpdateBuilder.append("." + c.get(Calendar.YEAR) + ",");
+            if (c.get(Calendar.HOUR_OF_DAY) < 10) {
+                lastUpdateBuilder.append(" 0" + c.get(Calendar.HOUR_OF_DAY) + ":");
+            } else {
+                lastUpdateBuilder.append(" " + c.get(Calendar.HOUR_OF_DAY) + ":");
+            }
+            if (c.get(Calendar.MINUTE) < 10) {
+                lastUpdateBuilder.append("0" + c.get(Calendar.MINUTE) + ":");
+            } else {
+                lastUpdateBuilder.append(c.get(Calendar.MINUTE) + ":");
+            }
+            if (c.get(Calendar.SECOND) < 10) {
+                lastUpdateBuilder.append("0" + c.get(Calendar.SECOND));
+            } else {
+                lastUpdateBuilder.append(c.get(Calendar.SECOND));
+            }
             lastUpdate = lastUpdateBuilder.toString();
             cityName = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("full");
-            visibility =  weather.getJSONObject("current_observation").getString("visibility_km");
+            visibility = weather.getJSONObject("current_observation").getString("visibility_km");
             longtitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("longitude");
             latitude = weather.getJSONObject("current_observation").getJSONObject("display_location").getString("latitude");
 
-
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat="+latitude+"&lng="+longtitude+"");
+            weatherInfo = new URL("http://api.sunrise-sunset.org/json?lat=" + latitude + "&lng=" + longtitude + "");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -151,20 +171,17 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
 
             }
-
             weather = new JSONObject(weatherJSON.toString());
-            if(weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR") ){
+            if (weather.getString("status").equals("INVALID_REQUEST") || weather.getString("status").equals("INVALID_DATE") || weather.getString("status").equals("UNKNOWN_ERROR")) {
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
                 return;
             }
-
             sunset = weather.getJSONObject("results").getString("sunset");
             sunrise = weather.getJSONObject("results").getString("sunrise");
-
             dayLength = weather.getJSONObject("results").getString("day_length");
             weatherJSON.delete(0, weatherJSON.length());
-            DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate,dayLength);
+            DBManager.getInstance(getApplicationContext()).addWeather(cityName, currentTemp, description, temp_min, temp_max, sunrise, sunset, windSpeed + "", humidity, pressure, feelsLike, visibility, lastUpdate, dayLength);
 
             Intent queryCompleteIntent = new Intent("FirstQueryComplete");
             sendBroadcast(queryCompleteIntent);
@@ -172,7 +189,7 @@ public class RequestWeatherIntentService extends IntentService {
             //Ten day data request
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from ten_day_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/"+city+"," + country + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/forecast10day/q/" + city + "," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -181,7 +198,7 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            if(weather.getJSONObject("response").has("error")){
+            if (weather.getJSONObject("response").has("error")) {
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
                 return;
@@ -205,12 +222,10 @@ public class RequestWeatherIntentService extends IntentService {
                 DBManager.getInstance(getApplicationContext()).addTenDayWeather(date, maxTemp, minTemp, condition, tenDayWindSpeed, tenDayHumidity, weekDay, yearDay, year);
             }
 
-
             //Twenty four hour data request
-
             DBManager.getInstance(getApplicationContext()).getWritableDatabase().execSQL("delete from twenty_hour_forecast");
             weatherJSON.delete(0, weatherJSON.length());
-            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/"+city+"," + country + ".json");
+            weatherInfo = new URL("http://api.wunderground.com/api/cca5e666b6459f6e/hourly/q/" + city + "," + country + ".json");
             weatherConnection = (HttpURLConnection) weatherInfo.openConnection();
             weatherConnection.setRequestMethod("GET");
             weatherStream = weatherConnection.getInputStream();
@@ -219,7 +234,7 @@ public class RequestWeatherIntentService extends IntentService {
                 weatherJSON.append(weatherScanner.nextLine());
             }
             weather = new JSONObject(weatherJSON.toString());
-            if(weather.getJSONObject("response").has("error")){
+            if (weather.getJSONObject("response").has("error")) {
                 Intent intent1 = new Intent("Error");
                 sendBroadcast(intent1);
                 return;
@@ -239,21 +254,17 @@ public class RequestWeatherIntentService extends IntentService {
             }
 
             Intent intent1 = null;
-
-            if(fromAlarm != null){
+            if (fromAlarm != null) {
                 intent1 = new Intent(this, Widget.class);
                 intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
                 int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), Widget.class));
                 intent1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                 sendBroadcast(intent1);
-            }
-            else{
+            } else {
                 intent1 = new Intent("SerciveComplete");
                 sendBroadcast(intent1);
                 DBManager.getInstance(getApplicationContext()).addLastSearch();
             }
-
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -261,7 +272,5 @@ public class RequestWeatherIntentService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
-
 }

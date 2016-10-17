@@ -248,21 +248,20 @@ public class WeatherActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
-            TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
-
-            twentyFourFragment.adaptor = new TwentyFourListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTwentyHourForecastObjects());
-            twentyFourFragment.adaptor.notifyDataSetChanged();
-
-            tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
-            tenDayFragment.adaptor.notifyDataSetChanged();
+//            TwentyFourFragment twentyFourFragment = (TwentyFourFragment) adapter.getItem(1);
+//            TenDayFragment tenDayFragment = (TenDayFragment) adapter.getItem(2);
+//
+//            twentyFourFragment.adaptor = new TwentyFourListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTwentyHourForecastObjects());
+//            twentyFourFragment.adaptor.notifyDataSetChanged();
+//
+//            tenDayFragment.adaptor = new TenDayListAdaptor(WeatherActivity.this, DBManager.getInstance(WeatherActivity.this).getTenDayForecast());
+//            tenDayFragment.adaptor.notifyDataSetChanged();
+            vPager.getAdapter().notifyDataSetChanged();
             layout.setRefreshing(false);
         }
     }
 
-
     class FirstQueryReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             WeatherActivity.this.recreate();
@@ -276,5 +275,4 @@ public class WeatherActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         WeatherActivity.this.recreate();
     }
-
 }
